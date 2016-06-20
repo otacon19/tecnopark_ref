@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Mysql
+Bundle-SymbolicName: sinbad2.database.connector.mysql;singleton:=true
+Bundle-Version: 1
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Require-Bundle: sinbad2.database;bundle-version="1.0.0";visibility:=reexport,
+ com.mysql.jdbc;bundle-version="5.1.6"
+Export-Package: sinbad2.database.connector.mysql
+Bundle-Vendor: Sinbad2

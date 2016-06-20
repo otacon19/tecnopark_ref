@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="sinbad2.database" name="Database" schema="schema/sinbad2.database.exsd"/>
+   <extension-point id="sinbad2.database.connector" name="Database connector" schema="schema/sinbad2.database.connector.exsd"/>
+</plugin>

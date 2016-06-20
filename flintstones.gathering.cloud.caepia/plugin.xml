@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         id="flintstones.entrypoints"
+         point="org.eclipse.rap.ui.entrypoint">
+      <entrypoint
+            brandingId="flintstones.gathering.cloud.branding"
+            path="/flintstones"
+            applicationId="flintstones.gathering.cloud.app"
+            id="flintstones.entrypoint">
+      </entrypoint>
+   </extension>
+   <extension
+         id="flintstones.gathering.cloud.app"
+         point="org.eclipse.core.runtime.applications">
+      <application
+            thread="main"
+            cardinality="singleton-global"
+            visible="true">
+         <run
+               class="flintstones.gathering.cloud.Application">
+         </run>
+      </application>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            name="Perspectiva de problemas"
+            class="flintstones.gathering.cloud.view.ProblemsPerspective"
+            id="flintstones.gathering.cloud.problems.perspective">
+      </perspective>
+      <perspective
+            class="flintstones.gathering.cloud.view.GatheringPerspective"
+            id="flintstones.gathering.cloud.gathering.perspective"
+            name="Perspectiva de gathering">
+      </perspective>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            class="flintstones.gathering.cloud.view.ProblemsView"
+            icon="icons/sample3.gif"
+            id="flintstones.gathering.cloud.view.problemsView"
+            name="Problemas">
+      </view>
+      <view
+            allowMultiple="true"
+            class="flintstones.gathering.cloud.view.ProblemView"
+            icon="icons/sample3.gif"
+            id="flintstones.gathering.cloud.view.problemView"
+            name="Problema">
+      </view>
+      <view
+            allowMultiple="true"
+            class="flintstones.gathering.cloud.view.SurveysView"
+            icon="icons/sample3.gif"
+            id="flintstones.gathering.cloud.view.surveysView"
+            name="Problemas asignados">
+      </view>
+      <view
+            allowMultiple="true"
+            class="flintstones.gathering.cloud.view.SurveyView"
+            icon="icons/sample3.gif"
+            id="flintstones.gathering.cloud.view.surveyView"
+            name="Recopilación de información">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            name="Gathering"
+            id="flintstones.gathering.cloud.category">
+      </category>
+      <command
+            name="Open view"
+            description="Open view"
+            categoryId="flintstones.gathering.cloud.category"
+            id="flintstones.gathering.cloud.open">
+      </command>
+      <command
+            categoryId="flintstones.gathering.cloud.category"
+            description="Import a problem"
+            id="flintstones.gathering.cloud.importProblem"
+            name="Import problem">
+      </command>
+      <command
+            categoryId="flintstones.gathering.cloud.category"
+            description="Close view"
+            id="flintstones.gathering.cloud.close"
+            name="Close view">
+      </command>
+      <command
+            categoryId="flintstones.gathering.cloud.category"
+            description="Show gathering perspective"
+            id="flintstones.gathering.cloud.openGatheringPerspective"
+            name="Show gathering">
+      </command>
+      <command
+            categoryId="flintstones.gathering.cloud.category"
+            description="Show problems perspective"
+            id="flintstones.gathering.cloud.openProblemsPerspective"
+            name="Show problems">
+      </command>
+      <command
+            categoryId="flintstones.gathering.cloud.category"
+            description="Refresh info"
+            id="flintstones.gathering.cloud.refreshAction"
+            name="Refresh info">
+      </command>
+      <command
+            categoryId="flintstones.gathering.cloud.category"
+            description="Import a problem"
+            id="flintstones.gathering.cloud.importProblemMenu"
+            name="Import problem in menu">
+      </command>
+      <command
+            categoryId="flintstones.gathering.cloud.category"
+            description="User account"
+            id="flintstones.gathering.cloud.userAccount"
+            name="User account">
+      </command>
+      <command
+            categoryId="flintstones.gathering.cloud.category"
+            description="Export a problem"
+            id="flintstones.gathering.cloud.exportProblem"
+            name="Export problem">
+      </command>
+      <command
+            categoryId="flintstones.gathering.cloud.category"
+            description="Export a problem"
+            id="flintstones.gathering.cloud.exportProblemMenu"
+            name="Export problem in menu">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.rap.ui.layouts">
+      <layout
+            id="flintstones.gathering.cloud.caepia.layout"
+            name="Flintstones logo">
+         <layoutSet
+               class="flintstones.gathering.cloud.view.layout.LogoInitializer"
+               id="flintstones.gathering.cloud.caepia.layoutSet"
+               name="Logo overriding"
+               overridesId="org.eclipse.rap.design.example.layoutset.logo">
+         </layoutSet>
+      </layout>
+   </extension>
+   <extension
+         point="org.eclipse.rap.ui.branding">
+      <branding
+            favicon="icons/favicon.ico"
+            id="flintstones.gathering.cloud.branding"
+            themeId="org.eclipse.rap.design.example.business.theme"
+            title="FLINTSTONES gathering cloud">
+         <presentationFactory
+               defaultLayoutId="org.eclipse.rap.design.example.business.layout"
+               name="Business PresentationFactory"
+               id="org.eclipse.rap.design.example.business.factory">
+            <defaultStackPresentation
+                  id="org.eclipse.rap.design.example.stack.view">
+            </defaultStackPresentation>
+         </presentationFactory>
+      </branding>
+   </extension>
+   <extension
+         id="product"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="flintstones.gathering.cloud.app"
+            name="flintstones.gathering.cloud">
+         <property
+               name="appName"
+               value="flintstones.gathering.cloud">
+         </property>
+      </product>
+   </extension>
+   <extension
+         id="product1"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="flintstones.gathering.cloud.app"
+            name="flintstones.gathering.cloud">
+      </product>
+   </extension>
+   <extension
+         point="sinbad2.database">
+      <database
+            connector="sinbad2.database.connector.mysql"
+            id="flintstones.gathering.cloud.caepia.database">
+         <parameter
+               id="url"
+               value="localhost">
+         </parameter>
+         <parameter
+               id="dbname"
+               value="db">
+         </parameter>
+         <parameter
+               id="user"
+               value="root">
+         </parameter>
+         <parameter
+               id="password"
+               value="admin">
+         </parameter>
+      </database>
+   </extension>
+   <extension
+         point="sinbad2.mail.account">
+      <account
+            mail="ceatic.ujaen@gmail.com"
+            password="zFcLA?lPdv">
+         <property
+               id="mail.smtp.auth"
+               value="true">
+         </property>
+         <property
+               id="mail.smtp.starttls.enable"
+               value="true">
+         </property>
+         <property
+               id="mail.smtp.host"
+               value="smtp.gmail.com">
+         </property>
+         <property
+               id="mail.smtp.port"
+               value="587">
+         </property>
+      </account>
+   </extension>
+
+</plugin>

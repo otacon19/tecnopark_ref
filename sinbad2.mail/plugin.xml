@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="sinbad2.mail.account" name="Mail account" schema="schema/sinbad2.mail.account.exsd"/>
+
+</plugin>

@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Database
+Bundle-SymbolicName: sinbad2.database;singleton:=true
+Bundle-Version: 1
+Bundle-Vendor: Sinbad2
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Export-Package: sinbad2.database,
+ sinbad2.database.connector
+Require-Bundle: org.eclipse.core.runtime;bundle-version="3.8.0";visibility:=reexport
