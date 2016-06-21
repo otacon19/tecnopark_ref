@@ -6,8 +6,7 @@ Bundle-Version: 1.0
 Bundle-Vendor: mcdacw
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: mcdacw.parametervalidator;bundle-version="1.0.0";visibility:=reexport
-Export-Package: mcdacw.valuation,
- mcdacw.valuation.domain,
+Export-Package: mcdacw.valuation.domain,
  mcdacw.valuation.domain.fuzzyset,
  mcdacw.valuation.domain.numeric,
  org.apache.commons.lang.builder
