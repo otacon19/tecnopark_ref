@@ -9,12 +9,12 @@ import java.util.List;
 import java.util.Map;
 
 import flintstones.gathering.cloud.mail.ProblemMailGenerator;
-import flintstones.gathering.cloud.model.Domain;
 import flintstones.gathering.cloud.model.Key;
 import flintstones.gathering.cloud.model.Problem;
 import flintstones.gathering.cloud.model.ProblemAssignment;
 import flintstones.gathering.cloud.model.User;
 import flintstones.gathering.cloud.model.Valuations;
+import mcdacw.valuation.domain.Domain;
 import sinbad2.database.Database;
 import sinbad2.database.DatabaseManager;
 

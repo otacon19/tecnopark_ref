@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import mcdacw.valuation.domain.Domain;
+
 public class Problem {
 
 	private String _id;

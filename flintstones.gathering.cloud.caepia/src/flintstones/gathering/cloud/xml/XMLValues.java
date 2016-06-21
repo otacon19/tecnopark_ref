@@ -1,30 +1,32 @@
 package flintstones.gathering.cloud.xml;
 
-import mcdacw.valuation.Hesitant;
-import mcdacw.valuation.Interval;
-import mcdacw.valuation.Linguistic;
-import mcdacw.valuation.NotApplicable;
-import mcdacw.valuation.Numeric;
-import mcdacw.valuation.TwoTuple;
 import mcdacw.valuation.domain.fuzzyset.FuzzySet;
-import mcdacw.valuation.domain.fuzzyset.HesitantFuzzySet;
-import mcdacw.valuation.domain.fuzzyset.TrapezoidalMembershipFunction;
-import mcdacw.valuation.domain.numeric.IntervalNumericDomain;
-import mcdacw.valuation.domain.numeric.NumericDomain;
+import mcdacw.valuation.domain.fuzzyset.Unbalanced;
+import mcdacw.valuation.domain.fuzzyset.function.types.TrapezoidalFunction;
+import mcdacw.valuation.domain.numeric.NumericIntegerDomain;
+import mcdacw.valuation.domain.numeric.NumericRealDomain;
+import mcdacw.valuation.valuation.IntegerIntervalValuation;
+import mcdacw.valuation.valuation.IntegerValuation;
+import mcdacw.valuation.valuation.LinguisticValuation;
+import mcdacw.valuation.valuation.RealIntervalValuation;
+import mcdacw.valuation.valuation.RealValuation;
+import mcdacw.valuation.valuation.TwoTuple;
+import mcdacw.valuation.valuation.hesitant.HesitantValuation;
 
 public class XMLValues {
 
-	public static final String NUMERIC_DOMAIN = NumericDomain.class.getName();
-	public static final String INTERVAL_NUMERIC_DOMAIN = IntervalNumericDomain.class.getName();
+	public static final String NUMERIC_INTEGER_DOMAIN = NumericIntegerDomain.class.getName();
+	public static final String NUMERIC_REAL_DOMAIN = NumericRealDomain.class.getName();
 	public static final String FUZZY_SET = FuzzySet.class.getName();
-	public static final String HESITANT_FUZZY_SET = HesitantFuzzySet.class.getName();
-	public static final String NUMERIC = Numeric.class.getName();
-	public static final String LINGUICTIC = Linguistic.class.getName();
+	public static final String UNBALANCED = Unbalanced.class.getName();
+	public static final String LINGUISTIC = LinguisticValuation.class.getName();
 	public static final String TWO_TUPLE = TwoTuple.class.getName();
-	public static final String HESITANT = Hesitant.class.getName();
-	public static final String NOT_APPLICABLE = NotApplicable.class.getName();
-	public static final String INTERVAL = Interval.class.getName();
-	public static final String TRAPEZOIDAL_MEMBERSHIP_FUNCTION = TrapezoidalMembershipFunction.class.getName();
+	public static final String HESITANT = HesitantValuation.class.getName();
+	public static final String INTEGER = IntegerValuation.class.getName();
+	public static final String REAL = RealValuation.class.getName();
+	public static final String INTEGER_INTERVAL = IntegerIntervalValuation.class.getName();
+	public static final String REAL_INTERVAL = RealIntervalValuation.class.getName();
+	public static final String TRAPEZOIDAL_MEMBERSHIP_FUNCTION = TrapezoidalFunction.class.getName();
 	public static final String END = "\n";
 	public static final String TAB = "\t";
 	public static final String PROBLEM = "problem";

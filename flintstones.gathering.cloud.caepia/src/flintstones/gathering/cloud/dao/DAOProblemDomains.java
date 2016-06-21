@@ -7,11 +7,13 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
-import mcdacw.valuation.domain.IDomain;
 import sinbad2.database.Database;
 import sinbad2.database.DatabaseManager;
-import flintstones.gathering.cloud.model.Domain;
 import flintstones.gathering.cloud.model.Problem;
+import flintstones.gathering.cloud.xml.XMLValues;
+import mcdacw.valuation.domain.Domain;
+import mcdacw.valuation.domain.numeric.NumericIntegerDomain;
+import mcdacw.valuation.domain.numeric.NumericRealDomain;
 
 public class DAOProblemDomains {
 
@@ -66,7 +68,7 @@ public class DAOProblemDomains {
 			Domain domain = null;
 			for (String id : domains.keySet()) {
 				domain = domains.get(id);
-				st.executeUpdate("insert into " + TABLE + " values ('" + id + "','" + problemId + "','" + domain.getType() + "','" + domain.getDomain().toString() + "')");
+				st.executeUpdate("insert into " + TABLE + " values ('" + id + "','" + problemId + "','" + domain.getType() + "','" + domain.toString() + "')");
 			}
 			st.close();
 		} catch (Exception e) {
@@ -97,18 +99,57 @@ public class DAOProblemDomains {
 			Connection c = getConnection();
 			Statement st = c.createStatement();
 
-			String select = "select * from " + TABLE + " where " + PROBLEM
-					+ "='" + problem + "';";
+			String select = "select * from " + TABLE + " where " + PROBLEM + "='" + problem + "';";
 			ResultSet rs = st.executeQuery(select);
 			Domain domain = null;
 			String id;
 			String type;
-			IDomain d;
+			String value;
 			while (rs.next()) {
+				
 				id = rs.getString(ID);
 				type = rs.getString(TYPE);
-				d = Domain.buildDomain(type, rs.getString(DOMAIN));
-				domain = new Domain(id, type, d);
+				value = rs.getString(DOMAIN);
+	
+				if(type.equals(XMLValues.NUMERIC_INTEGER_DOMAIN)) {
+					
+					try {
+						String[] tokens = value.split(",");
+						int min = Integer.parseInt(tokens[0].substring(1));
+						int max = Integer.parseInt(tokens[1].substring(0, tokens[1].length() - 1));
+						domain = new NumericIntegerDomain();
+						((NumericIntegerDomain) domain).setMinMax(min, max);
+						
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					
+				} else if(type.equals(XMLValues.NUMERIC_REAL_DOMAIN)) {
+					
+					try {
+						String[] tokens = value.split(",");
+						double min = Double.parseDouble(tokens[0].substring(1));
+						double max = Double.parseDouble(tokens[1].substring(0, tokens[1].length() - 1));
+						domain = new NumericRealDomain();
+						((NumericRealDomain) domain).setMinMax(min, max);
+						
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					
+				} else if(type.equals(XMLValues.FUZZY_SET)) {
+					
+					try {
+						
+						
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					
+				} else if(type.equals(XMLValues.UNBALANCED)) {
+					
+				}
+				
 				result.put(id, domain);
 			}
 		} catch (Exception e) {

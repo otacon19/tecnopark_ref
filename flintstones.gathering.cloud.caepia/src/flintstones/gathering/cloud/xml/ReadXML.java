@@ -16,18 +16,12 @@ import javax.xml.stream.events.EndElement;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 
-import mcdacw.valuation.domain.IDomain;
-import mcdacw.valuation.domain.fuzzyset.HesitantFuzzySet;
-import mcdacw.valuation.domain.fuzzyset.Label;
-import mcdacw.valuation.domain.numeric.IntervalNumericDomain;
-import mcdacw.valuation.domain.numeric.NumericDomain;
-
 import org.eclipse.rap.rwt.RWT;
 
-import flintstones.gathering.cloud.model.Domain;
 import flintstones.gathering.cloud.model.Key;
 import flintstones.gathering.cloud.model.Problem;
 import flintstones.gathering.cloud.model.User;
+import mcdacw.valuation.domain.Domain;
 
 public class ReadXML {
 
@@ -149,7 +143,7 @@ public class ReadXML {
 
 	private void readDomains() throws Exception {
 
-		XMLEvent event;
+		/*XMLEvent event;
 		boolean exit = false;
 
 		domains = new HashMap<String, Domain>();
@@ -163,11 +157,11 @@ public class ReadXML {
 			}
 		} while (!exit);
 
-		_problem.setDomains(domains);
+		_problem.setDomains(domains);*/
 
 	}
 
-	private void readDomain() throws Exception {
+	/*private void readDomain() throws Exception {
 
 		XMLEvent event;
 		StartElement startElement;
@@ -588,7 +582,7 @@ public class ReadXML {
 				}
 			}
 		}
-	}
+	}*/
 	
 	public String getStartElementLocalPart() {
 		StartElement startElement = _event.asStartElement();

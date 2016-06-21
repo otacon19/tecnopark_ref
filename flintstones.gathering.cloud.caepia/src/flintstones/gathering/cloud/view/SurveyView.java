@@ -7,11 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import mcdacw.valuation.domain.IDomain;
-import mcdacw.valuation.domain.fuzzyset.HesitantFuzzySet;
-import mcdacw.valuation.domain.numeric.IntervalNumericDomain;
-import mcdacw.valuation.domain.numeric.NumericDomain;
-
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;

@@ -10,7 +10,7 @@
       <plugin id="javax.transaction" fragment="true"/>
       <plugin id="javax.xml"/>
       <plugin id="mcdacw.parametervalidator"/>
-      <plugin id="mcdacw.valuation"/>
+      <plugin id="flintstones.valuation"/>
       <plugin id="com.mysql.jdbc"/>
       <plugin id="sinbad2.database"/>
       <plugin id="sinbad2.database.connector.mysql"/>

@@ -9,7 +9,7 @@ Bundle-ClassPath: lib/mysql-connector-java-5.1.33-bin.jar,
  .
 Require-Bundle: org.eclipse.rap.ui;bundle-version="2.3.1",
  org.eclipse.rap.filedialog;bundle-version="3.0.2",
- mcdacw.valuation;bundle-version="1.0.0",
+ flintstones.valuation;bundle-version="1.0.0",
  sinbad2.database,
  sinbad2.mail;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
