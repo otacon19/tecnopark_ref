@@ -1,0 +1,28 @@
+package mcdacw.valuation.domain.fuzzyset.semantic;
+
+import mcdacw.valuation.domain.fuzzyset.function.FragmentFunction;
+import mcdacw.valuation.domain.numeric.NumericRealDomain;
+
+public interface IMembershipFunction extends Cloneable, Comparable<IMembershipFunction> {
+	
+	public FragmentFunction toFragmentFunction();
+	
+	public boolean isSymmetrical();
+	
+	public boolean isSymmetrical(IMembershipFunction other, double center);
+	
+	public NumericRealDomain getCenter();
+	
+	public NumericRealDomain getCoverage();
+	
+	public double getMembershipValue(double x);
+	
+	public double centroid();
+	
+	public double maxMin(double max, double min);
+	
+	public double maxMin(IMembershipFunction function);
+	
+	public Object clone();
+
+}

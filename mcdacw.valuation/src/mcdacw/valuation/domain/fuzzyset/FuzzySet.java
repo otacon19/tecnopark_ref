@@ -8,8 +8,15 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import mcdacw.paremetervalidator.ParameterValidator;
-import mcdacw.valuation.domain.IDomain;
-import mcdacw.valuation.domain.numeric.NumericDomain;
+import mcdacw.valuation.domain.fuzzyset.function.FragmentFunction;
+import mcdacw.valuation.domain.fuzzyset.function.IFragmentFunction;
+import mcdacw.valuation.domain.fuzzyset.function.types.LinearPieceFunction;
+import mcdacw.valuation.domain.fuzzyset.function.types.TrapezoidalFunction;
+import mcdacw.valuation.domain.fuzzyset.label.LabelLinguisticDomain;
+import mcdacw.valuation.domain.fuzzyset.label.LabelSetLinguisticDomain;
+import mcdacw.valuation.domain.fuzzyset.semantic.IMembershipFunction;
+import mcdacw.valuation.domain.numeric.NumericRealDomain;
+import mcdacw.valuation.domain.type.Linguistic;
 
 /**
  * Conjunto de etiquetas difuso.
@@ -17,797 +24,498 @@ import mcdacw.valuation.domain.numeric.NumericDomain;
  * @author Estrella Liébana, Francisco Javier
  * @version 1.0
  */
-public class FuzzySet extends LabelSet implements IDomain, Cloneable {
-
-	/**
-	 * Medidas de las etiquetas del conjunto de etiquetas.
-	 */
-	protected List<Double> _measures;
+public class FuzzySet extends Linguistic {
 	
-	/**
-	 * Información no balanceada
-	 */
-	protected UnbalancedInfo _unbalancedInfo;
-
-	/**
-	 * Constructor por defecto de un conjunto difuso.
-	 */
+	public static final String ID = "flintstones.domain.linguistic"; //$NON-NLS-1$
+	
+	protected LabelSetLinguisticDomain _labelSet;
+	protected List<Double> _values;
+	
 	public FuzzySet() {
 		super();
-		_measures = new LinkedList<Double>();
-		_unbalancedInfo = null;
-	}
-
-	/**
-	 * Construye un conjunto difuso indicado las etiquetas que conforman el
-	 * mismo.
-	 * <p>
-	 * Establecerá todos los pesos a 0.
-	 * 
-	 * @param labels
-	 *            Etiquetas del conjunto difuso.
-	 * @throws IllegalArgumentException
-	 *             Si labels es nulo o,
-	 *             <p>
-	 *             si alguna etiqueta es nula o
-	 *             <p>
-	 *             si el nombre de alguna etiqueta está duplicado.
-	 */
-	public FuzzySet(List<Label> labels) {
-		this();
-		setLabels(labels);
-	}
-
-	/**
-	 * Construye un conjunto difuso indicado las etiquetas que conforman el
-	 * mismo y las medidas asociadas.
-	 * 
-	 * @param labels
-	 *            Etiquetas del conjunto difuso.
-	 * @param measures
-	 *            Medidas asociadas a las etiquetas.
-	 * @throws IllegalArgumentException
-	 *             Si labels es nulo o,
-	 *             <p>
-	 *             si alguna etiqueta es nula o,
-	 *             <p>
-	 *             si el nombre de alguna etiqueta está duplicado o,
-	 *             <p>
-	 *             si measures es nulo o,
-	 *             <p>
-	 *             si alguna medidas es nula o
-	 *             <p>
-	 *             si alguna medida no está en el rango [0, 1] o
-	 *             <p>
-	 *             si el número de medidas no coincide con el de etiquetas.
-	 */
-	public FuzzySet(List<Label> labels, List<Double> measures) {
-		this(labels);
-		setMeasures(measures);
-	}
-
-	/**
-	 * Establece las etiquetas que conforman el conjunto.
-	 * <p>
-	 * Establecerá todas las medidas a 0.
-	 * 
-	 * @param labels
-	 *            Conjunto de etiquetas.
-	 * @throws IllegalArgumentException
-	 *             Si labels es nulo o,
-	 *             <p>
-	 *             alguna de las etiquetas contenidas lo es o,
-	 *             <p>
-	 *             el nombre de alguna etiqueta está duplicado.
-	 */
-	@Override
-	public void setLabels(List<Label> labels) {
-		super.setLabels(labels);
-		List<Double> measures = new LinkedList<Double>();
-		for (int element = 0; element < _labels.size(); element++) {
-			measures.add(0d);
-		}
-		_measures = measures;
-	}
-
-	/**
-	 * Establece las medidas de las etiquetas.
-	 * <p>
-	 * Deben indicarse tantas medidas como etiquetas tenga el conjunto difuso.
-	 * 
-	 * @param measures
-	 *            Medidas de las etiquetas.
-	 * @throws IllegalArgumentException
-	 *             Si medidas es nulo o,
-	 *             <p>
-	 *             si alguna medida es nula o
-	 *             <p>
-	 *             si alguna medida no está en el rango [0, 1]
-	 *             <p>
-	 *             si el número de medidas no coincide con el de etiquetas.
-	 */
-	public void setMeasures(List<Double> measures) {
-		ParameterValidator.notNull(measures, "measures");
-		int cardinality = cardinality();
-		ParameterValidator.notInvalidSize(measures.size(), cardinality,
-				cardinality, "measures");
-		for (Double measure : measures) {
-			ParameterValidator.notNull(measure, "measure");
-			ParameterValidator.notInvalidSize(measure, 0.0, 1.0, "measure");
-		}
-		_measures = measures;
-	}
-
-	/**
-	 * Devuelve las medidas de las etiquetas.
-	 * 
-	 * @return Medidas de las etiquetas.
-	 */
-	public List<Double> getMeasures() {
-		return _measures;
+		
+		_labelSet = new LabelSetLinguisticDomain();
+		_values = new LinkedList<Double>();
 	}
 	
-	public UnbalancedInfo getUnbalancedInfo() {
-		return _unbalancedInfo;
+	public FuzzySet(List<LabelLinguisticDomain> labels) {
+		_labelSet.setLabels(labels);
+		addValues(labels);
 	}
 	
-	public void setUnbalancedInfo(UnbalancedInfo unbalancedInfo) {
-		_unbalancedInfo = unbalancedInfo;
+	public void clearFuzzySet() {
+		_labelSet = new LabelSetLinguisticDomain();
+		_values = new LinkedList<Double>();
 	}
-
-	/**
-	 * Añade una nueva etiqueta al conjunto difuso.
-	 * <p>
-	 * Establece la medida de la etiqueta a 0.
-	 * 
-	 * @param label
-	 *            Etiqueta a añadir.
-	 * 
-	 * @throws IllegalArgumentException
-	 *             Si label es null o
-	 *             <p>
-	 *             si el nombre de la etiqueta está duplicado.
-	 */
-	@Override
-	public void addLabel(Label label) {
-		addLabel(cardinality(), label);
-	}
-
-	/**
-	 * Añade una nueva etiqueta y la medida de la misma al conjunto difuso.
-	 * 
-	 * @param label
-	 *            Etiqueta a añadir.
-	 * @param measure
-	 *            Medida de la etiqueta.
-	 * @throws IllegalArgumentException
-	 *             Si label es null o
-	 *             <p>
-	 *             si el nombre de la etiqueta está duplicado o
-	 *             <p>
-	 *             si measure no está contenido en el intervalo [0, 1].
-	 */
-	public void addLabel(Label label, double measure) {
-		addLabel(cardinality(), label, measure);
-	}
-
-	/**
-	 * Añade una etiqueta en la posición indicada.
-	 * <p>
-	 * Establece la medida de la etiqueta a 0.
-	 * 
-	 * @param pos
-	 *            Posición de inserción.
-	 * @param label
-	 *            Etiqueta a añadir.
-	 * 
-	 * @throws IllegalArgumentException
-	 *             Si la etiqueta es nula o,
-	 *             <p>
-	 *             si la posición es inválida o,
-	 *             <p>
-	 *             si el nombre de la etiqueta ya existe.
-	 */
-	@Override
-	public void addLabel(int pos, Label label) {
-		super.addLabel(pos, label);
-		_measures.add(pos, 0d);
-	}
-
-	/**
-	 * Añade una etiqueta en la posición indicada así como la medida de esta.
-	 * 
-	 * @param pos
-	 *            Posición de inserción.
-	 * @param label
-	 *            Etiqueta a añadir.
-	 * @param measure
-	 *            Medida de la etiqueta.
-	 * 
-	 * @throws IllegalArgumentException
-	 *             Si la etiqueta es nula o,
-	 *             <p>
-	 *             si la posición es inválida o,
-	 *             <p>
-	 *             si el nombre de la etiqueta ya existe o
-	 *             <p>
-	 *             si measure no está contenido en el rango [0, 1].
-	 */
-	public void addLabel(int pos, Label label, double measure) {
-		super.addLabel(pos, label);
-
-		ParameterValidator.notNull(measure, "measure");
-		ParameterValidator.notInvalidSize(measure, 0.0, 1.0, "measure");
-
-		_measures.add(pos, measure);
-	}
-
-	/**
-	 * Elimina una etiqueta dada su posición.
-	 * <p>
-	 * Elimina también la medida asociada.
-	 * 
-	 * @param pos
-	 *            Posición de la etiqueta a eliminar.
-	 * 
-	 * @throws IllegalArgumentException
-	 *             Si se índica una posición vacía o
-	 *             <p>
-	 *             si la cardinalidad es vacía.
-	 */
-	@Override
-	public void rmLabel(int pos) {
-
-		ParameterValidator.notEmpty(_labels.toArray(), "_labels");
-		ParameterValidator.notInvalidSize(pos, 0, cardinality() - 1, "pos");
-
-		_labels.remove(pos);
-		_measures.remove(pos);
-	}
-
-	/**
-	 * Elimina una etiqueta dado su nombre.
-	 * <p>
-	 * Elimina también la medida asociada.
-	 * 
-	 * @param name
-	 *            Nombre de la etiqueta a eliminar.
-	 */
-	@Override
-	public void rmLabel(String name) {
-
-		if (name == null) {
-			return;
+	
+	public void setValues(List<Double> values) {
+		ParameterValidator.notNull(values, "values");
+		int cardinality = _labelSet.getCardinality();
+		ParameterValidator.notInvalidSize(values.size(), cardinality, cardinality, "cardinality");
+		for(Double value: values) {
+			ParameterValidator.notNull(value, "value");
+			ParameterValidator.notInvalidSize(value, 0.0, 1.0, "value"); //$NON-NLS-1$
 		}
-
-		int pos = getPos(name);
-
-		if (pos != -1) {
-			_labels.remove(pos);
-			_measures.remove(pos);
-		}
+		
+		_values = values;
 	}
-
-	/**
-	 * Elimina una etiqueta.
-	 * <p>
-	 * Elimina también la medida asociada.
-	 * 
-	 * @param label
-	 *            Etiqueta a eliminar.
-	 */
-	@Override
-	public void rmLabel(Label label) {
-
-		if (label == null) {
-			return;
-		}
-
-		int pos = getPos(label);
-
-		if (pos != -1) {
-			_labels.remove(pos);
-			_measures.remove(pos);
-		}
+	
+	public void setValue(int pos, Double value) {
+		ParameterValidator.notEmpty(_labelSet.getLabels().toArray(), "labels");
+		ParameterValidator.notInvalidSize(pos, 0, _labelSet.getCardinality() - 1, "cardinality");
+		
+		ParameterValidator.notNull(value, "value");
+		ParameterValidator.notInvalidSize(value, 0.0, 1.0, "value"); //$NON-NLS-1$
+		
+		_values.set(pos, value);
 	}
-
-	/**
-	 * Establece la medida de una etiqueta concreta dada su posición.
-	 * 
-	 * @param pos
-	 *            Posición de la etiqueta.
-	 * @param measure
-	 *            Medida de la etiqueta.
-	 * @throws IllegalArgumentException
-	 *             Si la posición es inválida o,
-	 *             <p>
-	 *             si measure es null o
-	 *             <p>
-	 *             si measure no está contenido en el intervalo [0, 1].
-	 */
-	public void setMeasure(int pos, double measure) {
-
-		ParameterValidator.notEmpty(_labels.toArray(), "_labels");
-		ParameterValidator.notInvalidSize(pos, 0, cardinality() - 1, "pos");
-
-		ParameterValidator.notNull(measure, "measure");
-		ParameterValidator.notInvalidSize(measure, 0.0, 1.0, "measure");
-
-		_measures.set(pos, measure);
-
-	}
-
-	/**
-	 * Establece la medida de una etiqueta concreta dado su nombre.
-	 * 
-	 * @param name
-	 *            Nombre de la etiqueta.
-	 * @param measure
-	 *            Medida de la etiqueta.
-	 * @throws IllegalArgumentException
-	 *             Si el nombre es nulo o,
-	 *             <p>
-	 *             si el nombre no corresponde a ninguna etiqueta o,
-	 *             <p>
-	 *             si measure es null o
-	 *             <p>
-	 *             si measure no está contenido en el intervalo [0, 1].
-	 */
-	public void setMeasure(String name, double measure) {
-
+	
+	public void setValue(String name, Double value) {
 		ParameterValidator.notNull(name, "name");
-		ParameterValidator.notNull(measure, "measure");
-		ParameterValidator.notInvalidSize(measure, 0.0, 1.0, "measure");
-
-		int pos = getPos(name);
-
-		if (pos != -1) {
-			_measures.set(pos, measure);
+		ParameterValidator.notNull(value, "value");
+		ParameterValidator.notInvalidSize(value, 0.0, 1.0, "value"); //$NON-NLS-1$
+		
+		int pos = _labelSet.getPos(name);
+		
+		if(pos != -1) {
+			setValue(pos, value);
 		} else {
-			throw new IllegalArgumentException("Inexistent element");
+			throw new IllegalArgumentException("Inexistent element in fuzzyset");
 		}
-
 	}
-
-	/**
-	 * Establece la medida de una etiqueta.
-	 * 
-	 * @param label
-	 *            Etiqueta.
-	 * @param measure
-	 *            Medida de la etiqueta.
-	 * @throws IllegalArgumentException
-	 *             Si la etiqueta es nula o,
-	 *             <p>
-	 *             si measure es null o
-	 *             <p>
-	 *             si measure no está contenido en el intervalo [0, 1].
-	 */
-	public void setMeasure(Label label, double measure) {
-
+	
+	public void setValue(LabelLinguisticDomain label, Double value) {
 		ParameterValidator.notNull(label, "label");
-		ParameterValidator.notNull(measure, "measure");
-		ParameterValidator.notInvalidSize(measure, 0.0, 1.0, "measure");
-
-		int pos = getPos(label);
-
-		if (pos != -1) {
-			_measures.set(pos, measure);
+		ParameterValidator.notNegative(value, "value");
+		ParameterValidator.notInvalidSize(value, 0.0, 1.0, "value"); //$NON-NLS-1$
+		
+		int pos = _labelSet.getPos(label);
+		
+		if(pos != -1) {
+			setValue(pos, value);
 		} else {
-			throw new IllegalArgumentException("Inexistent element");
+			throw new IllegalArgumentException("Inexistent element in fuzzyset");
 		}
-
 	}
-
-	/**
-	 * Devuelve la medida de una etiqueta concreta dada su posición.
-	 * 
-	 * @param pos
-	 *            Posición de la etiqueta.
-	 * @return La medida de la etiqueta.
-	 * 
-	 * @throws IllegalArgumentException
-	 *             Si indica una posición erronea.
-	 */
-	public Double getMeasure(int pos) {
-
-		ParameterValidator.notEmpty(_labels.toArray(), "_labels");
-		ParameterValidator.notInvalidSize(pos, 0, cardinality() - 1, "pos");
-
-		return _measures.get(pos);
-
+	
+	public Double getValue(int pos) {
+		ParameterValidator.notEmpty(_labelSet.getLabels().toArray(), "labels");
+		ParameterValidator.notInvalidSize(pos, 0, _labelSet.getCardinality() - 1, "cardinality");
+		
+		return _values.get(pos);
 	}
-
-	/**
-	 * Devuelve la medida de una etiqueta concreta dado su nombre.
-	 * 
-	 * @param name
-	 *            Nombre de la etiqueta.
-	 * 
-	 * @return La medida de la etiqueta.
-	 *         <p>
-	 *         null si no existe una etiqueta con este nombre.
-	 */
-	public Double getMeasure(String name) {
-
-		int pos = getPos(name);
-
-		if (pos != -1) {
-			return _measures.get(pos);
+	
+	public Double getValue(String name) {
+		
+		int pos = _labelSet.getPos(name);
+		
+		if(pos != -1) {
+			return getValue(pos);
 		} else {
 			return null;
 		}
-
 	}
-
-	/**
-	 * Devuelve la medida de una etiqueta concreta.
-	 * 
-	 * @param label
-	 *            Etiqueta.
-	 * 
-	 * @return La medida de la etiqueta.
-	 *         <p>
-	 *         null si no existe la etiqueta.
-	 */
-	public Double getMeasure(Label label) {
-
-		int pos = getPos(label);
-
-		if (pos != -1) {
-			return _measures.get(pos);
+	
+	public Double getValue(LabelLinguisticDomain label) {
+		
+		int pos = _labelSet.getPos(label);
+		
+		if(pos != -1) {
+			return getValue(pos);
 		} else {
 			return null;
 		}
-
+		
 	}
-
-	/**
-	 * Calcula un valor que resume el conjunto difuso.
-	 * 
-	 * @return Valor que resume el conjunto difuso.
-	 */
-	public double chi() {
-		double result, measuresSum, sum;
-		int pos;
-
-		if (cardinality() == 0) {
-			return 0;
-		}
-
-		sum = measuresSum = pos = 0;
-
-		for (Double measure : _measures) {
-			sum += measure * pos++;
-			measuresSum += measure;
-		}
-
-		result = sum / measuresSum;
-
-		return result;
+	
+	public List<Double> getValues() {
+		return _values;
 	}
-
-	/**
-	 * Comprueba si el FuzzySet es una partición difusa.
-	 * 
-	 * @return True si el FuzzySet es una partición difusa.
-	 *         <p>
-	 *         False si el FuzzySet no es una partición difusa.
-	 */
-	public boolean isFuzzyPartition() {
-
-		int cardinality = cardinality();
-
-		// Cardinalidad no vacía
-		if (cardinality == 0) {
-			return false;
-		}
-
-		// Pertenencia 1 entre 0 y 1
-		PiecewiseDefinedFunction piecewiseDefinedFunction = new PiecewiseDefinedFunction();
-		PiecewiseDefinedFunction semantic;
-		Map<NumericDomain, IPieceFunction> pieces;
-		for (Label label : _labels) {
-			semantic = label.getSemantic().toPiecewiseDefinedFunction();
-			pieces = semantic.getPieces();
-			for (NumericDomain domain : pieces.keySet()) {
-				piecewiseDefinedFunction.addPiece(domain, pieces.get(domain));
-				piecewiseDefinedFunction.simplify();
+	
+	public void setLabelSet(LabelSetLinguisticDomain labelSet) {
+		_labelSet = labelSet;
+	}
+	
+	public LabelSetLinguisticDomain getLabelSet() {
+		return _labelSet;
+	}
+	
+	public void addLabel(LabelLinguisticDomain label) {
+		
+		int labels = _labelSet.getCardinality();
+		
+		if(labels == 0) {
+			addLabel(labels, label);
+		} else {
+			boolean lower = false;
+			int counter = 0;	
+			do {
+				if(label.compareTo(_labelSet.getLabels().get(counter)) <= 0) {
+					lower = true;
+				} else {
+					counter++;
+				}
+			} while ((!lower) && (counter < labels));
+			
+			if(lower) {
+				addLabel(counter, label);				
+			} else {
+				addLabel(labels, label);
 			}
 		}
+	}
+	
+	public void addLabel(LabelLinguisticDomain label, Double value) {
+		addLabel(_labelSet.getCardinality(), label, value);
+	}
+	
+	public void addLabel(int pos, LabelLinguisticDomain label) {
+		_labelSet.addLabel(pos, label);
+		_values.add(pos, 0d);
+	}
+	
+	public void addLabel(int pos, LabelLinguisticDomain label, Double value) {
+		_labelSet.addLabel(pos, label);
+		
+		ParameterValidator.notNull(value, "value");
+		ParameterValidator.notInvalidSize(value, 0.0, 1.0, "value"); //$NON-NLS-1$
+		
 
-		pieces = piecewiseDefinedFunction.getPieces();
-		if (pieces.size() == 1) {
-			NumericDomain domain = new NumericDomain(0, 1);
-			LinearPieceFunction piece = (LinearPieceFunction) pieces
-					.get(domain);
-			if (piece != null) {
-				if ((piece.getSlope() == 0) && (piece.getYIntercept() == 1)) {
+		_values.add(pos, value);
+	}
+	
+	public void removeLabel(int pos) {
+		ParameterValidator.notEmpty(_labelSet.getLabels().toArray(), "labels");
+		ParameterValidator.notInvalidSize(pos, 0, _labelSet.getCardinality() - 1, "cardinality");
+		
+		_labelSet.getLabels().remove(pos);
+		_values.remove(pos);
+	}
+	
+	public void removeLabel(String name) {
+		
+		if(name == null) {
+			return;
+		}
+		
+		int pos = _labelSet.getPos(name);
+		
+		if(pos != -1) {
+			removeLabel(pos);
+		}
+	}
+	
+	public void removeLabel(LabelLinguisticDomain label) {
+		
+		if(label == null) {
+			return;
+		}
+		
+		int pos = _labelSet.getPos(label);
+		
+		if(pos != - 1) {
+			removeLabel(pos);
+		}
+	}
+	
+	public void addValues(List<LabelLinguisticDomain> labels) {
+		List<Double> values = new LinkedList<Double>();
+		for(int element = 0; element < labels.size(); ++element) {
+			values.add(0d);
+		}
+		
+		_values = values;
+	}
+	
+	public void createTrapezoidalFunction(String[] labels) {
+		LabelLinguisticDomain currentLabel;
+		IMembershipFunction semantic;
+		
+		clearFuzzySet();
+		
+		if(labels.length == 1) {
+			semantic = new TrapezoidalFunction(new double[] {0, 0, 1, 1});
+			currentLabel = new LabelLinguisticDomain(labels[0], semantic);
+			addLabel(currentLabel);
+		} else {
+			int numLabels = labels.length;
+			double lower, central, upper, increment = 1d / (numLabels  - 1), factor = 1e5;
+			
+			for(int i = 0; i < numLabels; ++i) {
+				lower = (i == 0) ? 0 : increment * (i - 1);
+				central = increment * i;
+				upper = (i == (numLabels - 1)) ? 1: increment * (i + 1);
+				
+				lower = Math.round(lower * factor) / factor;
+				central = Math.round(central * factor) / factor;
+				upper = Math.round(upper * factor) / factor;
+				
+				semantic = new TrapezoidalFunction(new double[] {lower, central, upper});
+				currentLabel = new LabelLinguisticDomain(labels[i], semantic);
+				addLabel(currentLabel);
+			}
+		}
+		
+		setType(ID);
+	}
+	
+	
+	public double chi() {
+		double result, valuesSum, sum;
+		int pos;
+		
+		if(_labelSet.getCardinality() == 0) {
+			return 0;
+		}
+		
+		sum = valuesSum = pos = 0;
+		
+		for(Double value: _values) {
+			sum += value * pos++;
+			valuesSum += value;
+		}
+		
+		result = sum / valuesSum;
+		
+		return result;
+	}
+	
+	public boolean isFuzzy() {
+		int cardinality = _labelSet.getCardinality();
+		
+		if(cardinality == 0) {
+			return false;
+		}
+		
+		FragmentFunction fragmentFunction = new FragmentFunction();
+		FragmentFunction semantic;
+		Map<NumericRealDomain, IFragmentFunction> pieces;
+		for(LabelLinguisticDomain label: _labelSet.getLabels()) {
+			semantic = label.getSemantic().toFragmentFunction();
+			pieces = semantic.getPieces();
+			for(NumericRealDomain domain: pieces.keySet()) {
+				fragmentFunction.addPiece(domain, pieces.get(domain));
+				fragmentFunction.simplify();
+			}
+		}
+		
+		pieces = fragmentFunction.getPieces();
+		if(pieces.size() == 1) {
+			Object[] values = pieces.values().toArray();
+			LinearPieceFunction piece = (LinearPieceFunction) values[0];
+			if(piece != null) {
+				if((piece.getSlope() == 0) && (piece.getCutOffY() == 1)) {
 					return true;
 				}
 			}
 		}
-
+		
 		return false;
 	}
-
-	/**
-	 * Comprueba si la cardinalidad es impar.
-	 * 
-	 * @return True si la cardinalidad es impar.
-	 *         <p>
-	 *         False si la cardinalidad es par.
-	 */
+	
 	public boolean isOdd() {
-		return (cardinality() % 2 != 0);
+		return (_labelSet.getCardinality() % 2 != 0);
+		
 	}
-
-	/**
-	 * Comprueba si un FuzzySet está conformado por etiquetas triangulares.
-	 * 
-	 * @return True si el FuzzySet está conformado por etiquetas triangulares.
-	 *         <p>
-	 *         False si el FuzzySet no está conformado por etiquetas
-	 *         triangulares.
-	 */
+	
 	public boolean isTriangular() {
-
-		if (cardinality() == 0) {
+		
+		if(_labelSet.getCardinality() == 0) {
 			return false;
 		}
-
+		
 		IMembershipFunction semantic;
-		for (Label label : _labels) {
+		for(LabelLinguisticDomain label: _labelSet.getLabels()) {
 			semantic = label.getSemantic();
-
-			if (semantic instanceof TrapezoidalMembershipFunction) {
-				if (!((TrapezoidalMembershipFunction) semantic).isTriangular()) {
+			if(semantic instanceof TrapezoidalFunction) {
+				if(!((TrapezoidalFunction) semantic).isTriangular()) {
 					return false;
 				}
-
 			} else {
 				return false;
 			}
 		}
-
+		
 		return true;
 	}
-
-	/**
-	 * Comprueba si un FuzzySet es un TOR (Triangular Odd Ruspini).
-	 * 
-	 * @return True si el FuzzySet es un TOR.
-	 *         <p>
-	 *         False si sel FuzzySet no es un TOR.
-	 */
+	
 	public boolean isTOR() {
-
-		if (isFuzzyPartition()) {
-			if (isOdd()) {
+		if(isFuzzy()) {
+			if(isOdd()) {
 				return isTriangular();
 			}
 		}
-
+		
 		return false;
 	}
-
-	/**
-	 * Comprueba si el FuzzySet es simétrico.
-	 * 
-	 * @return True si el FuzzySet es simétrico.
-	 *         <p>
-	 *         False si el FuzzySet no es simétrico.
-	 */
+	
 	public boolean isSymmetrical() {
-
-		if (cardinality() == 0) {
-			return true;
+	
+		if(_labelSet.getCardinality() == 0) {
+			return false;
 		}
+		
+		double midPoint = midpoint();
 
-		Label label1;
-		Label label2;
-		double center;
-		int centralPos = cardinality() / 2;
+		if(midPoint != -1){
+			LabelLinguisticDomain label1, label2;
+			int centralPos = _labelSet.getCardinality() / 2;
 
-		// Controlamos etiqueta central
-		if (isOdd()) {
-			label1 = _labels.get(centralPos);
-			IMembershipFunction semantic = label1.getSemantic();
-			if (!semantic.isSymmetrical()) {
-				return false;
-			} else {
-				center = semantic.resumeValue();
+			for(int i = 0; i < centralPos; ++i) {
+				label1 = _labelSet.getLabels().get(i);
+				label2 = _labelSet.getLabels().get((_labelSet.getCardinality() - 1) - i);
+				if(!(label1.getSemantic().isSymmetrical(label2.getSemantic(), midPoint))) {
+					return false;
+				}
 			}
-
+			return true;
 		} else {
-
-			// Calculamos el centro
-			label1 = _labels.get(centralPos - 1);
-			label2 = _labels.get(centralPos);
-
-			center = (label2.getSemantic().resumeValue() + label1.getSemantic()
-					.resumeValue()) / 2d;
+			return false;
 		}
-
-		// Vemos si las etiquetas son simétricas
-		for (int i = 0; i < centralPos; i++) {
-			label1 = _labels.get(i);
-			label2 = _labels.get((cardinality() - 1) - i);
-			if (!(label1.getSemantic().isSymmetrical(label2.getSemantic(),
-					center))) {
-				return false;
-			}
-		}
-
-		return true;
 	}
-
-	/**
-	 * Comprueba si el FuzzySet es uniforme.
-	 * 
-	 * @return True si el FuzzySet es uniforme.
-	 *         <p>
-	 *         False si el FuzzySet no es uniforme.
-	 */
-	public boolean isUniform() {
-
-		int cardinality = cardinality();
+	
+	@Override
+	public double midpoint() {
+		LabelLinguisticDomain label1, label2;
+		int centralPos = _labelSet.getCardinality() / 2;
+		double midPoint;
 		
-		if (cardinality <= 1) {
+		if(isOdd()) {
+			label1 = _labelSet.getLabels().get(centralPos);
+			IMembershipFunction semantic = label1.getSemantic();
+			if(!semantic.isSymmetrical()) {
+				return -1;
+			} else {
+				midPoint = semantic.centroid();
+			}
+		} else {
+			label1 = _labelSet.getLabels().get(centralPos - 1);
+			label2 = _labelSet.getLabels().get(centralPos);
+			
+			midPoint = (label2.getSemantic().centroid() + label1.getSemantic().centroid()) / 2d;
+		}
+		
+		return midPoint;
+	}
+	
+	public boolean isUniform() {
+		
+		int cardinality = _labelSet.getCardinality();
+		
+		if(cardinality <= 1) {
 			return true;
 		}
-
-		// Calculamos la distancia entre el centro de las dos primeras etiquetas
-		Label label1 = _labels.get(0);
-		Label label2 = _labels.get(1);
-
-		double center1 = label1.getSemantic().getCenter().resumeValue();
-		double center2 = label2.getSemantic().getCenter().resumeValue();
 		
+		LabelLinguisticDomain label1 = _labelSet.getLabels().get(0);
+		LabelLinguisticDomain label2 = _labelSet.getLabels().get(1);
+		
+		double center1 = label1.getSemantic().getCenter().midpoint();
+		double center2 = label2.getSemantic().getCenter().midpoint();
 		double distance = center2 - center1;
 		double error = (1 / Math.pow(10, Double.toString(distance).length() - 2)) * 1.5;
 		double distanceLower = distance - error;
 		double distanceUpper = distance + error;
-
-		// Comprobamos si la distancia entre todas las etiquetas es igual
-		for (int i = 2; i < cardinality; i++) {
-			label1 = (Label) label2.clone();
-			label2 = _labels.get(i);
-			
+		
+		for(int i = 2; i < cardinality; ++i) {
+			label1 = (LabelLinguisticDomain) label2.clone();
+			label2 = _labelSet.getLabels().get(i);
 			center1 = center2;
-			center2 = label2.getSemantic().getCenter().resumeValue();
+			center2 = label2.getSemantic().getCenter().midpoint();
 			distance = center2 - center1;
-			if (!((distanceLower <= distance) && (distance <= distanceUpper))) {
+			if(!((distanceLower <= distance) && (distance <= distanceUpper))) {
 				return false;
 			}
-			
 		}
-
-		return true;
+		
+ 		return true;
 	}
-
-	/**
-	 * Comprueba si el FuzzySet es un BLTS (Basic Linguistic Term Set).
-	 * 
-	 * @return True si el FuzzySet es un BLTS.
-	 *         <p>
-	 *         False si el FuzzySet no es un BLTS.
-	 */
+	
 	public boolean isBLTS() {
-
-		if (isTOR()) {
-			if (isSymmetrical()) {
+		if(isTOR()) {
+			if(isSymmetrical()) {
 				return isUniform();
 			}
 		}
-
+		
 		return false;
 	}
 	
-	/**
-	 * Devuelve el sumario del Fuzzy Set.
-	 * 
-	 * @return Sumario del FuzzySet.
-	 */
-	public String summary() {
-		
-		StringBuilder result = new StringBuilder();
+	@Override
+	public String formatDescriptionDomain() {
+		String result = ""; //$NON-NLS-1$
 		int cardinality;
 		
-		if ((cardinality = cardinality()) != 0) {
-			result.append("(");
-			for (int i = 0; i < cardinality - 1; i++) {
-				result.append(_labels.get(i).getName() + ",");
+		if((cardinality = _labelSet.getCardinality()) != 0){
+			result += "("; //$NON-NLS-1$
+			for(int i = 0; i < cardinality - 1; ++i) {
+				result += _labelSet.getLabels().get(i).getName() + ", "; //$NON-NLS-1$
 			}
-			result.append(_labels.get(cardinality - 1).getName() + ")");
+			result += _labelSet.getLabels().get(cardinality - 1).getName() + ")"; //$NON-NLS-1$
 		}
+		
 		return result.toString();
 	}
-
-	/**
-	 * Devuelve una descripción del conjunto difuso.
-	 * 
-	 * @return Descripción del conjunto difuso.
-	 */
+	
 	@Override
 	public String toString() {
-
-		StringBuilder result = new StringBuilder();
-
-		int cardinality = cardinality();
-		if (cardinality > 0) {
-			for (int pos = 0; pos < cardinality; pos++) {
-				if (pos > 0) {
-					result.append(", ");
+		String result = ""; //$NON-NLS-1$
+		int cardinality = _labelSet.getCardinality();
+		
+		if(cardinality > 0) {
+			for(int i = 0; i < cardinality; ++i) {
+				if(i > 0) {
+					result += ", "; //$NON-NLS-1$
 				}
-				result.append("[");
-				result.append(_labels.get(pos));
-				result.append(";");
-				result.append(_measures.get(pos));
-				result.append("]");
+				result += "[" + _labelSet.getLabels().get(i) + ";" + _values.get(i) + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
 		}
-
-		return "{" + result + "}";
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object object) {
-
-		if (this == object) {
-			return true;
-		}
-
-		if (object == null) {
-			return false;
-		}
-
-		if (object.getClass() != this.getClass()) {
-			return false;
-		}
-
-		final FuzzySet other = (FuzzySet) object;
-		return new EqualsBuilder().append(_labels, other._labels)
-				.append(_measures, other._measures).isEquals();
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder(17, 31).append(_labels).append(_measures)
-				.toHashCode();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#clone()
-	 */
-	@Override
-	public Object clone() {
-
-		Object result;
-
-		result = super.clone();
-
-		List<Double> measures = new LinkedList<Double>();
-		for (Double measure : _measures) {
-			measures.add(new Double(measure));
-		}
-
-		((FuzzySet) result)._measures = measures;
-
-		return result;
+		
+		return "{" + result + "}"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 	
+	@Override
+	public int hashCode() {
+		HashCodeBuilder hcb = new HashCodeBuilder(17, 31);
+		hcb.append(super.hashCode());
+		return hcb.toHashCode();
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		
+		if(this == obj) {
+			return true;
+		}
+		
+		if(obj == null) {
+			return false;
+		}
+		
+		if(this.getClass() != obj.getClass()) {
+			return false;
+		}
+		
+		final FuzzySet other = (FuzzySet) obj;
+		
+		EqualsBuilder eb = new EqualsBuilder();
+		eb.append(_values, other._values);
+		
+		return eb.isEquals();
+	}
+	
+	@Override
+	public Object clone() {
+		Object result;
+		
+		result = super.clone();
+		
+		List<Double> values = new LinkedList<Double>();
+		for(Double value: _values) {
+			values.add(new Double(value));
+		}
+		
+		((FuzzySet) result)._values = values;
+		
+		return result;
+	}
 }

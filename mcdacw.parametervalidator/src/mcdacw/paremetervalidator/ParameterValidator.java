@@ -599,4 +599,11 @@ public class ParameterValidator {
 		}
 	}
 
+	public static boolean isSameElement(int i, int length) {
+		if(i == length) {
+			return true;
+		}
+		return false;
+	}
+
 }
