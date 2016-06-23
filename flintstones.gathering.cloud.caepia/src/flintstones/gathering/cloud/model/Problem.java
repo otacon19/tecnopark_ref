@@ -38,6 +38,17 @@ public class Problem {
 		initAssignments();
 	}
 	
+	public Problem(String id, User admin, List<String> criteria, List<String> alternatives, List<String> experts, Map<String, Domain> domains) {
+		this();
+		setId(id);
+		setAdmin(admin);
+		setCriteria(criteria);
+		setAlternatives(alternatives);
+		setExperts(experts);
+		setDomains(domains);
+		initAssignments();
+	}
+	
 	public Problem(String id, User admin, List<String> criteria, List<String> alternatives, List<String> experts, Map<String, Domain> domains, Map<Key, String> domainAssignments, Map<String, ProblemAssignment> assignments) {
 		this();
 		setId(id);

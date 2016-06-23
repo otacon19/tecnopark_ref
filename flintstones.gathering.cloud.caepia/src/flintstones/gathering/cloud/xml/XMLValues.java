@@ -1,10 +1,7 @@
 package flintstones.gathering.cloud.xml;
 
-import mcdacw.valuation.domain.fuzzyset.FuzzySet;
 import mcdacw.valuation.domain.fuzzyset.Unbalanced;
 import mcdacw.valuation.domain.fuzzyset.function.types.TrapezoidalFunction;
-import mcdacw.valuation.domain.numeric.NumericIntegerDomain;
-import mcdacw.valuation.domain.numeric.NumericRealDomain;
 import mcdacw.valuation.valuation.IntegerIntervalValuation;
 import mcdacw.valuation.valuation.IntegerValuation;
 import mcdacw.valuation.valuation.LinguisticValuation;
@@ -15,9 +12,9 @@ import mcdacw.valuation.valuation.hesitant.HesitantValuation;
 
 public class XMLValues {
 
-	public static final String NUMERIC_INTEGER_DOMAIN = NumericIntegerDomain.class.getName();
-	public static final String NUMERIC_REAL_DOMAIN = NumericRealDomain.class.getName();
-	public static final String FUZZY_SET = FuzzySet.class.getName();
+	public static final String NUMERIC_INTEGER_DOMAIN = "flintstones.domain.numeric.integer";
+	public static final String NUMERIC_REAL_DOMAIN = "flintstones.domain.numeric.real";
+	public static final String FUZZY_SET = "flintstones.domain.linguistic";
 	public static final String UNBALANCED = Unbalanced.class.getName();
 	public static final String LINGUISTIC = LinguisticValuation.class.getName();
 	public static final String TWO_TUPLE = TwoTuple.class.getName();

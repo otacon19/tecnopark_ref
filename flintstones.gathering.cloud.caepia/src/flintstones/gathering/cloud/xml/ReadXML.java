@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;
@@ -18,10 +17,16 @@ import javax.xml.stream.events.XMLEvent;
 
 import org.eclipse.rap.rwt.RWT;
 
-import flintstones.gathering.cloud.model.Key;
 import flintstones.gathering.cloud.model.Problem;
 import flintstones.gathering.cloud.model.User;
 import mcdacw.valuation.domain.Domain;
+import mcdacw.valuation.domain.fuzzyset.FuzzySet;
+import mcdacw.valuation.domain.fuzzyset.function.types.TrapezoidalFunction;
+import mcdacw.valuation.domain.fuzzyset.label.LabelLinguisticDomain;
+import mcdacw.valuation.domain.fuzzyset.label.LabelSetLinguisticDomain;
+import mcdacw.valuation.domain.fuzzyset.semantic.IMembershipFunction;
+import mcdacw.valuation.domain.numeric.NumericIntegerDomain;
+import mcdacw.valuation.domain.numeric.NumericRealDomain;
 
 public class ReadXML {
 
@@ -32,13 +37,10 @@ public class ReadXML {
 
 	private XMLEventReader _eventReader;
 	private XMLEvent _event;
-	
-	private Map<String, Domain> domains;
-	private Map<Key, String> domainAssignments;
 
 	private ReadXML() {
 		User user = (User) RWT.getUISession().getAttribute("user");
-		_problem = new Problem("", user, new LinkedList<String>(), new LinkedList<String>(), new LinkedList<String>());
+		_problem = new Problem("", user, new LinkedList<String>(), new LinkedList<String>(), new LinkedList<String>(), new HashMap<String, Domain>());
 
 	}
 
@@ -62,10 +64,9 @@ public class ReadXML {
 		readExperts();
 		readAlternatives();
 		readCriteria();
+		readDomains();
 		
-		System.out.println(_problem.getExperts());
-		System.out.println(_problem.getCriteria());
-		System.out.println(_problem.getAlternatives());
+		System.out.println(_problem.getDomains());
 	}
 	
 	public void readExperts() throws XMLStreamException {
@@ -142,336 +143,172 @@ public class ReadXML {
 	
 
 	private void readDomains() throws Exception {
-
-		/*XMLEvent event;
-		boolean exit = false;
-
-		domains = new HashMap<String, Domain>();
-
-		do {
-			event = _eventReader.nextEvent();
-			if (event.isStartElement()) {
-				readDomain();
-			} else if (event.isEndElement()) {
-				exit = true;
-			}
-		} while (!exit);
-
-		_problem.setDomains(domains);*/
-
-	}
-
-	/*private void readDomain() throws Exception {
-
 		XMLEvent event;
-		StartElement startElement;
-		EndElement endElement;
-		String localPart;
-		String content;
-		boolean exit = false;
-		boolean inName = false;
-		boolean inType = false;
-		IDomain domain = null;
-		String name = null;
-		String type = null;
-
-		do {
-			event = _eventReader.nextEvent();
+		String extensionId = null, endtag = null, id = null;
+		boolean end = false;
+		
+		goToStartElement("domain-set"); //$NON-NLS-1$
+		
+		while (hasNext() && !end) {
+			event = next();
 			if (event.isStartElement()) {
-				startElement = event.asStartElement();
-				localPart = startElement.getName().getLocalPart();
-				if (XMLValues.NAME.equals(localPart)) {
-					inName = true;
-				} else if (XMLValues.TYPE.equals(localPart)) {
-					inType = true;
+				extensionId = getStartElementLocalPart();
+				id = getStartElementAttribute("id"); //$NON-NLS-1$
+				try {
+					readDomain(id, extensionId);
+				} catch (Exception e) {
+					throw new XMLStreamException();
 				}
 
 			} else if (event.isEndElement()) {
-				endElement = event.asEndElement();
-				localPart = endElement.getName().getLocalPart();
-				if (XMLValues.DOMAIN.equals(localPart)) {
-					exit = true;
-				} else if (inName) {
-					inName = false;
-				} else if (inType) {
-					inType = false;
-					if (XMLValues.NUMERIC_DOMAIN.equals(type)) {
-						domain = readNumericDomain();
-					} else if (XMLValues.HESITANT_FUZZY_SET.equals(type)) {
-						domain = readHesitantFuzzySet();
-					} else if (XMLValues.INTERVAL_NUMERIC_DOMAIN.equals(type)) {
-						domain = readIntervalNumericDomain();
-					}
-					domains.put(name, new Domain(name, type, domain));
-				}
-			} else {
-				content = event.asCharacters().getData();
-				if ((content.indexOf(XMLValues.END) == -1)
-						&& (content.indexOf(XMLValues.TAB) == -1)) {
-					if (inName) {
-						name = content;
-					} else if (inType) {
-						type = content;
-					}
+				endtag = getEndElementLocalPart();
+				if (endtag.equals("domain-set")) { //$NON-NLS-1$
+					end = true;
 				}
 			}
-		} while (!exit);
+		}
 	}
 
-	private NumericDomain readNumericDomain() throws Exception {
+	private void readDomain(String id, String extensionId) throws Exception {
+		if(extensionId.equals(XMLValues.NUMERIC_INTEGER_DOMAIN)) {
+			readNumericIntegerDomain(id);
+		} else if(extensionId.equals(XMLValues.NUMERIC_REAL_DOMAIN)) {
+			readNumericRealDomain(id);
+		} else if(extensionId.equals(XMLValues.FUZZY_SET)) {
+			readFuzzySetDomain(id);
+		}
+	}
 
-		NumericDomain result = null;
+	private void readNumericIntegerDomain(String id) {
+		boolean inRange = Boolean.parseBoolean(getStartElementAttribute("inRange")); //$NON-NLS-1$
+		int min = Integer.parseInt(getStartElementAttribute("min")); //$NON-NLS-1$
+		int max = Integer.parseInt(getStartElementAttribute("max")); //$NON-NLS-1$
+		
+		NumericIntegerDomain d = new NumericIntegerDomain();
+		d.setId(id);
+		d.setMinMax(min, max);
+		d.setInRange(inRange);
+		
+		_problem.getDomains().put(d.getId(), d);
+	}
+	
+	private void readNumericRealDomain(String id) {
+		boolean inRange = Boolean.parseBoolean(getStartElementAttribute("inRange")); //$NON-NLS-1$
+		double min = Double.parseDouble(getStartElementAttribute("min")); //$NON-NLS-1$
+		double max = Double.parseDouble(getStartElementAttribute("max")); //$NON-NLS-1$
+		
+		NumericRealDomain d = new NumericRealDomain();
+		d.setId(id);
+		d.setMinMax(min, max);
+		d.setInRange(inRange);
+		
+		_problem.getDomains().put(d.getId(), d);
+	}
 
+	private void readFuzzySetDomain(String id) throws Exception  {
 		XMLEvent event;
-		StartElement startElement;
-		EndElement endElement;
-		String localPart;
-		String content;
-		boolean exit = false;
-		boolean inMin = false;
-		boolean inMax = false;
-		boolean inValues = false;
-		boolean inRange = false;
-		Double min = null;
-		Double max = null;
-		Integer type = null;
-		Boolean range = null;
-
-		do {
-			event = _eventReader.nextEvent();
+		String v, endtag = null;
+		Double value = null;
+		boolean end = false;
+		
+		List<Double> values = new LinkedList<Double>();
+		
+		FuzzySet d = new FuzzySet();
+		LabelSetLinguisticDomain labelSet = null;
+		
+		goToStartElement("values"); //$NON-NLS-1$
+		
+		while (hasNext() && !end) {
+			event = next();
 			if (event.isStartElement()) {
-				startElement = event.asStartElement();
-				localPart = startElement.getName().getLocalPart();
-				if (XMLValues.MIN.equals(localPart)) {
-					inMin = true;
-				} else if (XMLValues.MAX.equals(localPart)) {
-					inMax = true;
-				} else if (XMLValues.VALUES.equals(localPart)) {
-					inValues = true;
-				} else if (XMLValues.RANGE.equals(localPart)) {
-					inRange = true;
+				if ("value".equals(getStartElementLocalPart())) { //$NON-NLS-1$
+					v = getStartElementAttribute("v"); //$NON-NLS-1$
+					value = new Double(v);
+					values.add(value);
+				} else {
+					labelSet = new LabelSetLinguisticDomain();
+					readLabelSet(labelSet);
 				}
 			} else if (event.isEndElement()) {
-				endElement = event.asEndElement();
-				localPart = endElement.getName().getLocalPart();
-				if (XMLValues.MIN.equals(localPart)) {
-					inMin = false;
-				} else if (XMLValues.MAX.equals(localPart)) {
-					inMax = false;
-				} else if (XMLValues.VALUES.equals(localPart)) {
-					inValues = false;
-				} else if (XMLValues.RANGE.equals(localPart)) {
-					inRange = false;
-					exit = true;
-				}
-			} else {
-				content = event.asCharacters().getData();
-				if ((content.indexOf(XMLValues.END) == -1)
-						&& (content.indexOf(XMLValues.TAB) == -1)) {
-					if (inMin) {
-						min = Double.parseDouble(content);
-					} else if (inMax) {
-						max = Double.parseDouble(content);
-					} else if (inValues) {
-						type = Integer.parseInt(content);
-					} else if (inRange) {
-						range = Boolean.parseBoolean(content);
-					}
+				endtag = getEndElementLocalPart();
+				if (endtag.equals("labelSet")) { //$NON-NLS-1$
+					d.setId(id);
+					d.setValues(values);
+					d.setLabelSet(labelSet);
+					end = true;
 				}
 			}
-		} while (!exit);
-
-		result = new NumericDomain(min, max);
-		result.setType(type);
-		result.setInRange(range);
-
-		return result;
+		}
+		_problem.getDomains().put(d.getId(), d);
 	}
-
-	private IntervalNumericDomain readIntervalNumericDomain() throws Exception {
-
-		IntervalNumericDomain result = null;
-
+	
+	private void readLabelSet(LabelSetLinguisticDomain labelSet) throws Exception {
 		XMLEvent event;
-		StartElement startElement;
-		EndElement endElement;
-		String localPart;
-		String content;
-		boolean exit = false;
-		boolean inMin = false;
-		boolean inMax = false;
-		boolean inValues = false;
-		boolean inRange = false;
-		Double min = null;
-		Double max = null;
-		Integer type = null;
-		Boolean range = null;
-
-		do {
-			event = _eventReader.nextEvent();
+		String name = null, endtag = null, localPart = null;
+		boolean end = false;
+		
+		LabelLinguisticDomain label = null;
+		
+		goToStartElement("labels"); //$NON-NLS-1$
+		while (hasNext() && !end) {
+			event = next();
 			if (event.isStartElement()) {
-				startElement = event.asStartElement();
-				localPart = startElement.getName().getLocalPart();
-				if (XMLValues.MIN.equals(localPart)) {
-					inMin = true;
-				} else if (XMLValues.MAX.equals(localPart)) {
-					inMax = true;
-				} else if (XMLValues.VALUES.equals(localPart)) {
-					inValues = true;
-				} else if (XMLValues.RANGE.equals(localPart)) {
-					inRange = true;
+				localPart = getStartElementLocalPart();
+				name = getStartElementAttribute("label"); //$NON-NLS-1$
+				try {
+					label = new LabelLinguisticDomain();
+					label.setName(name);
+					readLabel(label);
+				} catch (Exception e) {
+					throw new XMLStreamException();
 				}
 			} else if (event.isEndElement()) {
-				endElement = event.asEndElement();
-				localPart = endElement.getName().getLocalPart();
-				if (XMLValues.MIN.equals(localPart)) {
-					inMin = false;
-				} else if (XMLValues.MAX.equals(localPart)) {
-					inMax = false;
-				} else if (XMLValues.VALUES.equals(localPart)) {
-					inValues = false;
-				} else if (XMLValues.RANGE.equals(localPart)) {
-					inRange = false;
-					exit = true;
-				}
-			} else {
-				content = event.asCharacters().getData();
-				if ((content.indexOf(XMLValues.END) == -1)
-						&& (content.indexOf(XMLValues.TAB) == -1)) {
-					if (inMin) {
-						min = Double.parseDouble(content);
-					} else if (inMax) {
-						max = Double.parseDouble(content);
-					} else if (inValues) {
-						type = Integer.parseInt(content);
-					} else if (inRange) {
-						range = Boolean.parseBoolean(content);
-					}
+				endtag = getEndElementLocalPart();
+				if (endtag.equals(localPart)) {
+					labelSet.addLabel(label);
+				} else if (endtag.equals("labels")) { //$NON-NLS-1$
+					end = true;
 				}
 			}
-		} while (!exit);
-
-		result = new IntervalNumericDomain(min, max);
-		result.setType(type);
-		result.setInRange(range);
-
-		return result;
+		}
+		
 	}
 
-	private HesitantFuzzySet readHesitantFuzzySet() throws Exception {
-
-		HesitantFuzzySet result = null;
-
-		boolean exit = false;
-
-		XMLEvent event;
-		StartElement startElement;
-		EndElement endElement;
-		String localPart;
-		String content;
-		boolean inName = false;
-		boolean inSemantic = false;
-		boolean inType = false;
-		boolean inA = false;
-		boolean inB = false;
-		boolean inC = false;
-		boolean inD = false;
-		boolean inMeasure = false;
-		Label label = null;
-		String name = null;
-		String type = null;
-		Double a = null;
-		Double b = null;
-		Double c = null;
-		Double d = null;
-		Double measure = null;
-
-		List<Label> labels = new LinkedList<Label>();
-		List<Double> measures = new LinkedList<Double>();
-
-		do {
-			event = _eventReader.nextEvent();
-			if (event.isStartElement()) {
-				startElement = event.asStartElement();
-				localPart = startElement.getName().getLocalPart();
-				if (XMLValues.NAME.equals(localPart)) {
-					inName = true;
-				} else if (XMLValues.SEMANTIC.equals(localPart)) {
-					inSemantic = true;
-				} else if (XMLValues.TYPE.equals(localPart)) {
-					inType = true;
-				} else if (XMLValues.A.equals(localPart)) {
-					inA = true;
-				} else if (XMLValues.B.equals(localPart)) {
-					inB = true;
-				} else if (XMLValues.C.equals(localPart)) {
-					inC = true;
-				} else if (XMLValues.D.equals(localPart)) {
-					inD = true;
-				} else if (XMLValues.MEASURE.equals(localPart)) {
-					inMeasure = true;
-				}
-			} else if (event.isEndElement()) {
-				endElement = event.asEndElement();
-				localPart = endElement.getName().getLocalPart();
-				if (XMLValues.LABELS.equals(localPart)) {
-					exit = true;
-				} else if (XMLValues.NAME.equals(localPart)) {
-					inName = false;
-				} else if (XMLValues.SEMANTIC.equals(localPart)) {
-					inSemantic = false;
-				} else if (XMLValues.TYPE.equals(localPart)) {
-					inType = false;
-				} else if (XMLValues.A.equals(localPart)) {
-					inA = false;
-				} else if (XMLValues.B.equals(localPart)) {
-					inB = false;
-				} else if (XMLValues.C.equals(localPart)) {
-					inC = false;
-				} else if (XMLValues.D.equals(localPart)) {
-					inD = false;
-					if (inSemantic) {
-						if (XMLValues.TRAPEZOIDAL_MEMBERSHIP_FUNCTION
-								.equals(type)) {
-							label = mcdacw.valuation.domain.fuzzyset.Activator
-									.getActivator()
-									.getLabelFactory()
-									.buildTrapezoidalLabel(name,
-											new double[] { a, b, c, d });
-							labels.add(label);
-						}
-					}
-				} else if (XMLValues.MEASURE.equals(localPart)) {
-					inMeasure = false;
-					measures.add(measure);
-				}
-			} else {
-				content = event.asCharacters().getData();
-				if ((content.indexOf(XMLValues.END) == -1)
-						&& (content.indexOf(XMLValues.TAB) == -1)) {
-					if (inName) {
-						name = content;
-					} else if (inType) {
-						type = content;
-					} else if (inA) {
-						a = Double.parseDouble(content);
-					} else if (inB) {
-						b = Double.parseDouble(content);
-					} else if (inC) {
-						c = Double.parseDouble(content);
-					} else if (inD) {
-						d = Double.parseDouble(content);
-					} else if (inMeasure) {
-						measure = Double.parseDouble(content);
-					}
-				}
-			}
-		} while (!exit);
-
-		result = new HesitantFuzzySet(labels, measures);
-		return result;
+	private void readLabel(LabelLinguisticDomain label) throws Exception {
+		goToStartElement("semantic"); //$NON-NLS-1$
+		String type = getStartElementAttribute("type"); //$NON-NLS-1$
+		Class<?> function = null;
+		IMembershipFunction semantic = null;
+		
+		try {
+			function = Class.forName(type);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		try {
+			semantic = (IMembershipFunction) function.newInstance();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+		if(semantic instanceof TrapezoidalFunction) {
+			readTrapezoidalFunction(label);
+		}
 	}
 
+	private void readTrapezoidalFunction(LabelLinguisticDomain label) {
+		double a = Double.parseDouble(getStartElementAttribute("a")); //$NON-NLS-1$
+		double b = Double.parseDouble(getStartElementAttribute("b")); //$NON-NLS-1$
+		double c = Double.parseDouble(getStartElementAttribute("c")); //$NON-NLS-1$
+		double d = Double.parseDouble(getStartElementAttribute("d")); //$NON-NLS-1$
+		double limits[] = new double[]{a, b, c ,d};
+		
+		TrapezoidalFunction semantic = new TrapezoidalFunction(limits);
+		label.setSemantic(semantic);
+	}
+
+	/*
 	private void readDomainsAssignments() throws Exception {
 		XMLEvent event;
 		boolean exit = false;
