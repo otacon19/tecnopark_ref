@@ -5,7 +5,7 @@ public interface ILayoutSetConstants {
 	 * Image paths
 	 */
 	public static final String IMAGE_PATH_FANCY = "img/fancy/"; //$NON-NLS-1$
-	public static final String IMAGE_PATH = "icons/"; //$NON-NLS-1$
+	public static final String IMAGE_PATH = "img/business/"; //$NON-NLS-1$
 
 	/*
 	 * LayoutSet Ids

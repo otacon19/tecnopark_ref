@@ -10,7 +10,7 @@ public class LogoInitializer implements ILayoutSetInitializer{
 	@Override
 	public void initializeLayoutSet(LayoutSet layoutSet) {
 		String path = ILayoutSetConstants.IMAGE_PATH;
-		layoutSet.addImagePath( ILayoutSetConstants.LOGO, path + "exit.png" );
+		layoutSet.addImagePath( ILayoutSetConstants.LOGO, path + "logo.png" );
 
 		FormData fdLogo = new FormData();
 		fdLogo.right = new FormAttachment( 100, -50 );
