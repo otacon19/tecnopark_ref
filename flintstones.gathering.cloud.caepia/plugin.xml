@@ -32,6 +32,11 @@
             id="flintstones.gathering.cloud.problems.perspective">
       </perspective>
       <perspective
+            class="flintstones.gathering.cloud.view.FrameworkStructuringPerspective"
+            id="flintstones.gathering.cloud.frameworkstructuring.perspective"
+            name="Perspectiva asignación dominios">
+      </perspective>
+      <perspective
             class="flintstones.gathering.cloud.view.GatheringPerspective"
             id="flintstones.gathering.cloud.gathering.perspective"
             name="Perspectiva de gathering">
@@ -66,12 +71,23 @@
             id="flintstones.gathering.cloud.view.surveyView"
             name="Recopilación de información">
       </view>
+      <view
+            allowMultiple="true"
+            class="flintstones.gathering.cloud.view.DomainAssignmentView"
+            icon="icons/sample3.gif"
+            id="flintstones.gathering.cloud.view.domainassignments"
+            name="Asignación problemas">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
       <category
             name="Gathering"
             id="flintstones.gathering.cloud.category">
+      </category>
+      <category
+            id="flintstones.gathering.cloud.caepia.category.fe"
+            name="FrameworkStructuring">
       </category>
       <command
             name="Open view"
@@ -90,6 +106,12 @@
             description="Close view"
             id="flintstones.gathering.cloud.close"
             name="Close view">
+      </command>
+      <command
+            categoryId="flintstones.gathering.cloud.caepia.category.fe"
+            description="Show framework structuring perspepctive"
+            id="flintstones.gathering.cloud.openFrameworkStructuringPerspective"
+            name="Show framework structuring perspective">
       </command>
       <command
             categoryId="flintstones.gathering.cloud.category"

@@ -22,6 +22,7 @@ import flintstones.gathering.cloud.controller.ExportProblemAction;
 import flintstones.gathering.cloud.controller.ExportProblemActionMenu;
 import flintstones.gathering.cloud.controller.ImportProblemAction;
 import flintstones.gathering.cloud.controller.ImportProblemActionMenu;
+import flintstones.gathering.cloud.controller.OpenFrameworkStructuringPerspective;
 import flintstones.gathering.cloud.controller.OpenGatheringPerspective;
 import flintstones.gathering.cloud.controller.OpenProblemsPerspective;
 import flintstones.gathering.cloud.controller.RefreshAction;
@@ -35,6 +36,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 	private RefreshAction refreshAction;
 	private OpenProblemsPerspective openProblemsPerspective;
 	private OpenGatheringPerspective openGatheringPerspective;
+	private OpenFrameworkStructuringPerspective openFrameworkStructuringPerspective;
 	
 	private UserAccountAction userAccountAction;
 
@@ -80,6 +82,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		register(openProblemsPerspective);
 		openProblemsPerspective.setEnabled(false);
 
+		openFrameworkStructuringPerspective = new OpenFrameworkStructuringPerspective();
+		register(openFrameworkStructuringPerspective);
+		
 		openGatheringPerspective = new OpenGatheringPerspective();
 		register(openGatheringPerspective);
 
@@ -129,6 +134,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 			toolbar.add(exportProblemAction);
 			toolbar.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
 			toolbar.add(openProblemsPerspective);
+			toolbar.add(openFrameworkStructuringPerspective);
 			toolbar.add(openGatheringPerspective);
 			toolbar.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
 		}

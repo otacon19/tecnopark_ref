@@ -19,8 +19,7 @@ public class OpenProblemsPerspective extends Action {
 		setToolTipText("Mostrar problemas");
 		setId(ICommandIds.CMD_OPEN_PROBLEMS_PERSPECTIVE);
 		setActionDefinitionId(ICommandIds.CMD_OPEN_PROBLEMS_PERSPECTIVE);
-		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
-				"flintstones.gathering.cloud", "/icons/problems.png"));
+		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/problems.png"));
 		RWT.getUISession().setAttribute("open-problems-action", this);
 	}
 
@@ -28,10 +27,9 @@ public class OpenProblemsPerspective extends Action {
 		IWorkbench workbench = PlatformUI.getWorkbench();
 
 		try {
-			workbench.showPerspective(
-					"flintstones.gathering.cloud.problems.perspective",
-					workbench.getActiveWorkbenchWindow());
+			workbench.showPerspective("flintstones.gathering.cloud.problems.perspective", workbench.getActiveWorkbenchWindow());
 			this.setEnabled(false);
+			((OpenFrameworkStructuringPerspective) RWT.getUISession().getAttribute("open-frameworkstructuring-action")).setEnabled(true);
 			((OpenGatheringPerspective) RWT.getUISession().getAttribute("open-gathering-action")).setEnabled(true);
 
 		} catch (WorkbenchException e1) {

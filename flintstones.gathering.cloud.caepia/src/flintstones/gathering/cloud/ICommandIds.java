@@ -20,6 +20,7 @@ public interface ICommandIds {
 	public static final String CMD_EXPORT_PROBLEM = "flintstones.gathering.cloud.exportProblem";
 	public static final String CMD_EXPORT_PROBLEM_MENU = "flintstones.gathering.cloud.exportProblemMenu";
 	public static final String CMD_OPEN_GATHERING_PERSPECTIVE = "flintstones.gathering.cloud.openGatheringPerspective";
+	public static final String CMD_OPEN_FRAMEWORK_STRUCTURING_PERSPECTIVE = "flintstones.gathering.cloud.openFrameworkStructuringPerspective";
 	public static final String CMD_OPEN_PROBLEMS_PERSPECTIVE = "flintstones.gathering.cloud.openProblemsPerspective";
 
 }
