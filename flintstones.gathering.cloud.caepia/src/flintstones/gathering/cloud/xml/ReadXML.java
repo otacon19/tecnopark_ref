@@ -24,7 +24,6 @@ import mcdacw.valuation.domain.fuzzyset.FuzzySet;
 import mcdacw.valuation.domain.fuzzyset.function.types.TrapezoidalFunction;
 import mcdacw.valuation.domain.fuzzyset.label.LabelLinguisticDomain;
 import mcdacw.valuation.domain.fuzzyset.label.LabelSetLinguisticDomain;
-import mcdacw.valuation.domain.fuzzyset.semantic.IMembershipFunction;
 import mcdacw.valuation.domain.numeric.NumericIntegerDomain;
 import mcdacw.valuation.domain.numeric.NumericRealDomain;
 
@@ -233,12 +232,13 @@ public class ReadXML {
 				endtag = getEndElementLocalPart();
 				if (endtag.equals("labelSet")) { //$NON-NLS-1$
 					d.setId(id);
-					d.setValues(values);
 					d.setLabelSet(labelSet);
+					d.setValues(values);
 					end = true;
 				}
 			}
 		}
+		
 		_problem.getDomains().put(d.getId(), d);
 	}
 	
@@ -276,25 +276,8 @@ public class ReadXML {
 
 	private void readLabel(LabelLinguisticDomain label) throws Exception {
 		goToStartElement("semantic"); //$NON-NLS-1$
-		String type = getStartElementAttribute("type"); //$NON-NLS-1$
-		Class<?> function = null;
-		IMembershipFunction semantic = null;
-		
-		try {
-			function = Class.forName(type);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		try {
-			semantic = (IMembershipFunction) function.newInstance();
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		}
-		if(semantic instanceof TrapezoidalFunction) {
-			readTrapezoidalFunction(label);
-		}
+
+		readTrapezoidalFunction(label);
 	}
 
 	private void readTrapezoidalFunction(LabelLinguisticDomain label) {

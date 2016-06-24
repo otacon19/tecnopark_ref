@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="org.eclipse.rap.ui.launch.RAPLauncher">
+<setAttribute key="additional_plugins"/>
 <booleanAttribute key="append.args" value="true"/>
 <booleanAttribute key="askclear" value="false"/>
 <booleanAttribute key="automaticAdd" value="false"/>
@@ -7,11 +8,13 @@
 <stringAttribute key="bootstrap" value=""/>
 <stringAttribute key="checked" value="[NONE]"/>
 <booleanAttribute key="clearConfig" value="false"/>
-<booleanAttribute key="clearws" value="false"/>
+<booleanAttribute key="clearws" value="true"/>
 <stringAttribute key="configLocation" value="${workspace_loc}/.metadata/.plugins/org.eclipse.pde.core/flintstones.gathering.cloud"/>
 <booleanAttribute key="default" value="true"/>
 <booleanAttribute key="default_auto_start" value="true"/>
 <intAttribute key="default_start_level" value="4"/>
+<stringAttribute key="featureDefaultLocation" value="workspace"/>
+<stringAttribute key="featurePluginResolution" value="workspace"/>
 <booleanAttribute key="includeOptional" value="false"/>
 <booleanAttribute key="org.eclipse.debug.core.appendEnvironmentVariables" value="true"/>
 <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
@@ -32,10 +35,16 @@
 <booleanAttribute key="org.eclipse.rap.launch.useManualPort" value="false"/>
 <booleanAttribute key="org.eclipse.rap.launch.useSessionTimeout" value="false"/>
 <stringAttribute key="pde.version" value="3.3"/>
+<setAttribute key="selected_features">
+<setEntry value="org.eclipse.rap.equinox.target.feature:default"/>
+<setEntry value="org.eclipse.rap.examples.feature:default"/>
+<setEntry value="org.eclipse.rap.feature:default"/>
+<setEntry value="org.eclipse.rap.sdk.feature:default"/>
+</setAttribute>
 <booleanAttribute key="show_selected_only" value="true"/>
 <stringAttribute key="target_bundles" value="com.ibm.icu.base@default:default,javax.servlet@default:default,javax.xml@default:default,org.apache.commons.fileupload@default:default,org.apache.commons.io@default:default,org.apache.felix.gogo.command@default:default,org.apache.felix.gogo.runtime@default:default,org.apache.felix.gogo.shell@default:default,org.eclipse.core.commands@default:default,org.eclipse.core.contenttype@default:default,org.eclipse.core.databinding.beans@default:default,org.eclipse.core.databinding.observable@default:default,org.eclipse.core.databinding.property@default:default,org.eclipse.core.databinding@default:default,org.eclipse.core.expressions@default:default,org.eclipse.core.jobs@default:default,org.eclipse.core.runtime@default:true,org.eclipse.equinox.app@default:default,org.eclipse.equinox.common@2:true,org.eclipse.equinox.console@default:default,org.eclipse.equinox.http.jetty@default:default,org.eclipse.equinox.http.registry@default:default,org.eclipse.equinox.http.servlet@default:default,org.eclipse.equinox.preferences@default:default,org.eclipse.equinox.registry@default:default,org.eclipse.help@default:default,org.eclipse.jetty.continuation@default:default,org.eclipse.jetty.http@default:default,org.eclipse.jetty.io@default:default,org.eclipse.jetty.security@default:default,org.eclipse.jetty.server@default:default,org.eclipse.jetty.servlet@default:default,org.eclipse.jetty.util@default:default,org.eclipse.osgi.services@default:default,org.eclipse.osgi@-1:true,org.eclipse.rap.design.example@default:default,org.eclipse.rap.filedialog@default:default,org.eclipse.rap.fileupload@default:default,org.eclipse.rap.jface.databinding@default:default,org.eclipse.rap.jface@default:default,org.eclipse.rap.rwt.osgi@default:default,org.eclipse.rap.rwt.testfixture@default:default,org.eclipse.rap.rwt@default:default,org.eclipse.rap.ui.forms@default:default,org.eclipse.rap.ui.views@default:default,org.eclipse.rap.ui.workbench@default:default,org.eclipse.rap.ui@default:default,org.hamcrest.core@default:default,org.junit@default:default"/>
 <booleanAttribute key="tracing" value="false"/>
 <booleanAttribute key="useCustomFeatures" value="false"/>
 <booleanAttribute key="useDefaultConfigArea" value="true"/>
-<stringAttribute key="workspace_bundles" value="com.mysql.jdbc@default:default,flintstones.gathering.cloud@default:default,javax.mail@default:default,mcdacw.parametervalidator@default:default,flintstones.valuation@default:default,sinbad2.database.connector.mysql@default:default,sinbad2.database@default:default,sinbad2.mail@default:default"/>
+<stringAttribute key="workspace_bundles" value="com.mysql.jdbc@default:default,flintstones.gathering.cloud@default:default,flintstones.valuation@default:default,javax.mail@default:default,mcdacw.parametervalidator@default:default,sinbad2.database.connector.mysql@default:default,sinbad2.database@default:default,sinbad2.mail@default:default"/>
 </launchConfiguration>
