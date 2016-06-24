@@ -4,6 +4,8 @@ import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 import org.eclipse.ui.IViewLayout;
 
+import flintstones.gathering.cloud.view.frameworkstructuring.DomainAssignmentView;
+
 public class FrameworkStructuringPerspective implements IPerspectiveFactory{
 
 public static final String ID = "flintstones.gathering.cloud.frameworkstructuring.perspective";

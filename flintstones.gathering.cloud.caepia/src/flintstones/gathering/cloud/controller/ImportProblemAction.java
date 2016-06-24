@@ -31,8 +31,7 @@ public class ImportProblemAction extends Action {
 		setText("");
 		setId(ICommandIds.CMD_IMPORT_PROBLEM);
 		setActionDefinitionId(ICommandIds.CMD_IMPORT_PROBLEM);
-		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
-				"flintstones.gathering.cloud", "/icons/import.png"));
+		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/import.png"));
 	}
 
 	public void run() {
@@ -44,8 +43,7 @@ public class ImportProblemAction extends Action {
 		if (fileNames.length == 1) {
 			String file = fileNames[0];
 			if (!file.endsWith("flintstones")) {
-				MessageDialog.openError(window.getShell(), "Archivo inválido",
-						"Archivo inválido");
+				MessageDialog.openError(window.getShell(), "Archivo inválido", "Archivo inválido");
 			} else {
 				try {
 					ReadXML readXML = new ReadXML(file);
@@ -57,8 +55,7 @@ public class ImportProblemAction extends Action {
 						pv.refreshModel();
 					}
 				} catch (Exception e) {
-					MessageDialog.openError(window.getShell(), "Archivo inválido",
-							"Archivo inválido");
+					MessageDialog.openError(window.getShell(), "Archivo inválido", "Archivo inválido");
 				}
 			}
 		}

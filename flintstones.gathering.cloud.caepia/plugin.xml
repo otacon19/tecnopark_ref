@@ -73,10 +73,10 @@
       </view>
       <view
             allowMultiple="true"
-            class="flintstones.gathering.cloud.view.DomainAssignmentView"
+            class="flintstones.gathering.cloud.view.frameworkstructuring.DomainAssignmentView"
             icon="icons/sample3.gif"
             id="flintstones.gathering.cloud.view.domainassignments"
-            name="Asignación problemas">
+            name="Asignación dominios">
       </view>
    </extension>
    <extension

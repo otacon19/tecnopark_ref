@@ -89,8 +89,7 @@ public class LoginDialog extends TitleAreaDialog {
 		mailLabel.setText("mail");
 
 		_mailText = new Text(container, SWT.BORDER);
-		_mailText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,
-				1, 1));
+		_mailText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		Label passLabel = new Label(container, SWT.NONE);
 		passLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,

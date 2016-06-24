@@ -31,16 +31,15 @@ public class ReadXML {
 
 	private String _file;
 	private XMLInputFactory _inputFactory;
-	
-	private Problem _problem;
 
 	private XMLEventReader _eventReader;
 	private XMLEvent _event;
+	
+	private Problem _problem;
 
-	private ReadXML() {
+	private ReadXML() throws Exception {
 		User user = (User) RWT.getUISession().getAttribute("user");
 		_problem = new Problem("", user, new LinkedList<String>(), new LinkedList<String>(), new LinkedList<String>(), new HashMap<String, Domain>());
-
 	}
 
 	public ReadXML(String file) throws Exception {
@@ -288,119 +287,6 @@ public class ReadXML {
 		TrapezoidalFunction semantic = new TrapezoidalFunction(limits);
 		label.setSemantic(semantic);
 	}
-
-	/*
-	private void readDomainsAssignments() throws Exception {
-		XMLEvent event;
-		boolean exit = false;
-
-		domainAssignments = new HashMap<Key, String>();
-
-		do {
-			event = _eventReader.nextEvent();
-			if (event.isStartElement()) {
-				readDomainAssignment();
-			} else if (event.isEndElement()) {
-				exit = true;
-			}
-		} while (!exit);
-
-		_problem.setDomainAssignments(domainAssignments);
-	}
-
-	@SuppressWarnings("unused")
-	private void readDomainAssignment() throws Exception {
-
-		XMLEvent event;
-		StartElement startElement;
-		EndElement endElement;
-		String localPart;
-		String content;
-		boolean exit = false;
-		boolean inExpert = false;
-		boolean inAlternative = false;
-		boolean inCriterion = false;
-		boolean inDomain = false;
-		boolean inBlock = false;
-		String expert = null;
-		String alternative = null;
-		String criterion = null;
-		String domain = null;
-		Boolean blockDomain = null;
-
-		do {
-			event = _eventReader.nextEvent();
-			if (event.isStartElement()) {
-				startElement = event.asStartElement();
-				localPart = startElement.getName().getLocalPart();
-				if (XMLValues.EXPERT.equals(localPart)) {
-					inExpert = true;
-				} else if (XMLValues.ALTERNATIVE.equals(localPart)) {
-					inAlternative = true;
-				} else if (XMLValues.CRITERION.equals(localPart)) {
-					inCriterion = true;
-				} else if (XMLValues.DOMAIN.equals(localPart)) {
-					inDomain = true;
-				} else if (XMLValues.BLOCK.equals(localPart)) {
-					inBlock = true;
-				}
-			} else if (event.isEndElement()) {
-				endElement = event.asEndElement();
-				localPart = endElement.getName().getLocalPart();
-				if (XMLValues.EXPERT.equals(localPart)) {
-					inExpert = false;
-				} else if (XMLValues.ALTERNATIVE.equals(localPart)) {
-					inAlternative = false;
-				} else if (XMLValues.CRITERION.equals(localPart)) {
-					inCriterion = false;
-				} else if (XMLValues.DOMAIN.equals(localPart)) {
-					inDomain = false;
-				} else if (XMLValues.BLOCK.equals(localPart)) {
-					inBlock = false;
-				} else if (XMLValues.ASSIGNMENT.equals(localPart)) {
-					exit = true;
-				}
-			} else {
-				content = event.asCharacters().getData();
-				if ((content.indexOf(XMLValues.END) == -1)
-						&& (content.indexOf(XMLValues.TAB) == -1)) {
-					if (inExpert) {
-						expert = content;
-					} else if (inAlternative) {
-						alternative = content;
-					} else if (inCriterion) {
-						criterion = content;
-					} else if (inDomain) {
-						domain = content;
-					} else if (inBlock) {
-						blockDomain = Boolean.parseBoolean(content);
-					}
-				}
-			}
-		} while (!exit);
-
-		if (alternative.toLowerCase().equals("importancia")) {
-			for (String c : _problem.getCriteria()) {
-				domainAssignments.put(new Key(alternative, c), domain);
-			}
-		} else {
-			List<String> criteria = null;
-			if (criterion.equals("null")) {
-				criteria = _problem.getCriteria();
-			} else {
-				criteria = new LinkedList<String>();
-				criteria.add(criterion);
-			}
-
-			for (String c : criteria) {
-				for (String a : _problem.getAlternatives()) {
-					if (!a.toLowerCase().equals("importancia")) {
-						domainAssignments.put(new Key(a, c), domain);
-					}
-				}
-			}
-		}
-	}*/
 	
 	public String getStartElementLocalPart() {
 		StartElement startElement = _event.asStartElement();
