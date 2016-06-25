@@ -15,6 +15,7 @@
       <plugin id="sinbad2.database"/>
       <plugin id="sinbad2.database.connector.mysql"/>
       <plugin id="sinbad2.mail"/>
+      <plugin id="org.jfree.chart.jfreechart"/>
       <plugin id="org.apache.commons.fileupload"/>
       <plugin id="org.apache.commons.io"/>
       <plugin id="org.apache.felix.gogo.command"/>

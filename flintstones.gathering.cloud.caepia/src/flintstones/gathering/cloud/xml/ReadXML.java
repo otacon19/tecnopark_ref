@@ -64,8 +64,6 @@ public class ReadXML {
 		readAlternatives();
 		readCriteria();
 		readDomains();
-		
-		System.out.println(_problem.getDomains());
 	}
 	
 	public void readExperts() throws XMLStreamException {

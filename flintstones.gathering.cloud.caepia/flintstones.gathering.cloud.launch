@@ -46,5 +46,5 @@
 <booleanAttribute key="tracing" value="false"/>
 <booleanAttribute key="useCustomFeatures" value="false"/>
 <booleanAttribute key="useDefaultConfigArea" value="true"/>
-<stringAttribute key="workspace_bundles" value="com.mysql.jdbc@default:default,flintstones.gathering.cloud@default:default,flintstones.valuation@default:default,javax.mail@default:default,mcdacw.parametervalidator@default:default,sinbad2.database.connector.mysql@default:default,sinbad2.database@default:default,sinbad2.mail@default:default"/>
+<stringAttribute key="workspace_bundles" value="com.mysql.jdbc@default:default,flintstones.gathering.cloud@default:default,flintstones.valuation@default:default,javax.mail@default:default,mcdacw.parametervalidator@default:default,sinbad2.database.connector.mysql@default:default,sinbad2.database@default:default,sinbad2.mail@default:default,org.jfree.chart.jfreechart@default:default"/>
 </launchConfiguration>
