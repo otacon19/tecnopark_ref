@@ -1,24 +1,38 @@
 package flintstones.gathering.cloud.view.frameworkstructuring;
 
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.rap.rwt.RWT;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Display;
+
+import de.kupzog.ktable.KTableCellEditor;
+import de.kupzog.ktable.KTableCellRenderer;
 import de.kupzog.ktable.KTableNoScrollModel;
+import de.kupzog.ktable.SWTX;
+import de.kupzog.ktable.renderers.FixedCellRenderer;
+import de.kupzog.ktable.renderers.TextCellRenderer;
+import flintstones.gathering.cloud.model.Problem;
+import mcdacw.valuation.domain.Domain;
 
 public class ElementAssignmentsTableContentProvider extends KTableNoScrollModel {
 
 	private ElementAssignmentTable _table;
-	private DomainIndex _domainIndex;
-	private DomainAssignmentsManager _domainAssignmentsManager;
-	private DomainAssignments _domainAssignments;
-	private ProblemElementsManager _elementsManager;
-	private ProblemElementsSet _elementSet;
-	private List<Expert> _experts;
-	private List<Alternative> _alternatives;
-	private List<Criterion> _criteria;
-	private List<Expert> _finalExperts;
-	private List<Alternative> _finalAlternatives;
-	private List<Criterion> _finalCriteria;
-	private Map<ProblemElement, String> _index;
-	private ProblemElement[][] _colHeaderMatrix;
-	private ProblemElement[][] _rowHeaderMatrix;
+	
+	private List<String> _experts;
+	private List<String> _alternatives;
+	private List<String> _criteria;
+	private List<String> _finalExperts;
+	private List<String> _finalAlternatives;
+	private List<String> _finalCriteria;
+	private Map<String, String> _index;
+	private String[][] _colHeaderMatrix;
+	private String[][] _rowHeaderMatrix;
 	private EElement _row;
 	private EElement _col;
 	private int _expertsDepth = -1;
@@ -26,158 +40,60 @@ public class ElementAssignmentsTableContentProvider extends KTableNoScrollModel 
 	private int _criteriaDepth = -1;
 	private int _fixedRows = -1;
 	private int _fixedCols = -1;
-	private IPropertyChangeListener _preferencesListener;
+	
+	private Problem _problem;
 
-	private ProblemElement _element;
+	private String _element;
 
 	private final FixedCellRenderer _fixedRenderer = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | SWT.BOLD);
 
-	private final FixedCellRenderer _fixedRenderersInTable = new FixedCellRenderer(
-			FixedCellRenderer.STYLE_FLAT | TextCellRenderer.INDICATION_FOCUS);
+	private final FixedCellRenderer _fixedRenderersInTable = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | TextCellRenderer.INDICATION_FOCUS);
 
-	public ElementAssignmentsTableContentProvider(ElementAssignmentsTable table, ProblemElement element) {
+	public ElementAssignmentsTableContentProvider(ElementAssignmentTable table, String element) {
 		super(table);
-
+		
 		_table = table;
-		_elementsManager = ProblemElementsManager.getInstance();
-		_elementSet = _elementsManager.getActiveElementSet();
-		_domainAssignmentsManager = DomainAssignmentsManager.getInstance();
-		_domainAssignments = _domainAssignmentsManager.getActiveDomainAssignments();
+		
+		_problem = (Problem) RWT.getUISession().getAttribute("problem");
 
 		_element = element;
-		_experts = _elementSet.getExperts();
-		_alternatives = _elementSet.getAlternatives();
-		_criteria = _elementSet.getCriteria();
+		_experts = _problem.getExperts();
+		_alternatives = _problem.getAlternatives();
+		_criteria = _problem.getCriteria();
 
 		computeOrder();
-		hookPreferenceListener();
 		initialize();
 
 		_fixedRenderer.setAlignment(SWTX.ALIGN_HORIZONTAL_CENTER | SWTX.ALIGN_VERTICAL_CENTER);
 		_fixedRenderersInTable.setAlignment(SWTX.ALIGN_HORIZONTAL_CENTER | SWTX.ALIGN_VERTICAL_CENTER);
 		_fixedRenderersInTable.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
-
-		_domainAssignments.registerDomainAssignmentsChangeListener(this);
 	}
 
 	private void computeOrder() {
-		if (_element instanceof Alternative) {
-			boolean expertsInRows = Activator.getDefault().getPreferenceStore()
-					.getBoolean(PreferenceConstants.P_ALTERNATIVES_TABLE_EXPERTS_IN_ROWS);
-			if (expertsInRows) {
-				_row = EElement.EXPERT;
-				_col = EElement.CRITERION;
-			} else {
-				_row = EElement.CRITERION;
-				_col = EElement.EXPERT;
-			}
-			_elementSet.registerExpertsChangesListener(this);
-			_elementSet.registerCriteriaChangesListener(this);
-		} else if (_element instanceof Criterion) {
-			boolean alternativesInRows = Activator.getDefault().getPreferenceStore()
-					.getBoolean(PreferenceConstants.P_CRITERIA_TABLE_ALTERNATIVES_IN_ROWS);
-			if (alternativesInRows) {
-				_row = EElement.ALTERNATIVE;
-				_col = EElement.EXPERT;
-			} else {
-				_row = EElement.EXPERT;
-				_col = EElement.ALTERNATIVE;
-			}
-			_elementSet.registerExpertsChangesListener(this);
-			_elementSet.registerAlternativesChangesListener(this);
+		if (_problem.isAlternative(_element)) {
+			_row = EElement.EXPERT;
+			_col = EElement.CRITERION;
+		} else if (_problem.isCriterion(_element)) {
+			_row = EElement.ALTERNATIVE;
+			_col = EElement.EXPERT;
 		} else {
-			boolean alternativesInRows = Activator.getDefault().getPreferenceStore()
-					.getBoolean(PreferenceConstants.P_EXPERTS_TABLE_ALTERNATIVES_IN_ROWS);
-			if (alternativesInRows) {
-				_row = EElement.ALTERNATIVE;
-				_col = EElement.CRITERION;
-			} else {
-				_row = EElement.CRITERION;
-				_col = EElement.ALTERNATIVE;
-			}
-			_elementSet.registerCriteriaChangesListener(this);
-			_elementSet.registerAlternativesChangesListener(this);
+			_row = EElement.ALTERNATIVE;
+			_col = EElement.CRITERION;
 		}
 	}
 
 	@Override
 	public void initialize() {
-		computeDomainIndex();
 		computeDepths();
 		computeFixedValues();
 		extractElements();
 		super.initialize();
 	}
 
-	public void dispose() {
-		_domainAssignments.unregisterDomainAssignmentsChangeListener(this);
-		_elementSet.unregisterExpertsChangeListener(this);
-		_elementSet.unregisterAlternativesChangeListener(this);
-		_elementSet.unregisterCriteriaChangeListener(this);
-		Activator.getDefault().getPreferenceStore().removePropertyChangeListener(_preferencesListener);
-	}
-
-	private void hookPreferenceListener() {
-
-		final String constant = (_element instanceof Alternative)
-				? PreferenceConstants.P_ALTERNATIVES_TABLE_EXPERTS_IN_ROWS
-				: (_element instanceof Criterion) ? PreferenceConstants.P_CRITERIA_TABLE_ALTERNATIVES_IN_ROWS
-						: PreferenceConstants.P_EXPERTS_TABLE_ALTERNATIVES_IN_ROWS;
-
-		_preferencesListener = new IPropertyChangeListener() {
-			@Override
-			public void propertyChange(PropertyChangeEvent event) {
-				if (event.getProperty().equals(constant)) {
-					EElement aux = _row;
-					_row = _col;
-					_col = aux;
-					initialize();
-					_table.redraw();
-				}
-
-			}
-		};
-		Activator.getDefault().getPreferenceStore().addPropertyChangeListener(_preferencesListener);
-	}
-
-	private void computeDomainIndex() {
-		DomainsManager domainsManager = DomainsManager.getInstance();
-		_domainIndex = new DomainIndex(domainsManager.getActiveDomainSet());
-	}
-
 	private void computeDepths() {
 		_expertsDepth = 1;
-		List<Expert> nextLevelExperts = new LinkedList<Expert>(_experts);
-
-		do {
-			List<Expert> aux = new LinkedList<Expert>(nextLevelExperts);
-			nextLevelExperts = new LinkedList<Expert>();
-			for (Expert expert : aux) {
-				if (expert.hasChildren()) {
-					nextLevelExperts.addAll(expert.getChildren());
-				}
-			}
-			if (!nextLevelExperts.isEmpty()) {
-				_expertsDepth++;
-			}
-		} while (!nextLevelExperts.isEmpty());
-
 		_alternativesDepth = 1;
-
 		_criteriaDepth = 1;
-		List<Criterion> nextLevelCriteria = new LinkedList<Criterion>(_criteria);
-		do {
-			List<Criterion> aux = new LinkedList<Criterion>(nextLevelCriteria);
-			nextLevelCriteria = new LinkedList<Criterion>();
-			for (Criterion criterion : aux) {
-				if (criterion.hasSubcriteria()) {
-					nextLevelCriteria.addAll(criterion.getSubcriteria());
-				}
-			}
-			if (!nextLevelCriteria.isEmpty()) {
-				_criteriaDepth++;
-			}
-		} while (!nextLevelCriteria.isEmpty());
 	}
 
 	private void computeFixedValues() {
@@ -200,11 +116,11 @@ public class ElementAssignmentsTableContentProvider extends KTableNoScrollModel 
 
 	}
 
-	private List<Expert> extractExperts(Expert expert, int c) {
+	private List<String> extractExperts(String expert, int c) {
 
-		List<Expert> result = new LinkedList<Expert>();
+		List<String> result = new LinkedList<String>();
 
-		String index = _index.get(expert.getParent());
+		String index = _index.get(expert);
 		if (index == null) {
 			index = "E" + c; //$NON-NLS-1$
 		} else {
@@ -212,23 +128,16 @@ public class ElementAssignmentsTableContentProvider extends KTableNoScrollModel 
 		}
 		_index.put(expert, index);
 
-		int counter = 1;
-		if (expert.hasChildren()) {
-			for (Expert e : expert.getChildren()) {
-				result.addAll(extractExperts(e, counter++));
-			}
-		} else {
-			result.add(expert);
-		}
+		result.add(expert);
 
 		return result;
 	}
 
-	private List<Criterion> extractCriteria(Criterion criterion, int c) {
+	private List<String> extractCriteria(String criterion, int c) {
 
-		List<Criterion> result = new LinkedList<Criterion>();
+		List<String> result = new LinkedList<String>();
 
-		String index = _index.get(criterion.getParent());
+		String index = _index.get(criterion);
 		if (index == null) {
 			index = "C" + c; //$NON-NLS-1$
 		} else {
@@ -236,67 +145,49 @@ public class ElementAssignmentsTableContentProvider extends KTableNoScrollModel 
 		}
 		_index.put(criterion, index);
 
-		int counter = 1;
-		if (criterion.hasSubcriteria()) {
-			for (Criterion cr : criterion.getSubcriteria()) {
-				result.addAll(extractCriteria(cr, counter++));
-			}
-		} else {
-			result.add(criterion);
-		}
+		result.add(criterion);
+		
 		return result;
 	}
 
 	private void extractElements() {
-		_index = new HashMap<ProblemElement, String>();
+		_index = new HashMap<String, String>();
 
-		_finalExperts = new LinkedList<Expert>();
+		_finalExperts = new LinkedList<String>();
 		int counter = 1;
-		for (Expert expert : _experts) {
+		for (String expert : _experts) {
 			_finalExperts.addAll(extractExperts(expert, counter++));
 		}
 
-		_finalAlternatives = new LinkedList<Alternative>();
+		_finalAlternatives = new LinkedList<String>();
 		counter = 1;
-		for (Alternative alternative : _alternatives) {
+		for (String alternative : _alternatives) {
 			_index.put(alternative, "A" + counter++); //$NON-NLS-1$
 			_finalAlternatives.add(alternative);
 		}
 
 		counter = 1;
-		_finalCriteria = new LinkedList<Criterion>();
-		for (Criterion criterion : _criteria) {
+		_finalCriteria = new LinkedList<String>();
+		for (String criterion : _criteria) {
 			_finalCriteria.addAll(extractCriteria(criterion, counter++));
 		}
 
-		Expert expert;
-		Expert eParent;
-		Alternative alternative;
-		Criterion criterion;
-		Criterion cParent;
+		String expert;
+		String alternative;
+		String criterion;
 		int col;
 		int row;
-		int elementDepth;
 
 		if (_row.equals(EElement.EXPERT)) {
-			_rowHeaderMatrix = new ProblemElement[_fixedCols][_fixedRows + _finalExperts.size()];
+			_rowHeaderMatrix = new String[_fixedCols][_fixedRows + _finalExperts.size()];
 			for (int i = 0; i < _finalExperts.size(); i++) {
 				expert = _finalExperts.get(i);
+				col = _fixedCols - 1;
 				row = _fixedRows + i;
-				elementDepth = expert.getCanonicalId().split(">").length - 1; //$NON-NLS-1$
-				col = elementDepth;
-				eParent = expert;
-				while (eParent.getParent() != null) {
-					eParent = eParent.getParent();
-					_rowHeaderMatrix[--col][row] = eParent;
-				}
-				col = elementDepth;
-				while (col < _fixedCols) {
-					_rowHeaderMatrix[col++][row] = expert;
-				}
+				_rowHeaderMatrix[col][row] = expert;
 			}
 		} else if (_row.equals(EElement.ALTERNATIVE)) {
-			_rowHeaderMatrix = new ProblemElement[_fixedCols][_fixedRows + _finalAlternatives.size()];
+			_rowHeaderMatrix = new String[_fixedCols][_fixedRows + _finalAlternatives.size()];
 			for (int i = 0; i < _finalAlternatives.size(); i++) {
 				alternative = _finalAlternatives.get(i);
 				col = _fixedCols - 1;
@@ -304,43 +195,25 @@ public class ElementAssignmentsTableContentProvider extends KTableNoScrollModel 
 				_rowHeaderMatrix[col][row] = alternative;
 			}
 		} else {
-			_rowHeaderMatrix = new ProblemElement[_fixedCols][_fixedRows + _finalCriteria.size()];
+			_rowHeaderMatrix = new String[_fixedCols][_fixedRows + _finalCriteria.size()];
 			for (int i = 0; i < _finalCriteria.size(); i++) {
 				criterion = _finalCriteria.get(i);
+				col = _fixedCols - 1;
 				row = _fixedRows + i;
-				elementDepth = criterion.getCanonicalId().split(">").length - 1; //$NON-NLS-1$
-				col = elementDepth;
-				cParent = criterion;
-				while (cParent.getParent() != null) {
-					cParent = cParent.getParent();
-					_rowHeaderMatrix[--col][row] = cParent;
-				}
-				col = elementDepth;
-				while (col < _fixedCols) {
-					_rowHeaderMatrix[col++][row] = criterion;
-				}
+				_rowHeaderMatrix[col][row] = criterion;
 			}
 		}
 
 		if (_col.equals(EElement.EXPERT)) {
-			_colHeaderMatrix = new ProblemElement[_fixedCols + _finalExperts.size()][_fixedRows];
+			_colHeaderMatrix = new String[_fixedCols + _finalExperts.size()][_fixedRows];
 			for (int i = 0; i < _finalExperts.size(); i++) {
 				expert = _finalExperts.get(i);
 				col = _fixedCols + i;
-				elementDepth = expert.getCanonicalId().split(">").length - 1; //$NON-NLS-1$
-				row = elementDepth;
-				eParent = expert;
-				while (eParent.getParent() != null) {
-					eParent = eParent.getParent();
-					_colHeaderMatrix[col][--row] = eParent;
-				}
-				row = elementDepth;
-				while (row < _fixedRows) {
-					_colHeaderMatrix[col][row++] = expert;
-				}
+				row = _fixedRows - 1;
+				_colHeaderMatrix[col][row] = expert;
 			}
 		} else if (_col.equals(EElement.ALTERNATIVE)) {
-			_colHeaderMatrix = new ProblemElement[_fixedCols + _finalAlternatives.size()][_fixedRows];
+			_colHeaderMatrix = new String[_fixedCols + _finalAlternatives.size()][_fixedRows];
 			for (int i = 0; i < _finalAlternatives.size(); i++) {
 				alternative = _finalAlternatives.get(i);
 				col = _fixedCols + i;
@@ -349,21 +222,12 @@ public class ElementAssignmentsTableContentProvider extends KTableNoScrollModel 
 			}
 
 		} else {
-			_colHeaderMatrix = new ProblemElement[_fixedCols + _finalCriteria.size()][_fixedRows];
+			_colHeaderMatrix = new String[_fixedCols + _finalCriteria.size()][_fixedRows];
 			for (int i = 0; i < _finalCriteria.size(); i++) {
 				criterion = _finalCriteria.get(i);
 				col = _fixedCols + i;
-				elementDepth = criterion.getCanonicalId().split(">").length - 1; //$NON-NLS-1$
-				row = elementDepth;
-				cParent = criterion;
-				while (cParent.getParent() != null) {
-					cParent = cParent.getParent();
-					_colHeaderMatrix[col][--row] = cParent;
-				}
-				row = elementDepth;
-				while (row < _fixedRows) {
-					_colHeaderMatrix[col][row++] = criterion;
-				}
+				row = _fixedRows - 1;
+				_colHeaderMatrix[col][row] = criterion;
 			}
 		}
 
@@ -383,17 +247,17 @@ public class ElementAssignmentsTableContentProvider extends KTableNoScrollModel 
 
 		} else {
 			Object erg = null;
-			Expert expert = null;
-			Alternative alternative = null;
-			Criterion criterion = null;
+			String expert = null;
+			String alternative = null;
+			String criterion = null;
 
 			try {
 				if (col < _fixedCols) {
-					erg = (getColumnWidth(col) > 80) ? _rowHeaderMatrix[col][row].getId()
+					erg = (getColumnWidth(col) > 80) ? _rowHeaderMatrix[col][row]
 							: _index.get(_rowHeaderMatrix[col][row]);
 
 				} else if (row < _fixedRows) {
-					erg = (getColumnWidth(col) > 80) ? _colHeaderMatrix[col][row].getId()
+					erg = (getColumnWidth(col) > 80) ? _colHeaderMatrix[col][row]
 							: _index.get(_colHeaderMatrix[col][row]);
 
 				} else {
@@ -428,11 +292,11 @@ public class ElementAssignmentsTableContentProvider extends KTableNoScrollModel 
 					}
 
 					if (expert == null) {
-						expert = (Expert) _element;
+						expert = (String) _element;
 					} else if (alternative == null) {
-						alternative = (Alternative) _element;
+						alternative = (String) _element;
 					} else {
-						criterion = (Criterion) _element;
+						criterion = (String) _element;
 					}
 
 					erg = _domainAssignments.getDomain(expert, alternative, criterion);
@@ -608,31 +472,31 @@ public class ElementAssignmentsTableContentProvider extends KTableNoScrollModel 
 		if ((col < _fixedCols) && (row < _fixedRows)) {
 			return ""; //$NON-NLS-1$
 		} else if (col < _fixedCols) {
-			return _rowHeaderMatrix[col][row].getId();
+			return _rowHeaderMatrix[col][row];
 		} else if (row < _fixedRows) {
-			return _colHeaderMatrix[col][row].getId();
+			return _colHeaderMatrix[col][row];
 		} else {
 			String value = null;
 			col = col - _fixedCols;
 			row = row - _fixedRows;
-			Expert expert = null;
-			Alternative alternative = null;
-			Criterion criterion = null;
+			String expert = null;
+			String alternative = null;
+			String criterion = null;
 			Domain domain;
 			switch (_row) {
 			case EXPERT:
 				expert = _finalExperts.get(row);
-				value = expert.getId();
+				value = expert;
 				break;
 
 			case ALTERNATIVE:
 				alternative = _finalAlternatives.get(row);
-				value = alternative.getId();
+				value = alternative;
 				break;
 
 			case CRITERION:
 				criterion = _finalCriteria.get(row);
-				value = criterion.getId();
+				value = criterion;
 				break;
 			}
 
@@ -641,26 +505,26 @@ public class ElementAssignmentsTableContentProvider extends KTableNoScrollModel 
 			switch (_col) {
 			case EXPERT:
 				expert = _finalExperts.get(col);
-				value += expert.getId();
+				value += expert;
 				break;
 
 			case ALTERNATIVE:
 				alternative = _finalAlternatives.get(col);
-				value += alternative.getId();
+				value += alternative;
 				break;
 
 			case CRITERION:
 				criterion = _finalCriteria.get(col);
-				value += criterion.getId();
+				value += criterion;
 				break;
 			}
 
-			if (_element instanceof Expert) {
-				expert = (Expert) _element;
-			} else if (_element instanceof Alternative) {
-				alternative = (Alternative) _element;
+			if (_problem.isExpert(_element)) {
+				expert = _element;
+			} else if (_problem.isAlternative(_element)) {
+				alternative = _element;
 			} else {
-				criterion = (Criterion) _element;
+				criterion = _element;
 			}
 
 			domain = _domainAssignments.getDomain(expert, alternative, criterion);

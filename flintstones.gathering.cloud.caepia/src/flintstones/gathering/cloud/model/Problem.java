@@ -141,6 +141,33 @@ public class Problem {
 		return _assignments.get(id);
 	}
 
+	public boolean isExpert(String id) {
+		for(String idE: _experts) {
+			if(idE.equals(id)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean isAlternative(String id) {
+		for(String idA: _alternatives) {
+			if(idA.equals(id)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean isCriterion(String id) {
+		for(String idC: _criteria) {
+			if(idC.equals(id)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	@Override
 	public String toString() {
 		return _id;

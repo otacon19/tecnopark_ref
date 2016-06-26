@@ -7,6 +7,7 @@ import org.eclipse.swt.widgets.Display;
 
 import de.kupzog.ktable.KTable;
 
+@SuppressWarnings("serial")
 public class ElementAssignmentTable extends KTable {
 
 	private ElementAssignmentsTableContentProvider _model;
@@ -17,7 +18,7 @@ public class ElementAssignmentTable extends KTable {
 		_model = null;
 	}
 	
-	public void setModel(ProblemElement element) {
+	public void setModel(String element) {
 		_model = new ElementAssignmentsTableContentProvider(this, element);
 		setModel(_model);
 		getParent().getParent().layout();
@@ -25,7 +26,6 @@ public class ElementAssignmentTable extends KTable {
 	
 	@Override
 	public void dispose() {
-		_model.dispose();
 		super.dispose();
 	}
 	
