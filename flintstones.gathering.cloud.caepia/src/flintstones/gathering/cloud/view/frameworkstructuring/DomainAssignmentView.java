@@ -36,7 +36,6 @@ public class DomainAssignmentView extends ViewPart {
 	private Combo _domainCombo;
 	private Combo _alternativeCombo;
 	private Combo _criterionCombo;
-	private Combo _expertCombo;
 	private Boolean _validElements;
 	private Boolean _validDomains;
 	
@@ -67,11 +66,6 @@ public class DomainAssignmentView extends ViewPart {
 		parent.setLayout(new GridLayout(9, false));
 
 		Label label = new Label(parent, SWT.NONE);
-		label.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		label.setText("Expert");
-		_expertCombo = new Combo(parent, SWT.NONE);
-		_expertCombo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-
 		label = new Label(parent, SWT.NONE);
 		label.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		label.setText("Criterion");
@@ -195,17 +189,14 @@ public class DomainAssignmentView extends ViewPart {
 		}
 
 		if (enabled) {
-			_expertCombo.setItems(_expertValues.toArray(new String[0]));
 			_alternativeCombo.setItems(_alternativeValues.toArray(new String[0]));
 			_criterionCombo.setItems(_criterionValues.toArray(new String[0]));
 			_domainCombo.setItems(_domainValues.toArray(new String[0]));
-			_expertCombo.select(0);
 			_alternativeCombo.select(0);
 			_criterionCombo.select(0);
 			_domainCombo.select(0);
 
 		} else {
-			_expertCombo.setItems(new String[] {});
 			_alternativeCombo.setItems(new String[] {});
 			_criterionCombo.setItems(new String[] {});
 			_domainCombo.setItems(new String[] {});
