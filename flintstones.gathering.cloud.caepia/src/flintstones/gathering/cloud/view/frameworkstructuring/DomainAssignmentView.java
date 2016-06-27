@@ -40,6 +40,8 @@ public class DomainAssignmentView extends ViewPart {
 	private Boolean _validDomains;
 	
 	private Problem _problem;
+	
+	private List<IAssignmentDomain> _listeners;
 
 	public DomainAssignmentView() {
 		
@@ -49,6 +51,8 @@ public class DomainAssignmentView extends ViewPart {
 		_expertValues = new LinkedList<String>();
 		_alternativeValues = new LinkedList<String>();
 		_criterionValues = new LinkedList<String>();
+		
+		_listeners = new LinkedList<IAssignmentDomain>();
 		
 		extractDomainValues();
 		extractExpertValues();
@@ -96,6 +100,12 @@ public class DomainAssignmentView extends ViewPart {
 					domainAssignment = new HashMap<Key, String>();
 				}
 				domainAssignment.put(key, _domainCombo.getItem(_domainCombo.getSelectionIndex()));
+				String[] assignment = new String[3];
+				assignment[0] = key.getCriterion();
+				assignment[1] = key.getAlternative();
+				assignment[2] = _domainCombo.getItem(_domainCombo.getSelectionIndex());
+				
+				notifyListeners(assignment);
 			}
 		});
 
@@ -103,7 +113,9 @@ public class DomainAssignmentView extends ViewPart {
 	}
 	
 	@Override
-	public void dispose() {}
+	public void dispose() {
+		_listeners.clear();
+	}
 
 	@Override
 	public void setFocus() {}
@@ -203,4 +215,17 @@ public class DomainAssignmentView extends ViewPart {
 		}
 	}
 	
+	public void registerListener(IAssignmentDomain listener) {
+		_listeners.add(listener);
+	}
+	
+	public void removeListener(IAssignmentDomain listener) {
+		_listeners.remove(listener);
+	}
+	
+	private void notifyListeners(String[] assignment) {
+		for(IAssignmentDomain listener: _listeners) {
+			listener.notifyAssignmentDomain(assignment);
+		}
+	}
 }

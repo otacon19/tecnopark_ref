@@ -16,16 +16,17 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
-
-public class ElementAssignmentView extends ViewPart implements ISelectionListener {
+public class ElementAssignmentView extends ViewPart implements ISelectionListener, IAssignmentDomain {
 
 	public static final String ID = "flintstones.gathering.cloud.view.elementassignments"; //$NON-NLS-1$
 	
@@ -37,7 +38,21 @@ public class ElementAssignmentView extends ViewPart implements ISelectionListene
 	private TableViewerColumn _tvcAlternative;
 	private TableViewerColumn _tvcDomain;
 	
-	public ElementAssignmentView() {}
+	private List<String[]> _domainAssignments;
+	
+	public ElementAssignmentView() {
+		_domainAssignments = new LinkedList<String[]>();
+		
+		DomainAssignmentView domainAssignmentView = null;
+		IViewReference viewReferences[] = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences();
+		for (int i = 0; i < viewReferences.length; i++) {
+			if (DomainAssignmentView.ID.equals(viewReferences[i].getId())) {
+				domainAssignmentView = (DomainAssignmentView) viewReferences[i];
+			}
+		}
+		
+		domainAssignmentView.registerListener(this);
+	}
 	
 	@SuppressWarnings("serial")
 	class ViewContentProvider implements IStructuredContentProvider {
@@ -50,7 +65,7 @@ public class ElementAssignmentView extends ViewPart implements ISelectionListene
 
 		@SuppressWarnings("unchecked")
 		public Object[] getElements(Object parent) {
-			return ((List<String>) parent).toArray(new String[0]);
+			return ((List<String[]>) parent).toArray(new String[0]);
 		}
 	}
 	
@@ -69,21 +84,21 @@ public class ElementAssignmentView extends ViewPart implements ISelectionListene
 	@SuppressWarnings("serial")
 	class CriterionLabelProvider extends ColumnLabelProvider {
 		public String getText(Object obj) {
-			return ((String) obj);
+			return ((String[]) obj)[0];	
 		}
 	}
 
 	@SuppressWarnings("serial")
 	class AlternativeLabelProvider extends ColumnLabelProvider {
 		public String getText(Object obj) {
-			return ((String) obj);
+			return ((String[]) obj)[1];
 		}
 	}
 
 	@SuppressWarnings("serial")
 	class DomainLabelProvider extends ColumnLabelProvider {
 		public String getText(Object obj) {
-			return ((String) obj);
+			return ((String[]) obj)[2];
 		}
 	}
 	
@@ -94,8 +109,7 @@ public class ElementAssignmentView extends ViewPart implements ISelectionListene
 	}
 	
 	@Override
-	public void createPartControl(Composite parent) {
-		
+	public void createPartControl(Composite parent) {	
 		_viewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		_viewer.setContentProvider(new ViewContentProvider());
 		_viewer.setLabelProvider(new ViewLabelProvider());
@@ -120,12 +134,10 @@ public class ElementAssignmentView extends ViewPart implements ISelectionListene
 		_container = parent;
 		_container.setLayout(new FillLayout());
 		
-		List<String> input = new LinkedList<String>();
-		
-		_viewer.setInput(input);
-	
+		_viewer.setInput(_domainAssignments);
 		
 		setModel();
+		packColumns();
 	}
 
 	
@@ -141,14 +153,23 @@ public class ElementAssignmentView extends ViewPart implements ISelectionListene
 	}
 	
 	private void setModel() {
-		
-
+	
 	}
-
+	
+	private void packColumns() {
+		for (TableColumn column : _viewer.getTable().getColumns()) {
+			column.pack();
+		}
+	}
 
 	@Override
 	public void setFocus() {
 		_viewer.getControl().setFocus();
 	}
-	
+
+	@Override
+	public void notifyAssignmentDomain(String[] assignment) {
+		_domainAssignments.add(assignment);
+		_viewer.refresh();
+	}
 }
