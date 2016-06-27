@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
@@ -17,12 +16,10 @@ import de.kupzog.ktable.KTableNoScrollModel;
 import de.kupzog.ktable.SWTX;
 import de.kupzog.ktable.renderers.FixedCellRenderer;
 import de.kupzog.ktable.renderers.TextCellRenderer;
+import flintstones.gathering.cloud.model.Key;
 import flintstones.gathering.cloud.model.Problem;
-import mcdacw.valuation.domain.Domain;
 
 public class ElementAssignmentsTableContentProvider extends KTableNoScrollModel {
-
-	private ElementAssignmentTable _table;
 	
 	private List<String> _experts;
 	private List<String> _alternatives;
@@ -51,8 +48,6 @@ public class ElementAssignmentsTableContentProvider extends KTableNoScrollModel 
 
 	public ElementAssignmentsTableContentProvider(ElementAssignmentTable table, String element) {
 		super(table);
-		
-		_table = table;
 		
 		_problem = (Problem) RWT.getUISession().getAttribute("problem");
 
@@ -298,11 +293,13 @@ public class ElementAssignmentsTableContentProvider extends KTableNoScrollModel 
 					} else {
 						criterion = (String) _element;
 					}
+					
+					Map<Key, String> domainAssignment = _problem.getDomainAssignments();
 
-					erg = _domainAssignments.getDomain(expert, alternative, criterion);
+					erg = domainAssignment.get(new Key(alternative, criterion));
 
 					if (erg != null) {
-						erg = (getColumnWidth(col) > 80) ? ((Domain) erg).getId() : _domainIndex.getIndex((Domain) erg);
+						//erg = (getColumnWidth(col) > 80) ? ((Domain) erg).getId() : _domainIndex.getIndex((Domain) erg);
 					} else {
 						erg = ""; //$NON-NLS-1$
 					}
@@ -482,7 +479,7 @@ public class ElementAssignmentsTableContentProvider extends KTableNoScrollModel 
 			String expert = null;
 			String alternative = null;
 			String criterion = null;
-			Domain domain;
+			String domain;
 			switch (_row) {
 			case EXPERT:
 				expert = _finalExperts.get(row);
@@ -526,12 +523,14 @@ public class ElementAssignmentsTableContentProvider extends KTableNoScrollModel 
 			} else {
 				criterion = _element;
 			}
+			
+			Map<Key, String> domainAssignment = _problem.getDomainAssignments();
 
-			domain = _domainAssignments.getDomain(expert, alternative, criterion);
+			domain = domainAssignment.get(new Key(alternative, criterion));
 			if (domain == null) {
 				return value;
 			} else {
-				return value += " - " + domain.getId(); //$NON-NLS-1$
+				return value += " - " + domain; //$NON-NLS-1$
 			}
 		}
 

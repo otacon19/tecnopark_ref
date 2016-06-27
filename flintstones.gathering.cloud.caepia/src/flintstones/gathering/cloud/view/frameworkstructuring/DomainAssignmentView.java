@@ -1,7 +1,9 @@
 package flintstones.gathering.cloud.view.frameworkstructuring;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
@@ -18,6 +20,7 @@ import org.eclipse.ui.ISizeProvider;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
+import flintstones.gathering.cloud.model.Key;
 import flintstones.gathering.cloud.model.Problem;
 
 public class DomainAssignmentView extends ViewPart {
@@ -57,6 +60,7 @@ public class DomainAssignmentView extends ViewPart {
 		_validDomains = null;
 	}
 	
+	@SuppressWarnings("serial")
 	@Override
 	public void createPartControl(Composite parent) {
 		_container = parent;
@@ -92,7 +96,12 @@ public class DomainAssignmentView extends ViewPart {
 		_applyButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-			
+				Key key = new Key(_alternativeCombo.getItem(_alternativeCombo.getSelectionIndex()), _criterionCombo.getItem(_criterionCombo.getSelectionIndex()));
+				Map<Key, String> domainAssignment = _problem.getDomainAssignments();
+				if(domainAssignment == null) {
+					domainAssignment = new HashMap<Key, String>();
+				}
+				domainAssignment.put(key, _domainCombo.getItem(_domainCombo.getSelectionIndex()));
 			}
 		});
 

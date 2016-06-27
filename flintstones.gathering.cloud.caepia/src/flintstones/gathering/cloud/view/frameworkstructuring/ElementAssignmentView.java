@@ -3,6 +3,7 @@ package flintstones.gathering.cloud.view.frameworkstructuring;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
@@ -10,11 +11,13 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
+import org.eclipse.ui.ISelectionListener;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
 
 import flintstones.gathering.cloud.model.Problem;
 
-public class ElementAssignmentView extends ViewPart {
+public class ElementAssignmentView extends ViewPart implements ISelectionListener {
 
 	public static final String ID = "flintstones.gathering.cloud.view.elementassignments"; //$NON-NLS-1$
 
@@ -28,9 +31,13 @@ public class ElementAssignmentView extends ViewPart {
 	
 	private ElementAssignmentView _instance;
 	
+	
+	public ElementAssignmentView() {}
+	
 	@Override
 	public void createPartControl(Composite parent) {
 		_instance = this;
+		
 		_partName = getPartName();
 		_container = parent;
 		_container.setLayout(new FillLayout());
@@ -57,6 +64,13 @@ public class ElementAssignmentView extends ViewPart {
 		super.dispose();
 	}
 	
+	
+	@Override
+	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+		setElementSelected((StructuredSelection) selection);
+		setModel();
+	}
+	
 	private void setModel() {
 		
 		if (_tabFolder != null) {
@@ -78,6 +92,7 @@ public class ElementAssignmentView extends ViewPart {
 				tabItem.setControl(elementAssignmentsTable);
 				elementAssignmentsTable.setModel(element);
 			}
+			
 			if (_problem.isAlternative(_selectedElement)) {
 				_instance.setPartName(_partName + " | " + "alternative"); //$NON-NLS-1$
 			} else if (_problem.isCriterion(_selectedElement)) {
