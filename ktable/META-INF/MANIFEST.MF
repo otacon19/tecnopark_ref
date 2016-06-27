@@ -8,4 +8,5 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="3.8.0"
 Export-Package: de.kupzog.ktable,
  de.kupzog.ktable.editors,
  de.kupzog.ktable.renderers
-Bundle-ClassPath: KTable.jar
+Bundle-ClassPath: KTable.jar,
+ de.kupzog.ktable_2.2.0.jar
