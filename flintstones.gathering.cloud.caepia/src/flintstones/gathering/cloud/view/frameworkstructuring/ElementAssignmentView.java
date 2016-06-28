@@ -4,7 +4,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
@@ -16,17 +15,14 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IViewSite;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
-public class ElementAssignmentView extends ViewPart implements ISelectionListener, IAssignmentDomain {
+public class ElementAssignmentView extends ViewPart implements IAssignmentDomain {
 
 	public static final String ID = "flintstones.gathering.cloud.view.elementassignments"; //$NON-NLS-1$
 	
@@ -47,7 +43,7 @@ public class ElementAssignmentView extends ViewPart implements ISelectionListene
 		IViewReference viewReferences[] = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences();
 		for (int i = 0; i < viewReferences.length; i++) {
 			if (DomainAssignmentView.ID.equals(viewReferences[i].getId())) {
-				domainAssignmentView = (DomainAssignmentView) viewReferences[i];
+				domainAssignmentView = (DomainAssignmentView) viewReferences[i].getView(false);
 			}
 		}
 		
@@ -65,7 +61,7 @@ public class ElementAssignmentView extends ViewPart implements ISelectionListene
 
 		@SuppressWarnings("unchecked")
 		public Object[] getElements(Object parent) {
-			return ((List<String[]>) parent).toArray(new String[0]);
+			return ((List<String[]>) parent).toArray(new String[0][0]);
 		}
 	}
 	
@@ -121,14 +117,17 @@ public class ElementAssignmentView extends ViewPart implements ISelectionListene
 		
 		_tvcCriterion = new TableViewerColumn(_viewer, SWT.NONE);
 		_tvcCriterion.getColumn().setText("Criterion");
+		_tvcCriterion.getColumn().setWidth(200);
 		_tvcCriterion.setLabelProvider(new CriterionLabelProvider());
 		
 		_tvcAlternative = new TableViewerColumn(_viewer, SWT.NONE);
 		_tvcAlternative.getColumn().setText("Alternative");
+		_tvcAlternative.getColumn().setWidth(200);
 		_tvcAlternative.setLabelProvider(new AlternativeLabelProvider());
 		
 		_tvcDomain = new TableViewerColumn(_viewer, SWT.NONE);
 		_tvcDomain.getColumn().setText("Domain");
+		_tvcDomain.getColumn().setWidth(200);
 		_tvcDomain.setLabelProvider(new DomainLabelProvider());
 		
 		_container = parent;
@@ -136,8 +135,6 @@ public class ElementAssignmentView extends ViewPart implements ISelectionListene
 		
 		_viewer.setInput(_domainAssignments);
 		
-		setModel();
-		packColumns();
 	}
 
 	
@@ -146,22 +143,6 @@ public class ElementAssignmentView extends ViewPart implements ISelectionListene
 		_viewer.getTable().dispose();
 	}
 	
-	
-	@Override
-	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-		setModel();
-	}
-	
-	private void setModel() {
-	
-	}
-	
-	private void packColumns() {
-		for (TableColumn column : _viewer.getTable().getColumns()) {
-			column.pack();
-		}
-	}
-
 	@Override
 	public void setFocus() {
 		_viewer.getControl().setFocus();
@@ -169,7 +150,25 @@ public class ElementAssignmentView extends ViewPart implements ISelectionListene
 
 	@Override
 	public void notifyAssignmentDomain(String[] assignment) {
-		_domainAssignments.add(assignment);
+		if(!checkAssignment(assignment)) {
+			_domainAssignments.add(assignment);
+		}
 		_viewer.refresh();
+	}
+
+	private boolean checkAssignment(String[] assignment) {
+		
+		for(String[] a: _domainAssignments) {
+			if(a[0] == assignment[0] && a[1] == assignment[1]) { 
+				if(a[2] != assignment[2]) {
+					int index = _domainAssignments.indexOf(a);
+					_domainAssignments.remove(a);
+					_domainAssignments.add(index, assignment);
+					
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 }
