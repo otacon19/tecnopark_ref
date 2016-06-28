@@ -466,7 +466,7 @@ public class FuzzySet extends Linguistic {
 				if(i > 0) {
 					result += ", "; //$NON-NLS-1$
 				}
-				result += "[" + _labelSet.getLabels().get(i) + ";" + _values.get(i) + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				result += "[" + _labelSet.getLabels().get(i).toString() + ";" + _values.get(i) + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
 		}
 		

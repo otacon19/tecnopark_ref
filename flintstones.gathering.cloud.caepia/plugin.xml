@@ -85,6 +85,13 @@
             id="flintstones.gathering.cloud.view.elementassignments"
             name="Asignación de elementos">
       </view>
+      <view
+            allowMultiple="true"
+            class="flintstones.gathering.cloud.view.frameworkstructuring.DomainIndexView"
+            icon="icons/sample3.gif"
+            id="flintstones.gathering.cloud.view.domainindex"
+            name="Índices de dominios">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.commands">

@@ -3,7 +3,6 @@ package mcdacw.valuation.domain.fuzzyset.function.types;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.text.DecimalFormat;
 
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
@@ -265,13 +264,11 @@ public class TrapezoidalFunction implements IMembershipFunction {
 	
 	@Override
 	public String toString() {
-		DecimalFormat df = new DecimalFormat("#.##"); //$NON-NLS-1$
-		df.setRoundingMode(RoundingMode.CEILING);
 		
 		if(_b == _c) {
-			return ("Trapezoidal(" + df.format(_a) + ", " + df.format(_b) + ", " + df.format(_d) + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			return ("Trapezoidal(" + _a + ", " + _b + ", " + _d + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		} else {
-			return ("Trapezoidal(" + df.format(_a) + ", " + df.format(_b) + ", " + df.format(_c) + ", " + df.format(_d) + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+			return ("Trapezoidal(" + _a + ", " + _b + ", " + _c + ", " + _d + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 		}
 	}
 	

@@ -40,7 +40,7 @@ public class LabelLinguisticDomain implements Cloneable, Comparable<LabelLinguis
 	
 	@Override
 	public String toString() {
-		return _name;
+		return _name + ";" + _semantic.toString();
 	}
 	
 	@Override

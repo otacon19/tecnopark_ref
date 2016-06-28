@@ -182,8 +182,10 @@ public class ReadXML {
 		
 		NumericIntegerDomain d = new NumericIntegerDomain();
 		d.setId(id);
+		d.setName(id);
 		d.setMinMax(min, max);
 		d.setInRange(inRange);
+		d.setType("Integer");
 		
 		_problem.getDomains().put(d.getId(), d);
 	}
@@ -195,8 +197,10 @@ public class ReadXML {
 		
 		NumericRealDomain d = new NumericRealDomain();
 		d.setId(id);
+		d.setName(id);
 		d.setMinMax(min, max);
 		d.setInRange(inRange);
+		d.setType("Real");
 		
 		_problem.getDomains().put(d.getId(), d);
 	}
@@ -229,8 +233,10 @@ public class ReadXML {
 				endtag = getEndElementLocalPart();
 				if (endtag.equals("labelSet")) { //$NON-NLS-1$
 					d.setId(id);
+					d.setName(id);
 					d.setLabelSet(labelSet);
 					d.setValues(values);
+					d.setType("Linguistic");
 					end = true;
 				}
 			}

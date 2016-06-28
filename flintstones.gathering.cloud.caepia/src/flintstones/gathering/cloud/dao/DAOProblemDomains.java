@@ -4,14 +4,20 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import sinbad2.database.Database;
 import sinbad2.database.DatabaseManager;
 import flintstones.gathering.cloud.model.Problem;
-import flintstones.gathering.cloud.xml.XMLValues;
 import mcdacw.valuation.domain.Domain;
+import mcdacw.valuation.domain.fuzzyset.FuzzySet;
+import mcdacw.valuation.domain.fuzzyset.function.types.TrapezoidalFunction;
+import mcdacw.valuation.domain.fuzzyset.label.LabelLinguisticDomain;
+import mcdacw.valuation.domain.fuzzyset.label.LabelSetLinguisticDomain;
 import mcdacw.valuation.domain.numeric.NumericIntegerDomain;
 import mcdacw.valuation.domain.numeric.NumericRealDomain;
 
@@ -92,7 +98,6 @@ public class DAOProblemDomains {
 		removeProblemDomains(problem.getId());
 	}
 	
-	//TODO
 	public Map<String, Domain> getProblemDomains(String problem) {
 		Map<String, Domain> result = new HashMap<String, Domain>();
 		
@@ -112,45 +117,86 @@ public class DAOProblemDomains {
 				type = rs.getString(TYPE);
 				value = rs.getString(DOMAIN);
 	
-				if(type.equals(XMLValues.NUMERIC_INTEGER_DOMAIN)) {
-					
+				if(type.equals("Integer")) {
+	
 					try {
 						String[] tokens = value.split(",");
 						int min = Integer.parseInt(tokens[0].substring(1));
-						int max = Integer.parseInt(tokens[1].substring(0, tokens[1].length() - 1));
+						int max = Integer.parseInt(tokens[1].substring(1, tokens[1].length() - 1));
 						domain = new NumericIntegerDomain();
+						domain.setId(id);
+						domain.setName(id);
+						domain.setType(type);
 						((NumericIntegerDomain) domain).setMinMax(min, max);
 						
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
 					
-				} else if(type.equals(XMLValues.NUMERIC_REAL_DOMAIN)) {
+				} else if(type.equals("Real")) {
 					
 					try {
 						String[] tokens = value.split(",");
 						double min = Double.parseDouble(tokens[0].substring(1));
-						double max = Double.parseDouble(tokens[1].substring(0, tokens[1].length() - 1));
+						double max = Double.parseDouble(tokens[1].substring(1, tokens[1].length() - 1));
 						domain = new NumericRealDomain();
+						domain.setId(id);
+						domain.setName(id);
+						domain.setType(type);
 						((NumericRealDomain) domain).setMinMax(min, max);
 						
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
 					
-				} else if(type.equals(XMLValues.FUZZY_SET)) {
+				} else if(type.equals("Linguistic")) {
 					
 					try {
+						value = value.replace("{", "");
+						value = value.replace("}", "");
+						value = value.replace("[", "");
+						value = value.replace(" ", "");
+						String[] tokens = value.split("]");
+	
+						List<Double> values = new LinkedList<Double>();
+						LabelSetLinguisticDomain labelSet = new LabelSetLinguisticDomain();
+						for(int i = 0; i < tokens.length; ++i) {
+							LabelLinguisticDomain label = new LabelLinguisticDomain();
+							String labelInfo = tokens[i];
+							
+							String[] info = labelInfo.split(";");
+							if(info[0].equals(",")) {
+								info = Arrays.copyOfRange(info, 1, info.length);
+							}
+							
+							label.setName(info[0]);
+							String semanticFunction = info[1];
+							String limits = semanticFunction.substring(semanticFunction.indexOf("(") + 1, semanticFunction.indexOf(")"));
+							String[] limitsNumbers = limits.split(",");
+							
+							double[] limitsV = new double[limitsNumbers.length];
+							for(int j = 0; j < limitsNumbers.length; ++j) {
+								limitsV[j] = Double.parseDouble(limitsNumbers[j]);
+							}
+	
+							TrapezoidalFunction semantic = new TrapezoidalFunction(limitsV);
+							label.setSemantic(semantic);
+							labelSet.addLabel(label);
+							values.add(Double.parseDouble(info[2]));
+						}			
 						
+						domain = new FuzzySet();
+						domain.setId(id);
+						domain.setName(id);
+						domain.setType(type);
+						((FuzzySet) domain).setLabelSet(labelSet);
+						((FuzzySet) domain).setValues(values);
 						
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
 					
-				} else if(type.equals(XMLValues.UNBALANCED)) {
-					
 				}
-				
 				result.put(id, domain);
 			}
 		} catch (Exception e) {

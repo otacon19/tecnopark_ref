@@ -5,6 +5,7 @@ import org.eclipse.ui.IPerspectiveFactory;
 import org.eclipse.ui.IViewLayout;
 
 import flintstones.gathering.cloud.view.frameworkstructuring.DomainAssignmentView;
+import flintstones.gathering.cloud.view.frameworkstructuring.DomainIndexView;
 import flintstones.gathering.cloud.view.frameworkstructuring.ElementAssignmentView;
 
 public class FrameworkStructuringPerspective implements IPerspectiveFactory{
@@ -20,10 +21,14 @@ public static final String ID = "flintstones.gathering.cloud.frameworkstructurin
 		viewLayout.setCloseable(false);
 		viewLayout.setMoveable(false);
 		
-		layout.addView(ElementAssignmentView.ID, IPageLayout.BOTTOM, 0.9f, editorArea);
+		layout.addView(ElementAssignmentView.ID, IPageLayout.RIGHT, 0.2f, editorArea);
 		IViewLayout viewLayout2 = layout.getViewLayout(ElementAssignmentView.ID);
 		viewLayout2.setCloseable(false);
 		viewLayout2.setMoveable(false);
-
+		
+		layout.addView(DomainIndexView.ID, IPageLayout.LEFT, 0.8f, editorArea);
+		IViewLayout viewLayout3 = layout.getViewLayout(DomainIndexView.ID);
+		viewLayout3.setCloseable(false);
+		viewLayout3.setMoveable(false);
 	}
 }
