@@ -12,9 +12,12 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
@@ -74,6 +77,7 @@ public class DomainIndexView extends ViewPart {
 		}
 	}
 	
+	@SuppressWarnings("serial")
 	@Override
 	public void createPartControl(Composite parent) {
 		_viewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
@@ -84,6 +88,13 @@ public class DomainIndexView extends ViewPart {
 		table.setLinesVisible(true);
 		table.setVisible(true);
 		table.setHeaderVisible(true);
+		table.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				TableItem ti = (TableItem) e.item;
+				String id = ti.getText();
+			}
+		});
 		
 		_id = new TableViewerColumn(_viewer, SWT.NONE);
 		_id.getColumn().setText("Id");
