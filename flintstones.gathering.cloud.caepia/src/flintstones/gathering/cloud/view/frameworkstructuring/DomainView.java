@@ -14,6 +14,8 @@ import flintstones.gathering.cloud.model.Problem;
 import mcdacw.valuation.domain.Domain;
 import mcdacw.valuation.domain.DomainChart;
 import mcdacw.valuation.domain.fuzzyset.jfreechart.LinguisticDomainChart;
+import mcdacw.valuation.domain.numeric.jfreechart.NumericIntegerDomainChart;
+import mcdacw.valuation.domain.numeric.jfreechart.NumericRealDomainChart;
 
 public class DomainView extends ViewPart implements ISelectedDomain {
 
@@ -51,12 +53,27 @@ public class DomainView extends ViewPart implements ISelectedDomain {
 		if(d.getType().equals("Linguistic")) {
 			_chart = new LinguisticDomainChart();
 			_chart.initialize(d, _parent.getSize().x, _parent.getSize().y, SWT.NONE);
-			Image chartImage = _chart.createImage();
 			
+			Image chartImage = _chart.createImage();
+			_parent.setBackgroundMode(SWT.INHERIT_NONE);
+			_parent.setBackgroundImage(chartImage);
+			
+		} else if(d.getType().equals("Integer")) {
+			_chart = new NumericIntegerDomainChart();
+			_chart.initialize(d, _parent.getSize().x, _parent.getSize().y, SWT.NONE);
+			
+			Image chartImage = _chart.createImage();
+			_parent.setBackgroundMode(SWT.INHERIT_NONE);
+			_parent.setBackgroundImage(chartImage);
+			
+		} else if(d.getType().equals("Real")) {
+			_chart = new NumericRealDomainChart();
+			_chart.initialize(d, _parent.getSize().x, _parent.getSize().y, SWT.NONE);
+			
+			Image chartImage = _chart.createImage();
 			_parent.setBackgroundMode(SWT.INHERIT_NONE);
 			_parent.setBackgroundImage(chartImage);
 		}
-		
 	}
 	
 	@Override
