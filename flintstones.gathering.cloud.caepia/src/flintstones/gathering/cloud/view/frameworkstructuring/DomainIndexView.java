@@ -34,6 +34,8 @@ public class DomainIndexView extends ViewPart {
 	private TableViewerColumn _id;
 	private TableViewerColumn _type;
 	
+	private List<ISelectedDomain> _listeners;
+	
 	private Problem _problem;
 	
 	@SuppressWarnings("serial")
@@ -76,10 +78,12 @@ public class DomainIndexView extends ViewPart {
 			return ((Domain) obj).getType();
 		}
 	}
-	
+
 	@SuppressWarnings("serial")
 	@Override
 	public void createPartControl(Composite parent) {
+		_listeners = new LinkedList<ISelectedDomain>();
+		
 		_viewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		_viewer.setContentProvider(new ViewContentProvider());
 		_viewer.setLabelProvider(new ViewLabelProvider());
@@ -92,7 +96,7 @@ public class DomainIndexView extends ViewPart {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				TableItem ti = (TableItem) e.item;
-				String id = ti.getText();
+				notifyListeners(ti.getText());
 			}
 		});
 		
@@ -102,7 +106,7 @@ public class DomainIndexView extends ViewPart {
 		_id.setLabelProvider(new IdLabelProvider());
 		
 		_type = new TableViewerColumn(_viewer, SWT.NONE);
-		_type.getColumn().setText("Type");
+		_type.getColumn().setText("Tipo");
 		_type.getColumn().setWidth(80);
 		_type.setLabelProvider(new TypeLabelProvider());
 		
@@ -114,6 +118,20 @@ public class DomainIndexView extends ViewPart {
 			ds.add(domains.get(id));
 		}
 		_viewer.setInput(ds);
+	}
+	
+	public void registerListener(ISelectedDomain listener) {
+		_listeners.add(listener);
+	}
+	
+	public void removeListener(ISelectedDomain listener) {
+		_listeners.remove(listener);
+	}
+	
+	private void notifyListeners(String id) {
+		for(ISelectedDomain listener: _listeners) {
+			listener.notifySelectedDomain(id);
+		}
 	}
 
 	@Override

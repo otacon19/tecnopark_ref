@@ -169,7 +169,7 @@ public class DAOProblemDomains {
 								info = Arrays.copyOfRange(info, 1, info.length);
 							}
 							
-							label.setName(info[0]);
+							label.setName(info[0].replace(",", ""));
 							String semanticFunction = info[1];
 							String limits = semanticFunction.substring(semanticFunction.indexOf("(") + 1, semanticFunction.indexOf(")"));
 							String[] limitsNumbers = limits.split(",");

@@ -5,10 +5,12 @@ Bundle-SymbolicName: flintstones.valuation
 Bundle-Version: 1.0
 Bundle-Vendor: mcdacw
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: mcdacw.parametervalidator;bundle-version="1.0.0";visibility:=reexport
+Require-Bundle: mcdacw.parametervalidator;bundle-version="1.0.0";visibility:=reexport,
+ org.jfree.chart.jfreechart;bundle-version="1.0.0"
 Export-Package: mcdacw.valuation.domain,
  mcdacw.valuation.domain.fuzzyset,
  mcdacw.valuation.domain.fuzzyset.function.types,
+ mcdacw.valuation.domain.fuzzyset.jfreechart,
  mcdacw.valuation.domain.fuzzyset.label,
  mcdacw.valuation.domain.fuzzyset.semantic,
  mcdacw.valuation.domain.numeric,
@@ -18,3 +20,5 @@ Export-Package: mcdacw.valuation.domain,
  org.apache.commons.lang.builder
 Bundle-ClassPath: lib/org.apache.commons.lang_2.6.0.v201404270220.jar,
  .
+Import-Package: org.eclipse.swt.graphics,
+ org.eclipse.swt.widgets

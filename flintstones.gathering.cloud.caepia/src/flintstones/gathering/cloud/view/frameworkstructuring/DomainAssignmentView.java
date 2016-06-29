@@ -72,24 +72,24 @@ public class DomainAssignmentView extends ViewPart {
 		Label label = new Label(parent, SWT.NONE);
 		label = new Label(parent, SWT.NONE);
 		label.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		label.setText("Criterion");
+		label.setText("Criterio");
 		_criterionCombo = new Combo(parent, SWT.NONE);
 		_criterionCombo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		label = new Label(parent, SWT.NONE);
 		label.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		label.setText("Alternative");
+		label.setText("Alternativa");
 		_alternativeCombo = new Combo(parent, SWT.NONE);
 		_alternativeCombo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		label = new Label(parent, SWT.NONE);
 		label.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		label.setText("Domain");
+		label.setText("Dominio");
 		_domainCombo = new Combo(parent, SWT.NONE);
 		_domainCombo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		_applyButton = new Button(parent, SWT.NONE);
-		_applyButton.setText("Apply");
+		_applyButton.setText("Aplicar");
 		_applyButton.setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/exit.png").createImage());
 		_applyButton.addSelectionListener(new SelectionAdapter() {
 			@Override

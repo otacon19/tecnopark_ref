@@ -92,6 +92,13 @@
             id="flintstones.gathering.cloud.view.domainindex"
             name="Índices de dominios">
       </view>
+      <view
+            allowMultiple="true"
+            class="flintstones.gathering.cloud.view.frameworkstructuring.DomainView"
+            icon="icons/sample3.gif"
+            id="flintstones.gathering.cloud.view.domainview"
+            name="Dominios">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
