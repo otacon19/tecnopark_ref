@@ -45,6 +45,7 @@
    <extension
          point="org.eclipse.ui.views">
       <view
+            allowMultiple="true"
             class="flintstones.gathering.cloud.view.ProblemsView"
             icon="icons/sample3.gif"
             id="flintstones.gathering.cloud.view.problemsView"

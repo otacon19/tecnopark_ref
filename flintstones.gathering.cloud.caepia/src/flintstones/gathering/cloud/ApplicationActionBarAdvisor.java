@@ -81,6 +81,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		openProblemsPerspective.setEnabled(false);
 
 		openFrameworkStructuringPerspective = new OpenFrameworkStructuringPerspective();
+		openFrameworkStructuringPerspective.setEnabled(false);
 		register(openFrameworkStructuringPerspective);
 		
 		openGatheringPerspective = new OpenGatheringPerspective();
@@ -133,7 +134,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 			toolbar.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
 		} else {
 			toolbar.add(openFrameworkStructuringPerspective);
-			
 			toolbar.add(openGatheringPerspective);
 		}
 		toolbar.add(userAccountAction);

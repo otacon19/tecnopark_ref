@@ -9,7 +9,7 @@ import org.eclipse.ui.IViewLayout;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 
-import flintstones.gathering.cloud.controller.OpenGatheringPerspective;
+import flintstones.gathering.cloud.controller.OpenFrameworkStructuringPerspective;
 import flintstones.gathering.cloud.model.User;
 
 /**
@@ -47,7 +47,7 @@ public class ProblemsPerspective implements IPerspectiveFactory {
 				if (perspective.getId().equals(ID)) {
 					User user = (User) RWT.getUISession().getAttribute("user");
 					if (!user.getManageProblems()) {
-						new OpenGatheringPerspective().run();
+						new OpenFrameworkStructuringPerspective().run();
 					}
 				}
 			}

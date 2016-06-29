@@ -22,19 +22,25 @@ public static final String ID = "flintstones.gathering.cloud.frameworkstructurin
 		viewLayout.setCloseable(false);
 		viewLayout.setMoveable(false);
 		
-		layout.addView(DomainIndexView.ID, IPageLayout.LEFT, 0.2f, editorArea);
+		layout.addView(ProblemsView.ID, IPageLayout.LEFT, 0.5f, editorArea);
+		IViewLayout viewLayout2 = layout.getViewLayout(ProblemsView.ID);
+		viewLayout2.setCloseable(false);
+		viewLayout2.setMoveable(false);
+		
+		layout.addView(DomainIndexView.ID, IPageLayout.BOTTOM, 0.5f, ProblemsView.ID);
 		IViewLayout viewLayout3 = layout.getViewLayout(DomainIndexView.ID);
 		viewLayout3.setCloseable(false);
 		viewLayout3.setMoveable(false);
 		
-		layout.addView(DomainView.ID, IPageLayout.BOTTOM, 0.5f, editorArea);
+		layout.addView(ElementAssignmentView.ID, IPageLayout.RIGHT, 0.2f, ProblemsView.ID);
+		IViewLayout viewLayout5 = layout.getViewLayout(ElementAssignmentView.ID);
+		viewLayout5.setCloseable(false);
+		viewLayout5.setMoveable(false);
+		
+		layout.addView(DomainView.ID, IPageLayout.RIGHT, 0.2f, DomainIndexView.ID);
 		IViewLayout viewLayout4 = layout.getViewLayout(DomainView.ID);
 		viewLayout4.setCloseable(false);
 		viewLayout4.setMoveable(false);
 		
-		layout.addView(ElementAssignmentView.ID, IPageLayout.RIGHT, 0.4f, editorArea);
-		IViewLayout viewLayout2 = layout.getViewLayout(ElementAssignmentView.ID);
-		viewLayout2.setCloseable(false);
-		viewLayout2.setMoveable(false);
 	}
 }
