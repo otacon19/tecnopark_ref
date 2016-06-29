@@ -50,7 +50,7 @@ public class DomainView extends ViewPart implements ISelectedDomain {
 	public void notifySelectedDomain(String id) {
 		Domain d = _domains.get(id);
 
-		if(d.getType().equals("Linguistic")) {
+		if(d.getType().equals("Lingüístico")) {
 			_chart = new LinguisticDomainChart();
 			_chart.initialize(d, _parent.getSize().x, _parent.getSize().y, SWT.NONE);
 			
@@ -58,7 +58,7 @@ public class DomainView extends ViewPart implements ISelectedDomain {
 			_parent.setBackgroundMode(SWT.INHERIT_NONE);
 			_parent.setBackgroundImage(chartImage);
 			
-		} else if(d.getType().equals("Integer")) {
+		} else if(d.getType().equals("Entero")) {
 			_chart = new NumericIntegerDomainChart();
 			_chart.initialize(d, _parent.getSize().x, _parent.getSize().y, SWT.NONE);
 			

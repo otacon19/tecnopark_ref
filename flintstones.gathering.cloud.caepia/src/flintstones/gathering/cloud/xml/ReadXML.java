@@ -185,7 +185,7 @@ public class ReadXML {
 		d.setName(id);
 		d.setMinMax(min, max);
 		d.setInRange(inRange);
-		d.setType("Integer");
+		d.setType("Entero");
 		
 		_problem.getDomains().put(d.getId(), d);
 	}
@@ -236,7 +236,7 @@ public class ReadXML {
 					d.setName(id);
 					d.setLabelSet(labelSet);
 					d.setValues(values);
-					d.setType("Linguistic");
+					d.setType("Lingüístico");
 					end = true;
 				}
 			}

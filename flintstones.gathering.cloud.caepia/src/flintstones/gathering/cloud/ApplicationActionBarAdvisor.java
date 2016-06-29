@@ -70,9 +70,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		logoutAction = ActionFactory.QUIT.create(window);
 		logoutAction.setToolTipText("Salir");
 		logoutAction.setText("");
-		logoutAction.setImageDescriptor(AbstractUIPlugin
-				.imageDescriptorFromPlugin("flintstones.gathering.cloud",
-						"/icons/exit.png"));
+		logoutAction.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/exit.png"));
 		register(logoutAction);
 
 		refreshAction = new RefreshAction(window);
@@ -89,8 +87,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		register(openGatheringPerspective);
 
 		aboutAction = new AboutAction(window);
-		aboutAction.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
-				"flintstones.gathering.cloud", "/icons/about.png"));
+		aboutAction.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/about.png"));
 		register(aboutAction);
 	}
 
@@ -100,11 +97,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		boolean canManageProblems = user.getManageProblems();
 		MenuManager problemMenu = null;
 		if (canManageProblems) {
-			problemMenu = new MenuManager("&Problemas",
-					IWorkbenchActionConstants.M_FILE);
+			problemMenu = new MenuManager("&Problemas", IWorkbenchActionConstants.M_FILE);
 		}
-		MenuManager helpMenu = new MenuManager("&Ayuda",
-				IWorkbenchActionConstants.M_HELP);
+		MenuManager helpMenu = new MenuManager("&Ayuda", IWorkbenchActionConstants.M_HELP);
 
 		if (canManageProblems) {
 			menuBar.add(problemMenu);
@@ -134,9 +129,12 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 			toolbar.add(exportProblemAction);
 			toolbar.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
 			toolbar.add(openProblemsPerspective);
-			toolbar.add(openFrameworkStructuringPerspective);
 			toolbar.add(openGatheringPerspective);
 			toolbar.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
+		} else {
+			toolbar.add(openFrameworkStructuringPerspective);
+			
+			toolbar.add(openGatheringPerspective);
 		}
 		toolbar.add(userAccountAction);
 		toolbar.add(logoutAction);

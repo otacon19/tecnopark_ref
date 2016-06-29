@@ -117,7 +117,7 @@ public class DAOProblemDomains {
 				type = rs.getString(TYPE);
 				value = rs.getString(DOMAIN);
 	
-				if(type.equals("Integer")) {
+				if(type.equals("Entero")) {
 	
 					try {
 						String[] tokens = value.split(",");
@@ -149,7 +149,7 @@ public class DAOProblemDomains {
 						e.printStackTrace();
 					}
 					
-				} else if(type.equals("Linguistic")) {
+				} else if(type.equals("Lingüístico")) {
 					
 					try {
 						value = value.replace("{", "");
