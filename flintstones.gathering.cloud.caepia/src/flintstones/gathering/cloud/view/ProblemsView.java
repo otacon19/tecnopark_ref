@@ -71,12 +71,12 @@ public class ProblemsView extends ViewPart {
 
 	private Object createModel() {
 		User user = (User) RWT.getUISession().getAttribute("user");
+		
 		return DAOProblem.getDAO().getProblems(user);
 	}
 
 	public void createPartControl(Composite parent) {
-		viewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL
-				| SWT.V_SCROLL | SWT.BORDER);
+		viewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		viewer.setContentProvider(new ViewContentProvider());
 		viewer.setLabelProvider(new ViewLabelProvider());
 		hookListeners();

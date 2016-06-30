@@ -81,8 +81,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		openProblemsPerspective.setEnabled(false);
 
 		openFrameworkStructuringPerspective = new OpenFrameworkStructuringPerspective();
-		openFrameworkStructuringPerspective.setEnabled(false);
 		register(openFrameworkStructuringPerspective);
+		openFrameworkStructuringPerspective.setEnabled(false);
 		
 		openGatheringPerspective = new OpenGatheringPerspective();
 		register(openGatheringPerspective);

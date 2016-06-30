@@ -11,8 +11,11 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.ISharedImages;
@@ -25,8 +28,6 @@ import org.eclipse.ui.part.ViewPart;
 public class ElementAssignmentView extends ViewPart implements IAssignmentDomain {
 
 	public static final String ID = "flintstones.gathering.cloud.view.elementassignments"; //$NON-NLS-1$
-	
-	private Composite _container;
 	
 	private TableViewer _viewer;
 	
@@ -104,8 +105,9 @@ public class ElementAssignmentView extends ViewPart implements IAssignmentDomain
 		RWT.getUISession().setAttribute(ID, this);
 	}
 	
+	@SuppressWarnings("serial")
 	@Override
-	public void createPartControl(Composite parent) {	
+	public void createPartControl(final Composite parent) {	
 		_viewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		_viewer.setContentProvider(new ViewContentProvider());
 		_viewer.setLabelProvider(new ViewLabelProvider());
@@ -117,21 +119,33 @@ public class ElementAssignmentView extends ViewPart implements IAssignmentDomain
 		
 		_tvcCriterion = new TableViewerColumn(_viewer, SWT.NONE);
 		_tvcCriterion.getColumn().setText("Criterion");
-		_tvcCriterion.getColumn().setWidth(200);
 		_tvcCriterion.setLabelProvider(new CriterionLabelProvider());
 		
 		_tvcAlternative = new TableViewerColumn(_viewer, SWT.NONE);
 		_tvcAlternative.getColumn().setText("Alternative");
-		_tvcAlternative.getColumn().setWidth(200);
 		_tvcAlternative.setLabelProvider(new AlternativeLabelProvider());
 		
 		_tvcDomain = new TableViewerColumn(_viewer, SWT.NONE);
 		_tvcDomain.getColumn().setText("Domain");
-		_tvcDomain.getColumn().setWidth(200);
 		_tvcDomain.setLabelProvider(new DomainLabelProvider());
 		
-		_container = parent;
-		_container.setLayout(new FillLayout());
+		parent.addControlListener(new ControlAdapter() {
+			public void controlResized(ControlEvent e) {
+				Rectangle area = parent.getClientArea();
+				Point oldSize = _viewer.getTable().getSize();
+				if (oldSize.x > area.width) {
+					_viewer.getTable().getColumn(0).setWidth(parent.getSize().x / 3);
+					_viewer.getTable().getColumn(1).setWidth(parent.getSize().x / 3 - 1);
+					_viewer.getTable().getColumn(2).setWidth(parent.getSize().x / 3 - 1);
+					_viewer.getTable().setSize(area.width, area.height);
+				} else {
+					_viewer.getTable().setSize(area.width, area.height);
+					_viewer.getTable().getColumn(0).setWidth(parent.getSize().x / 3);
+					_viewer.getTable().getColumn(1).setWidth(parent.getSize().x / 3 - 1);
+					_viewer.getTable().getColumn(2).setWidth(parent.getSize().x / 3 - 1);
+				}
+			}
+		});
 		
 		_viewer.setInput(_domainAssignments);
 		

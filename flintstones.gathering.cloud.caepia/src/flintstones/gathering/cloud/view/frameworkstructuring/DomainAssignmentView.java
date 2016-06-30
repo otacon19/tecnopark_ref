@@ -45,7 +45,7 @@ public class DomainAssignmentView extends ViewPart {
 
 	public DomainAssignmentView() {
 		
-		_problem = (Problem) RWT.getUISession().getAttribute("problem");
+		_problem = (Problem) RWT.getUISession().getAttribute("valuation-problem");
 		
 		_domainValues = new LinkedList<String>();
 		_expertValues = new LinkedList<String>();
@@ -54,10 +54,12 @@ public class DomainAssignmentView extends ViewPart {
 		
 		_listeners = new LinkedList<IAssignmentDomain>();
 		
-		extractDomainValues();
-		extractExpertValues();
-		extractAlternativeValues();
-		extractCriterionValues();
+		if(_problem != null) {
+			extractDomainValues();
+			extractExpertValues();
+			extractAlternativeValues();
+			extractCriterionValues();
+		}
 
 		_validElements = null;
 		_validDomains = null;

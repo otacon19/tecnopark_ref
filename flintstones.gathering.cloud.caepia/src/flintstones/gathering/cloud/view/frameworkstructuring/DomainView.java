@@ -32,7 +32,7 @@ public class DomainView extends ViewPart implements ISelectedDomain {
 	public void createPartControl(Composite parent) {
 		_parent = parent;
 		
-		_problem = (Problem) RWT.getUISession().getAttribute("problem");
+		_problem = (Problem) RWT.getUISession().getAttribute("valuation-problem");
 		_domains = _problem.getDomains();
 		
 		DomainIndexView domainIndexView = null;

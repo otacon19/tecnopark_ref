@@ -17,7 +17,11 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -47,7 +51,7 @@ public class SurveysView extends ViewPart {
 		super.init(site);
 		RWT.getUISession().setAttribute(ID, this);
 	}
-	
+
 	class TableElement {
 		private Problem problem = null;
 		private ProblemAssignment assignment = null;
@@ -65,7 +69,7 @@ public class SurveysView extends ViewPart {
 			return assignment;
 		}
 	}
-	
+
 	@SuppressWarnings("serial")
 	class ViewContentProvider implements IStructuredContentProvider {
 
@@ -96,8 +100,7 @@ public class SurveysView extends ViewPart {
 		}
 
 		public Image getImage(Object obj) {
-			return PlatformUI.getWorkbench().getSharedImages()
-					.getImage(ISharedImages.IMG_OBJ_ELEMENT);
+			return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_ELEMENT);
 		}
 	}
 
@@ -128,28 +131,48 @@ public class SurveysView extends ViewPart {
 		return model;
 	}
 
-	public void createPartControl(Composite parent) {
-		viewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL
-				| SWT.V_SCROLL | SWT.BORDER);
+	@SuppressWarnings("serial")
+	public void createPartControl(final Composite parent) {
+		viewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		viewer.setContentProvider(new ViewContentProvider());
-		
+
 		Table table = viewer.getTable();
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
 
 		TableViewerColumn tvc = new TableViewerColumn(viewer, SWT.NONE);
 		TableColumn tc = tvc.getColumn();
-		tc.setText("Identificador de problema");
-		tc.setImage(PlatformUI.getWorkbench().getSharedImages()
-				.getImage(ISharedImages.IMG_OBJ_ELEMENT));
+		tc.setText("Problema");
+		tc.setImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_ELEMENT));
 		tvc.setLabelProvider(new ProblemLabelProvider());
 
 		tvc = new TableViewerColumn(viewer, SWT.NONE);
 		tc = tvc.getColumn();
-		tc.setText("Identificador de experto");
-		tc.setImage(AbstractUIPlugin.imageDescriptorFromPlugin(
-				"flintstones.gathering.cloud", "/icons/expert_20.png").createImage());
+		tc.setText("Experto");
+		tc.setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/expert_20.png").createImage());
 		tvc.setLabelProvider(new ExpertLabelProvider());
+
+		parent.addControlListener(new ControlAdapter() {
+			public void controlResized(ControlEvent e) {
+				Rectangle area = parent.getClientArea();
+				Point preferredSize = viewer.getTable().computeSize(SWT.DEFAULT, SWT.DEFAULT);
+				int width = area.width - 2 * viewer.getTable().getBorderWidth();
+				if (preferredSize.y > area.height + viewer.getTable().getHeaderHeight()) {
+					Point vBarSize = viewer.getTable().getVerticalBar().getSize();
+					width -= vBarSize.x;
+				}
+				Point oldSize = viewer.getTable().getSize();
+				if (oldSize.x > area.width) {
+					viewer.getTable().getColumn(0).pack();
+					viewer.getTable().getColumn(1).setWidth(width - viewer.getTable().getColumn(0).getWidth());
+					viewer.getTable().setSize(area.width, area.height);
+				} else {
+					viewer.getTable().setSize(area.width, area.height);
+					viewer.getTable().getColumn(0).pack();
+					viewer.getTable().getColumn(1).setWidth(width - viewer.getTable().getColumn(0).getWidth());
+				}
+			}
+		});
 
 		hookListeners();
 		refreshModel();
@@ -160,12 +183,6 @@ public class SurveysView extends ViewPart {
 	 */
 	public void setFocus() {
 		viewer.getControl().setFocus();
-	}
-	
-	private void packColumns() {
-		for (TableColumn column : viewer.getTable().getColumns()) {
-			column.pack();
-		}
 	}
 
 	private void hookListeners() {
@@ -179,21 +196,19 @@ public class SurveysView extends ViewPart {
 
 	public void refreshModel() {
 		viewer.setInput(createModel());
-		
+
 		if (model.isEmpty()) {
 			viewer.setSelection(new StructuredSelection(), false);
 		} else {
-			viewer.setSelection(
-					new StructuredSelection(viewer.getElementAt(0)), true);
+			viewer.setSelection(new StructuredSelection(viewer.getElementAt(0)), true);
 		}
 		updateSelection();
-		
-		packColumns();
+
+		//packColumns();
 	}
 
 	private void updateSelection() {
-		IStructuredSelection selection = (IStructuredSelection) viewer
-				.getSelection();
+		IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
 		TableElement te = null;
 		if (!selection.isEmpty()) {
 			te = (TableElement) selection.getFirstElement();
@@ -209,12 +224,10 @@ public class SurveysView extends ViewPart {
 		RWT.getUISession().setAttribute("valuation-problem-assignment", assignment);
 
 		if (te != null) {
-			OpenViewAction ova = new OpenViewAction(getSite()
-					.getWorkbenchWindow(), "survey", SurveyView.ID);
+			OpenViewAction ova = new OpenViewAction(getSite().getWorkbenchWindow(), "survey", SurveyView.ID);
 			ova.run();
 		} else {
-			CloseViewAction cva = new CloseViewAction(getSite()
-					.getWorkbenchWindow(), "survey", SurveyView.ID);
+			CloseViewAction cva = new CloseViewAction(getSite().getWorkbenchWindow(), "survey", SurveyView.ID);
 			cva.run();
 		}
 	}

@@ -29,7 +29,6 @@ public class OpenProblemsPerspective extends Action {
 		try {
 			workbench.showPerspective("flintstones.gathering.cloud.problems.perspective", workbench.getActiveWorkbenchWindow());
 			this.setEnabled(false);
-			((OpenFrameworkStructuringPerspective) RWT.getUISession().getAttribute("open-frameworkstructuring-action")).setEnabled(true);
 			((OpenGatheringPerspective) RWT.getUISession().getAttribute("open-gathering-action")).setEnabled(true);
 
 		} catch (WorkbenchException e1) {

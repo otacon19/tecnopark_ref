@@ -22,11 +22,9 @@ public class OpenFrameworkStructuringPerspective extends Action {
 
 	public void run() {
 		IWorkbench workbench = PlatformUI.getWorkbench();
-
 		try {
 			workbench.showPerspective("flintstones.gathering.cloud.frameworkstructuring.perspective", workbench.getActiveWorkbenchWindow());
 			this.setEnabled(false);
-			((OpenProblemsPerspective) RWT.getUISession().getAttribute("open-problems-action")).setEnabled(true);
 			((OpenGatheringPerspective) RWT.getUISession().getAttribute("open-gathering-action")).setEnabled(true);
 
 		} catch (WorkbenchException e1) {

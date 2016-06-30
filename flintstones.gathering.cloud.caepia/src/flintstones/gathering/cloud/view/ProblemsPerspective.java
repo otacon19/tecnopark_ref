@@ -37,17 +37,19 @@ public class ProblemsPerspective implements IPerspectiveFactory {
 		PlatformUI.getWorkbench().getActiveWorkbenchWindow().addPerspectiveListener(new IPerspectiveListener() {
 			
 			@Override
-			public void perspectiveChanged(IWorkbenchPage page,
-					IPerspectiveDescriptor perspective, String changeId) {
+			public void perspectiveChanged(IWorkbenchPage page, IPerspectiveDescriptor perspective, String changeId) {
 			}
 			
 			@Override
-			public void perspectiveActivated(IWorkbenchPage page,
-					IPerspectiveDescriptor perspective) {
+			public void perspectiveActivated(IWorkbenchPage page, IPerspectiveDescriptor perspective) {
 				if (perspective.getId().equals(ID)) {
 					User user = (User) RWT.getUISession().getAttribute("user");
 					if (!user.getManageProblems()) {
-						new OpenFrameworkStructuringPerspective().run();
+						if(((OpenFrameworkStructuringPerspective) RWT.getUISession().getAttribute("open-frameworkstructuring-action") == null)) {
+							new OpenFrameworkStructuringPerspective().run();
+						} else {
+							((OpenFrameworkStructuringPerspective) RWT.getUISession().getAttribute("open-frameworkstructuring-action")).run();
+						}
 					}
 				}
 			}
