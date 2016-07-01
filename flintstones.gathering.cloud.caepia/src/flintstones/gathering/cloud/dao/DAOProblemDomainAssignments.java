@@ -82,7 +82,7 @@ public class DAOProblemDomainAssignments {
 			
 			for(Key key: assignment.keySet()) {
 				domain = assignment.get(key);
-				st.executeUpdate("insert into " + TABLE + " values ('" + problemId + "','" + key.getAlternative().replace("'", "''") + "','" + key.getCriterion().replace("'", "''") + "','" + domain + "')");
+				st.executeUpdate("replace into " + TABLE + " values ('" + problemId + "','" + key.getAlternative().replace("'", "''") + "','" + key.getCriterion().replace("'", "''") + "','" + domain + "')");
 			}
 			st.close();
 		} catch (Exception e) {
