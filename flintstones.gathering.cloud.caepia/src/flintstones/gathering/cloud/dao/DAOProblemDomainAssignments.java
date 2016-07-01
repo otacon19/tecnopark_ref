@@ -73,6 +73,23 @@ public class DAOProblemDomainAssignments {
 		}
 	}
 	
+	public void createProblemDomainAssignment(Problem problem, Map<Key, String> assignment) {
+		try {
+			Connection c = getConnection();
+			Statement st = c.createStatement();
+			String problemId = problem.getId();
+			String domain = null;
+			
+			for(Key key: assignment.keySet()) {
+				domain = assignment.get(key);
+				st.executeUpdate("insert into " + TABLE + " values ('" + problemId + "','" + key.getAlternative().replace("'", "''") + "','" + key.getCriterion().replace("'", "''") + "','" + domain + "')");
+			}
+			st.close();
+		} catch (Exception e) {
+			
+		}
+	}
+	
 	public void removeProblemDomainAssignments(String problem) {
 		try {
 			Connection c = getConnection();

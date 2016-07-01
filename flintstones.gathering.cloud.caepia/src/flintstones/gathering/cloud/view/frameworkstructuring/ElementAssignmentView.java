@@ -1,6 +1,5 @@
 package flintstones.gathering.cloud.view.frameworkstructuring;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -38,8 +37,6 @@ public class ElementAssignmentView extends ViewPart implements IAssignmentDomain
 	private List<String[]> _domainAssignments;
 	
 	public ElementAssignmentView() {
-		_domainAssignments = new LinkedList<String[]>();
-		
 		DomainAssignmentView domainAssignmentView = null;
 		IViewReference viewReferences[] = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences();
 		for (int i = 0; i < viewReferences.length; i++) {
@@ -49,6 +46,8 @@ public class ElementAssignmentView extends ViewPart implements IAssignmentDomain
 		}
 		
 		domainAssignmentView.registerListener(this);
+		
+		_domainAssignments = domainAssignmentView.getDomainAssignments();
 	}
 	
 	@SuppressWarnings("serial")
@@ -173,7 +172,7 @@ public class ElementAssignmentView extends ViewPart implements IAssignmentDomain
 	private boolean checkAssignment(String[] assignment) {
 		
 		for(String[] a: _domainAssignments) {
-			if(a[0] == assignment[0] && a[1] == assignment[1]) { 
+			if(a[0].equals(assignment[0]) && a[1].equals(assignment[1])) { 
 				if(a[2] != assignment[2]) {
 					int index = _domainAssignments.indexOf(a);
 					_domainAssignments.remove(a);

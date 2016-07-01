@@ -67,8 +67,7 @@ public class DAOProblemAssignments {
 			Connection c = getConnection();
 			Statement st = c.createStatement();
 			String id = problem.getId();
-			Map<String, ProblemAssignment> assignments = problem
-					.getAssignments();
+			Map<String, ProblemAssignment> assignments = problem.getAssignments();
 			User user = null;
 			String userId;
 			ProblemAssignment assignment = null;
@@ -79,8 +78,7 @@ public class DAOProblemAssignments {
 					user = assignment.getUser();
 					userId = user.getMail();
 					make = assignment.getMake();
-					st.executeUpdate("insert into " + TABLE + " values ('" + id
-							+ "','" + problemUserId + "','" + userId + "','"
+					st.executeUpdate("insert into " + TABLE + " values ('" + id + "','" + problemUserId + "','" + userId + "','"
 							+ Boolean.toString(make) + "')");
 				}
 				DAOValuations.getDAO().createProblemValuations(problem);

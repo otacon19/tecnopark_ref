@@ -20,6 +20,7 @@ import org.eclipse.ui.ISizeProvider;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
+import flintstones.gathering.cloud.dao.DAOProblemDomainAssignments;
 import flintstones.gathering.cloud.model.Key;
 import flintstones.gathering.cloud.model.Problem;
 
@@ -41,9 +42,12 @@ public class DomainAssignmentView extends ViewPart {
 	
 	private Problem _problem;
 	
+	private List<String[]> _domainAssignments;
+	
 	private List<IAssignmentDomain> _listeners;
 
 	public DomainAssignmentView() {
+		_domainAssignments = new LinkedList<String[]>();
 		
 		_problem = (Problem) RWT.getUISession().getAttribute("valuation-problem");
 		
@@ -59,12 +63,13 @@ public class DomainAssignmentView extends ViewPart {
 			extractExpertValues();
 			extractAlternativeValues();
 			extractCriterionValues();
+			setDomainAssignments();
 		}
 
 		_validElements = null;
 		_validDomains = null;
 	}
-	
+
 	@SuppressWarnings("serial")
 	@Override
 	public void createPartControl(Composite parent) {
@@ -102,12 +107,17 @@ public class DomainAssignmentView extends ViewPart {
 					domainAssignment = new HashMap<Key, String>();
 				}
 				domainAssignment.put(key, _domainCombo.getItem(_domainCombo.getSelectionIndex()));
+	
 				String[] assignment = new String[3];
 				assignment[0] = key.getCriterion();
 				assignment[1] = key.getAlternative();
 				assignment[2] = _domainCombo.getItem(_domainCombo.getSelectionIndex());
 				
 				notifyListeners(assignment);
+		
+				Map<Key, String> assignmentDAO = new HashMap<Key, String>();
+				assignmentDAO.put(key, _domainCombo.getItem(_domainCombo.getSelectionIndex()));
+				DAOProblemDomainAssignments.getDAO().createProblemDomainAssignment(_problem , assignmentDAO);
 			}
 		});
 
@@ -163,6 +173,25 @@ public class DomainAssignmentView extends ViewPart {
 		for(String id: _problem.getCriteria()) {
 			_criterionValues.add(id);
 		}
+	}
+	
+	private void setDomainAssignments() {
+		Map<Key, String> domainAssignments = _problem.getDomainAssignments();
+		if(domainAssignments != null) {
+			if(domainAssignments.size() > 0) {
+				for(Key key: domainAssignments.keySet()) {
+					String[] assignment = new String[3];
+					assignment[0] = key.getCriterion();
+					assignment[1] = key.getAlternative();
+					assignment[2] = domainAssignments.get(key);
+					_domainAssignments.add(assignment);
+				}
+			}
+		}
+	}
+	
+	public List<String[]> getDomainAssignments() {
+		return _domainAssignments;
 	}
 
 	private void computeState(EComboChange change) {
