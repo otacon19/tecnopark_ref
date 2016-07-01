@@ -1,5 +1,6 @@
 package flintstones.gathering.cloud.view.frameworkstructuring;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.rap.rwt.RWT;
@@ -33,7 +34,12 @@ public class DomainView extends ViewPart implements ISelectedDomain {
 		_parent = parent;
 		
 		_problem = (Problem) RWT.getUISession().getAttribute("valuation-problem");
-		_domains = _problem.getDomains();
+		
+		if(_problem != null) {
+			_domains = _problem.getDomains();
+		} else {
+			_domains = new HashMap<String, Domain>();
+		}
 		
 		DomainIndexView domainIndexView = null;
 		IViewReference viewReferences[] = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences();

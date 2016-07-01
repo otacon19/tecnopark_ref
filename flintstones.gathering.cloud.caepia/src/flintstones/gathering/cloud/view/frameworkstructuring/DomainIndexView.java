@@ -117,11 +117,15 @@ public class DomainIndexView extends ViewPart {
 		
 		_problem = (Problem) RWT.getUISession().getAttribute("valuation-problem");
 		
-		Map<String, Domain> domains = _problem.getDomains();
 		List<Domain> ds = new LinkedList<Domain>();
-		for(String id: domains.keySet()) {
-			ds.add(domains.get(id));
+		
+		if(_problem != null) {
+			Map<String, Domain> domains = _problem.getDomains();
+			for(String id: domains.keySet()) {
+				ds.add(domains.get(id));
+			}
 		}
+		
 		_viewer.setInput(ds);
 		
 		parent.addControlListener(new ControlAdapter() {
