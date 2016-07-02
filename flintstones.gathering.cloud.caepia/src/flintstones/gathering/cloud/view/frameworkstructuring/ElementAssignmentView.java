@@ -117,15 +117,15 @@ public class ElementAssignmentView extends ViewPart implements IAssignmentDomain
 		table.setHeaderVisible(true);
 		
 		_tvcCriterion = new TableViewerColumn(_viewer, SWT.NONE);
-		_tvcCriterion.getColumn().setText("Criterion");
+		_tvcCriterion.getColumn().setText("Criterio");
 		_tvcCriterion.setLabelProvider(new CriterionLabelProvider());
 		
 		_tvcAlternative = new TableViewerColumn(_viewer, SWT.NONE);
-		_tvcAlternative.getColumn().setText("Alternative");
+		_tvcAlternative.getColumn().setText("Alternativa");
 		_tvcAlternative.setLabelProvider(new AlternativeLabelProvider());
 		
 		_tvcDomain = new TableViewerColumn(_viewer, SWT.NONE);
-		_tvcDomain.getColumn().setText("Domain");
+		_tvcDomain.getColumn().setText("Dominio");
 		_tvcDomain.setLabelProvider(new DomainLabelProvider());
 		
 		parent.addControlListener(new ControlAdapter() {
