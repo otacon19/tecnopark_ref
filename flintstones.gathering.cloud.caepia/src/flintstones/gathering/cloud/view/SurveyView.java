@@ -155,7 +155,7 @@ public class SurveyView extends ViewPart {
 					if(v != null) {
 						values[2] = v.toString(); 
 					} else {
-						values[2] = "Not assigned";
+						values[2] = "No asignada";
 					}
 					input.add(values);
 				}
@@ -172,5 +172,6 @@ public class SurveyView extends ViewPart {
 	public void refresh() {
 		_problem = (Problem) RWT.getUISession().getAttribute("valuation-problem");
 		setModel();
+		_viewer.refresh();
 	}
 }

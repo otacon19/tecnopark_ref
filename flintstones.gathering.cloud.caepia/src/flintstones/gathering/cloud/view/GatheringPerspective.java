@@ -25,6 +25,11 @@ public class GatheringPerspective implements IPerspectiveFactory {
 		viewLayout = layout.getViewLayout(SurveyView.ID);
 		viewLayout.setCloseable(false);
 		viewLayout.setMoveable(false);
+		
+		layout.addView(ValuationView.ID, IPageLayout.BOTTOM, 0.6f, SurveyView.ID);
+		viewLayout = layout.getViewLayout(ValuationView.ID);
+		viewLayout.setCloseable(false);
+		viewLayout.setMoveable(false);
 	}
 	
 }
