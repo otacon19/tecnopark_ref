@@ -235,6 +235,6 @@ public class SurveyView extends ViewPart {
 		_problem.setAssignment(_problemAssignment);
 		_valuationSelected.setText(2, "Not assigned");
 		
-		DAOProblemAssignments.getDAO().createProblemAssignments(_problem);
+		DAOProblemAssignments.getDAO().setAssignment(_problem, _problemAssignment);
 	}
 }
