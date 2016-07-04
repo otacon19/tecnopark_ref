@@ -18,6 +18,7 @@ import mcdacw.valuation.valuation.LinguisticValuation;
 import mcdacw.valuation.valuation.RealIntervalValuation;
 import mcdacw.valuation.valuation.RealValuation;
 import mcdacw.valuation.valuation.Valuation;
+import mcdacw.valuation.valuation.hesitant.EUnaryRelationType;
 import mcdacw.valuation.valuation.hesitant.HesitantValuation;
 import sinbad2.database.Database;
 import sinbad2.database.DatabaseManager;
@@ -149,27 +150,65 @@ public class DAOValuations {
 				Problem problemDAO = DAOProblem.getDAO().getProblem(problem);
 				
 				if(type.equals(IntegerValuation.class.toString())) {
+					
 					valuation = new IntegerValuation((NumericIntegerDomain) problemDAO.getDomains().get(domainId), Double.parseDouble(rs.getString(VALUE)));
+				
 				} else if(type.equals(IntegerIntervalValuation.class.toString())) {
+					
 					String range = rs.getString(VALUE);
 					range = range.replace("[", "").replace("]", "").replace(" ", "");
 					String[] minMax = range.split(",");
 					valuation = new IntegerIntervalValuation((NumericIntegerDomain) problemDAO.getDomains().get(domainId), 
 							Long.parseLong(minMax[0]), Long.parseLong(minMax[1]));
+					
 				} else if(type.equals(RealValuation.class.toString())) {
+					
 					valuation = new RealValuation((NumericRealDomain) problemDAO.getDomains().get(domainId), Double.parseDouble(rs.getString(VALUE)));
+				
 				} else if(type.equals(RealIntervalValuation.class.toString())) {
+					
 					String range = rs.getString(VALUE);
 					range = range.replace("[", "").replace("]", "").replace(" ", "");
 					String[] minMax = range.split(",");
 					valuation = new RealIntervalValuation((NumericRealDomain) problemDAO.getDomains().get(domainId), 
 							Double.parseDouble(minMax[0]), Double.parseDouble(minMax[1]));
+					
 				} else if(type.equals(LinguisticValuation.class.toString())) {
+					
 					valuation = new LinguisticValuation();
 					valuation.setDomain((FuzzySet) problemDAO.getDomains().get(domainId));
 					((LinguisticValuation) valuation).setLabel(rs.getString(VALUE));
+					
 				} else if(type.equals(HesitantValuation.class.toString())) {
-					valuation = new HesitantValuation((FuzzySet) problemDAO.getDomains().get(domainId));
+					
+					String hesitant = rs.getString(VALUE);
+					FuzzySet fuzzySet =(FuzzySet) problemDAO.getDomains().get(domainId);
+					if(hesitant.contains("Between")) {
+						hesitant = hesitant.replace("Between", "");
+						String lowerTerm = hesitant.substring(0, hesitant.indexOf(" ") - 1);
+						String upperTerm = hesitant.substring(hesitant.lastIndexOf(" "), hesitant.length() - 1);
+
+						valuation = new HesitantValuation(fuzzySet);
+						((HesitantValuation) valuation).setBinaryRelation(lowerTerm, upperTerm);
+					} else {
+						valuation = new HesitantValuation((FuzzySet) problemDAO.getDomains().get(domainId));
+						valuation.setDomain(fuzzySet);
+						String unaryRelation = hesitant.substring(0, hesitant.indexOf(" ") - 1);
+						
+						EUnaryRelationType unary;
+						if(unaryRelation.equals(EUnaryRelationType.AtLeast.getRelationType())) {
+							unary = EUnaryRelationType.AtLeast;
+						} else if(unaryRelation.equals(EUnaryRelationType.AtMost)) {
+							unary = EUnaryRelationType.AtMost;
+						} else if(unaryRelation.equals(EUnaryRelationType.GreaterThan)) {
+							unary = EUnaryRelationType.GreaterThan;
+						} else {
+							unary = EUnaryRelationType.LowerThan;
+						}
+						String term = hesitant.substring(hesitant.indexOf(" ") - 1, hesitant.length() - 1);
+						((HesitantValuation) valuation).setUnaryRelation(unary, fuzzySet.getLabelSet().getLabel(term));
+					}
+					
 				}
 				result.setValuation(key, valuation);
 			}
