@@ -14,12 +14,16 @@ import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
@@ -30,6 +34,7 @@ import flintstones.gathering.cloud.model.ProblemAssignment;
 import flintstones.gathering.cloud.model.User;
 import flintstones.gathering.cloud.model.Valuation;
 import flintstones.gathering.cloud.model.Valuations;
+import mcdacw.valuation.domain.Domain;
 
 public class SurveyView extends ViewPart {
 
@@ -37,10 +42,15 @@ public class SurveyView extends ViewPart {
 
 	private TableViewer _viewer;
 	
+	private ValuationView _valuationView;
+	
 	private Problem _problem;
+	private ProblemAssignment _problemAssignment;
+	private Valuations _valuations;
 
 	public SurveyView() {
 		_problem = (Problem) RWT.getUISession().getAttribute("valuation-problem");
+		_valuations = new Valuations();
 	}
 
 	@SuppressWarnings("serial")
@@ -98,7 +108,7 @@ public class SurveyView extends ViewPart {
 		_viewer.setContentProvider(new ViewContentProvider());
 		_viewer.setLabelProvider(new ViewLabelProvider());
 		
-		Table table = _viewer.getTable();
+		final Table table = _viewer.getTable();
 		table.setLinesVisible(true);
 		table.setVisible(true);
 		table.setHeaderVisible(true);
@@ -114,6 +124,30 @@ public class SurveyView extends ViewPart {
 		TableViewerColumn tc_valuation = new TableViewerColumn(_viewer, SWT.NONE);
 		tc_valuation.getColumn().setText("Valoración");
 		tc_valuation.setLabelProvider(new ValuationLabelProvider());
+		
+		table.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				TableItem ti = (TableItem) e.item;
+				String criterion = ti.getText(0);
+				String alternative = ti.getText(1);
+				
+				Map<Key, String> domainAssignments = _problem.getDomainAssignments();
+				Key key = new Key(alternative, criterion);
+				String idDomain = domainAssignments.get(key);
+				Domain domain = _problem.getDomains().get(idDomain);
+				
+				if(_valuationView == null) {
+					IViewReference viewReferences[] = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences();
+					for (int i = 0; i < viewReferences.length; i++) {
+						if (ValuationView.ID.equals(viewReferences[i].getId())) {
+							_valuationView = (ValuationView) viewReferences[i].getView(false);
+						}
+					}
+				}
+				_valuationView.setDomain(domain);
+			}
+		});
 		
 		parent.addControlListener(new ControlAdapter() {
 			public void controlResized(ControlEvent e) {
@@ -141,24 +175,33 @@ public class SurveyView extends ViewPart {
 	private void setModel() {
 		User user = (User) RWT.getUISession().getAttribute("user");
 		Map<Problem, ProblemAssignment> model = DAOProblemAssignments.getDAO().getUserProblemAssignments(user);
-		ProblemAssignment problemAssignment = model.get(_problem);
-		Valuations valuations = problemAssignment.getValuations();
+		_problemAssignment = model.get(_problem);
+		
+		Valuations valuations = null;
+		
+		if(_problemAssignment != null) {
+			valuations = _problemAssignment.getValuations();
+		} else {
+			_problemAssignment = new ProblemAssignment(_problem.getId(), user);
+		}
 		
 		List<String[]> input = new LinkedList<String[]>();
 		for(String a: _problem.getAlternatives()) {
 			for(String c: _problem.getCriteria()) {
+				String[] values = new String[3];
+				values[0] = a;
+				values[1] = c;
 				if(valuations != null) {
-					String[] values = new String[3];
-					values[0] = a;
-					values[1] = c;
 					Valuation v = valuations.getValuation(new Key(a, c));
 					if(v != null) {
 						values[2] = v.toString(); 
 					} else {
 						values[2] = "No asignada";
 					}
-					input.add(values);
+				} else {
+					values[2] = "No asignada";
 				}
+				input.add(values);
 			}
 		}
 		_viewer.setInput(input);

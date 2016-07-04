@@ -16,6 +16,7 @@ public class Problem {
 	private Map<String, Domain> _domains;
 	private Map<Key, String> _domainAssignments;
 	private Map<String, ProblemAssignment> _assignments;
+	private Map<String, String> _domainValuations;
 
 	private Problem() {
 		_id = null;
@@ -26,6 +27,7 @@ public class Problem {
 		_domains = null;
 		_domainAssignments = null;
 		_assignments = null;
+		_domainValuations = null;
 	}
 
 	public Problem(String id, User admin, List<String> criteria, List<String> alternatives, List<String> experts) {
@@ -139,6 +141,14 @@ public class Problem {
 	
 	public ProblemAssignment getAssignment(String id) {
 		return _assignments.get(id);
+	}
+	
+	public void setDomainValuations(Map<String, String> domainsValuations) {
+		_domainValuations = domainsValuations;
+	}
+	
+	public Map<String, String> getDomainValuations() {
+		return _domainValuations;
 	}
 
 	public boolean isExpert(String id) {

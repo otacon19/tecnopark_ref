@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;
@@ -63,8 +64,9 @@ public class ReadXML {
 		readAlternatives();
 		readCriteria();
 		readDomains();
+		readDomainsValuations();
 	}
-	
+
 	public void readExperts() throws XMLStreamException {
 		goToStartElement("experts"); //$NON-NLS-1$
 
@@ -292,6 +294,34 @@ public class ReadXML {
 		
 		TrapezoidalFunction semantic = new TrapezoidalFunction(limits);
 		label.setSemantic(semantic);
+	}
+	
+	private void readDomainsValuations() throws Exception {
+		XMLEvent event;
+		String endtag = null, idDomain = null, idValuation = null;
+		boolean end = false;
+		
+		goToStartElement("domain-valuation"); //$NON-NLS-1$
+		
+		Map<String, String> domainsValuations = new HashMap<String, String>();
+		while (hasNext() && !end) {
+			event = next();
+			if (event.isStartElement()) {
+				if ("domain-id".equals(getStartElementLocalPart())) { //$NON-NLS-1$
+					idDomain = getStartElementAttribute("id"); //$NON-NLS-1$
+				} else if ("valuation-id".equals(getStartElementLocalPart())) { //$NON-NLS-1$
+					idValuation = getStartElementAttribute("id"); //$NON-NLS-1$
+				}
+			} else if (event.isEndElement()) {
+				endtag = getEndElementLocalPart();
+				if (endtag.equals("valuation-id")) { //$NON-NLS-1$
+					domainsValuations.put(idDomain, idValuation);
+				} else if (endtag.equals("domain-valuation")) { //$NON-NLS-1$
+					end = true;
+				}
+			}
+		}
+		_problem.setDomainValuations(domainsValuations);
 	}
 	
 	public String getStartElementLocalPart() {

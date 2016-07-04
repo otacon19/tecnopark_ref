@@ -71,6 +71,7 @@ public class DAOProblem {
 			DAOProblemAssignments.getDAO().createProblemAssignments(problem);
 			DAOProblemDomains.getDAO().createProblemDomains(problem);
 			DAOProblemDomainAssignments.getDAO().createProblemDomainAssignments(problem);
+			DAOProblemValuations.getDAO().createDomainValuations(problem);
 		} catch (Exception e) {
 		}
 	}
@@ -90,6 +91,7 @@ public class DAOProblem {
 			DAOProblemAssignments.getDAO().removeProblemAssignments(id);
 			DAOProblemDomains.getDAO().removeProblemDomains(id);
 			DAOProblemDomainAssignments.getDAO().removeProblemDomainAssignments(id);
+			DAOProblemValuations.getDAO().removeDomainValuations(problem);
 		} catch (Exception e) {
 		}
 	}
