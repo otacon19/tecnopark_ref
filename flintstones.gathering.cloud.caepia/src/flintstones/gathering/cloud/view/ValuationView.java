@@ -15,11 +15,10 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -39,14 +38,23 @@ public class ValuationView extends ViewPart {
 	private Button _valuateButton;
 	private Composite _parent;
 	
-	private int _value;
+	private double _value;
 	
 	private Domain _domain;
-	
 	private Problem _problem;
+	
+	private SurveyView _surveyView;
 	
 	public ValuationView() {
 		_problem = (Problem) RWT.getUISession().getAttribute("valuation-problem");
+		
+		_surveyView = null;
+		IViewReference viewReferences[] = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences();
+		for (int i = 0; i < viewReferences.length; i++) {
+			if (SurveyView.ID.equals(viewReferences[i].getId())) {
+				_surveyView = (SurveyView) viewReferences[i].getView(false);
+			}
+		}
 	}
 	
 	@Override
@@ -104,7 +112,10 @@ public class ValuationView extends ViewPart {
 		_valuateButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				
+				if(_problem.getDomainValuations().get(_domain.getId()).equals(IntegerValuation.class.toString())) {
+					IntegerValuation valuation = new IntegerValuation((NumericIntegerDomain) _domain, _value);
+					_surveyView.addValuation(valuation);
+				}
 			}
 		});
 		
@@ -177,5 +188,5 @@ public class ValuationView extends ViewPart {
 
 	@Override
 	public void setFocus() {}
-
+	
 }

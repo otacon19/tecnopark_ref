@@ -12,6 +12,7 @@ import sinbad2.database.DatabaseManager;
 public class DAOProblemValuations {
 	
 	public static final String TABLE = "problemvaluations";
+	public static final String PROBLEM_ID = "problem_id";
 	public static final String DOMAIN_ID = "domain_id";
 	public static final String VALUATION_ID = "valuation_id";
 	
@@ -31,8 +32,8 @@ public class DAOProblemValuations {
 	public static String getCreationTableSql() {
 		String result = null;
 
-		result = "create table " + TABLE + "(" + DOMAIN_ID
-				+ " VARCHAR(255) NOT NULL, " + VALUATION_ID + " VARCHAR(255) NOT NULL, PRIMARY KEY(" + DOMAIN_ID + "));";
+		result = "create table " + TABLE + "(" + PROBLEM_ID + " VARCHAR(100) NOT NULL, " + DOMAIN_ID
+				+ " VARCHAR(255) NOT NULL, " + VALUATION_ID + " VARCHAR(255) NOT NULL, PRIMARY KEY(" + PROBLEM_ID + "));";
 
 		return result;
 	}
@@ -55,23 +56,19 @@ public class DAOProblemValuations {
 			Statement st = c.createStatement();
 			Map<String, String> domainValuations = problem.getDomainValuations();
 			for(String domainId: domainValuations.keySet()) {
-				st.executeUpdate("insert into " + TABLE + " values ('" + domainId + "','" + domainValuations.get(domainId) + "')");
+				st.executeUpdate("insert into " + TABLE + " values ('" + problem.getId() + "','" + domainId + "','" + domainValuations.get(domainId) + "')");
 			}
 			st.close();
 		} catch (Exception e) {
 		}
 	}
 
-	public void removeDomainValuations(Problem problem) {
+	public void removeDomainValuations(String id) {
 		try {
 			Connection c = getConnection();
-			Map<String, String> domainValuations = problem.getDomainValuations();
 			PreparedStatement pst = null;
-			for(String domainId: domainValuations.keySet()) {
-				pst = c.prepareStatement("delete from " + TABLE + " where " + DOMAIN_ID + " = ?");
-				pst.setString(1, domainId);
-				pst.executeUpdate();
-			}
+			pst = c.prepareStatement("delete from " + TABLE + " where " + PROBLEM_ID + " = ?");
+			pst.setString(1, id);
 			pst.close();
 		} catch (Exception e) {
 		}

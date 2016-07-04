@@ -32,24 +32,26 @@ import flintstones.gathering.cloud.model.Key;
 import flintstones.gathering.cloud.model.Problem;
 import flintstones.gathering.cloud.model.ProblemAssignment;
 import flintstones.gathering.cloud.model.User;
-import flintstones.gathering.cloud.model.Valuation;
 import flintstones.gathering.cloud.model.Valuations;
 import mcdacw.valuation.domain.Domain;
+import mcdacw.valuation.valuation.Valuation;
 
 public class SurveyView extends ViewPart {
 
 	public static final String ID = "flintstones.gathering.cloud.view.surveyView";
 
 	private TableViewer _viewer;
+	private TableItem _valuationSelected;
 	
 	private ValuationView _valuationView;
 	
 	private Problem _problem;
-	private ProblemAssignment _problemAssignment;
 	private Valuations _valuations;
+	private ProblemAssignment _problemAssignment;
 
 	public SurveyView() {
 		_problem = (Problem) RWT.getUISession().getAttribute("valuation-problem");
+	
 		_valuations = new Valuations();
 	}
 
@@ -128,9 +130,9 @@ public class SurveyView extends ViewPart {
 		table.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				TableItem ti = (TableItem) e.item;
-				String criterion = ti.getText(0);
-				String alternative = ti.getText(1);
+				_valuationSelected = (TableItem) e.item;
+				String criterion = _valuationSelected.getText(0);
+				String alternative = _valuationSelected.getText(1);
 				
 				Map<Key, String> domainAssignments = _problem.getDomainAssignments();
 				Key key = new Key(alternative, criterion);
@@ -216,5 +218,23 @@ public class SurveyView extends ViewPart {
 		_problem = (Problem) RWT.getUISession().getAttribute("valuation-problem");
 		setModel();
 		_viewer.refresh();
+	}
+
+	public void addValuation(Valuation valuation) {
+		_valuations.getValuations().put(new Key(_valuationSelected.getText(0), _valuationSelected.getText(1)), valuation);
+		_problemAssignment.setValuations(_valuations);
+		_problem.setAssignment(_problemAssignment);
+		_valuationSelected.setText(2, valuation.changeFormatValuationToString());
+		
+		DAOProblemAssignments.getDAO().setAssignment(_problem, _problemAssignment);
+	}
+	
+	public void removeValuation(Valuation valuation) {
+		_valuations.getValuations().remove(new Key(_valuationSelected.getText(0), _valuationSelected.getText(1)));
+		_problemAssignment.setValuations(_valuations);
+		_problem.setAssignment(_problemAssignment);
+		_valuationSelected.setText(2, "Not assigned");
+		
+		DAOProblemAssignments.getDAO().createProblemAssignments(_problem);
 	}
 }

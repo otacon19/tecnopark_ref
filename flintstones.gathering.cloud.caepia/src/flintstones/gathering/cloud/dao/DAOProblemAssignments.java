@@ -106,8 +106,7 @@ public class DAOProblemAssignments {
 		removeProblemAssignments(problem.getId());
 	}
 
-	public Map<String, ProblemAssignment> getProblemAssignments(String problem,
-			List<String> experts) {
+	public Map<String, ProblemAssignment> getProblemAssignments(String problem, List<String> experts) {
 		Map<String, ProblemAssignment> result = new HashMap<String, ProblemAssignment>();
 
 		try {
@@ -123,10 +122,8 @@ public class DAOProblemAssignments {
 			ProblemAssignment assignment;
 			while (rs.next()) {
 				uId = rs.getString(ID);
-				assignment = new ProblemAssignment(uId, daoUser.getUser(rs
-						.getString(USER)));
-				assignment.setValuations(daoValuations.getValuations(problem,
-						assignment));
+				assignment = new ProblemAssignment(uId, daoUser.getUser(rs.getString(USER)));
+				assignment.setValuations(daoValuations.getValuations(problem,assignment));
 				assignment.setMake(Boolean.parseBoolean(rs.getString(MAKE)));
 				result.put(uId, assignment);
 			}

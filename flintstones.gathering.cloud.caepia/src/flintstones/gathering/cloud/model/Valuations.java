@@ -3,6 +3,8 @@ package flintstones.gathering.cloud.model;
 import java.util.HashMap;
 import java.util.Map;
 
+import mcdacw.valuation.valuation.Valuation;
+
 public class Valuations {
 
 	private Map<Key, Valuation> _valuations;

@@ -80,8 +80,7 @@ public class DAOProblem {
 
 		try {
 			Connection c = getConnection();
-			PreparedStatement pst = c.prepareStatement("delete from " + TABLE
-					+ " where " + ID + " = ?");
+			PreparedStatement pst = c.prepareStatement("delete from " + TABLE + " where " + ID + " = ?");
 			pst.setString(1, id);
 			pst.executeUpdate();
 			pst.close();
@@ -91,7 +90,7 @@ public class DAOProblem {
 			DAOProblemAssignments.getDAO().removeProblemAssignments(id);
 			DAOProblemDomains.getDAO().removeProblemDomains(id);
 			DAOProblemDomainAssignments.getDAO().removeProblemDomainAssignments(id);
-			DAOProblemValuations.getDAO().removeDomainValuations(problem);
+			DAOProblemValuations.getDAO().removeDomainValuations(id);
 		} catch (Exception e) {
 		}
 	}

@@ -45,6 +45,7 @@ public class Deploy {
 		s.executeUpdate("drop table if exists " + DAOProblemDomains.TABLE + ";");
 		s.executeUpdate("drop table if exists " + DAOProblemDomainAssignments.TABLE + ";");
 		s.executeUpdate("drop table if exists " + DAOValuations.TABLE + ";");
+		s.executeUpdate("drop table if exists " + DAOProblemValuations.TABLE + ";");
 	}
 	
 	private void createTables(Statement s) throws SQLException {
@@ -57,6 +58,7 @@ public class Deploy {
 		s.executeUpdate(DAOProblemDomains.getCreationTableSql());
 		s.executeUpdate(DAOProblemDomainAssignments.getCreationTableSql());
 		s.executeUpdate(DAOValuations.getCreationTableSql());
+		s.executeUpdate(DAOProblemValuations.getCreationTableSql());
 	}
 	
 	private void createAdminAccount() {
