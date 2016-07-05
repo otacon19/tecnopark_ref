@@ -76,6 +76,7 @@ public class DAOValuations {
 	}
 
 	public void createProblemValuations(Problem problem) {
+
 		try {
 			Connection c = getConnection();
 			Statement st = c.createStatement();
@@ -105,7 +106,7 @@ public class DAOValuations {
 			}
 			st.close();
 		} catch (Exception e) {
-
+			e.printStackTrace();
 		}
 	}
 
@@ -247,7 +248,7 @@ public class DAOValuations {
 			st.close();
 
 		} catch (Exception e) {
-
+			e.printStackTrace();
 		}
 	}
 

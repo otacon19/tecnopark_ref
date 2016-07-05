@@ -187,7 +187,7 @@ public class SurveyView extends ViewPart {
 		if(_problemAssignment != null) {
 			valuations = _problemAssignment.getValuations();
 		} else {
-			_problemAssignment = new ProblemAssignment(_problem.getId(), user);
+			_problemAssignment = new ProblemAssignment(user.getMail(), user);
 		}
 		
 		List<String[]> input = new LinkedList<String[]>();
@@ -229,7 +229,7 @@ public class SurveyView extends ViewPart {
 		_problem.setAssignment(_problemAssignment);
 		_valuationSelected.setText(2, valuation.changeFormatValuationToString());
 		
-		DAOProblemAssignments.getDAO().setAssignment(_problem, _problemAssignment);
+		DAOProblemAssignments.getDAO().createProblemAssignments(_problem);
 	}
 	
 	public void removeValuation(Valuation valuation) {
@@ -238,6 +238,6 @@ public class SurveyView extends ViewPart {
 		_problem.setAssignment(_problemAssignment);
 		_valuationSelected.setText(2, "Not assigned");
 		
-		DAOProblemAssignments.getDAO().setAssignment(_problem, _problemAssignment);
+		DAOProblemAssignments.getDAO().createProblemAssignments(_problem);
 	}
 }

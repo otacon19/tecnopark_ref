@@ -85,6 +85,7 @@ public class DAOProblemAssignments {
 			}
 			st.close();
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
