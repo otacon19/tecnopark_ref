@@ -109,6 +109,7 @@ public class DAOProblem {
 			DAOProblemAssignments daoProblemAssignments = DAOProblemAssignments.getDAO();
 			DAOProblemDomains daoProblemDomains = DAOProblemDomains.getDAO();
 			DAOProblemDomainAssignments daoProblemDomainAssignments = DAOProblemDomainAssignments.getDAO();
+			DAOProblemValuations daoProblemValuations = DAOProblemValuations.getDAO();
 			String problemId;
 			String problemAdmin;
 			User problemUser;
@@ -117,6 +118,7 @@ public class DAOProblem {
 			List<String> problemExperts;
 			Map<String, ProblemAssignment> problemAssignments;
 			Map<String, Domain> domains;
+			Map<String, String> domainValuations;
 			Map<Key, String> domainAssignments;
 			while (rs.next()) {
 				problemId = rs.getString(ID);
@@ -128,7 +130,8 @@ public class DAOProblem {
 				problemAssignments = daoProblemAssignments.getProblemAssignments(problemId, problemExperts);
 				domainAssignments = daoProblemDomainAssignments.getProblemDomainAssignments(problemId);
 				domains = daoProblemDomains.getProblemDomains(problemId);
-				result.add(new Problem(problemId, problemUser, problemCriteria, problemAlternatives, problemExperts, domains, domainAssignments, problemAssignments));
+				domainValuations = daoProblemValuations.getDomainValuations(problemId);
+				result.add(new Problem(problemId, problemUser, problemCriteria, problemAlternatives, problemExperts, domains, domainAssignments, problemAssignments, domainValuations));
 			}
 		} catch (Exception e) {
 			

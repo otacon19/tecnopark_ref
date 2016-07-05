@@ -1,28 +1,18 @@
 package flintstones.gathering.cloud.xml;
 
-import mcdacw.valuation.domain.fuzzyset.Unbalanced;
 import mcdacw.valuation.domain.fuzzyset.function.types.TrapezoidalFunction;
-import mcdacw.valuation.valuation.IntegerIntervalValuation;
-import mcdacw.valuation.valuation.IntegerValuation;
-import mcdacw.valuation.valuation.LinguisticValuation;
-import mcdacw.valuation.valuation.RealIntervalValuation;
-import mcdacw.valuation.valuation.RealValuation;
-import mcdacw.valuation.valuation.TwoTuple;
-import mcdacw.valuation.valuation.hesitant.HesitantValuation;
 
 public class XMLValues {
 
 	public static final String NUMERIC_INTEGER_DOMAIN = "flintstones.domain.numeric.integer";
 	public static final String NUMERIC_REAL_DOMAIN = "flintstones.domain.numeric.real";
 	public static final String FUZZY_SET = "flintstones.domain.linguistic";
-	public static final String UNBALANCED = Unbalanced.class.getName();
-	public static final String LINGUISTIC = LinguisticValuation.class.getName();
-	public static final String TWO_TUPLE = TwoTuple.class.getName();
-	public static final String HESITANT = HesitantValuation.class.getName();
-	public static final String INTEGER = IntegerValuation.class.getName();
-	public static final String REAL = RealValuation.class.getName();
-	public static final String INTEGER_INTERVAL = IntegerIntervalValuation.class.getName();
-	public static final String REAL_INTERVAL = RealIntervalValuation.class.getName();
+	public static final String LINGUISTIC = "flintstones.valuation.linguistic";
+	public static final String HESITANT = "flintstones.valuation.hesitant";
+	public static final String INTEGER = "flintstones.valuation.integer";
+	public static final String REAL = "flintstones.valuation.real";
+	public static final String INTEGER_INTERVAL = "flintstones.valuation.integer.interval";
+	public static final String REAL_INTERVAL = "flintstones.valuation.real.interval";
 	public static final String TRAPEZOIDAL_MEMBERSHIP_FUNCTION = TrapezoidalFunction.class.getName();
 	public static final String END = "\n";
 	public static final String TAB = "\t";

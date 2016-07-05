@@ -28,6 +28,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
 import flintstones.gathering.cloud.dao.DAOProblemAssignments;
+import flintstones.gathering.cloud.dao.DAOProblemDomainAssignments;
 import flintstones.gathering.cloud.model.Key;
 import flintstones.gathering.cloud.model.Problem;
 import flintstones.gathering.cloud.model.ProblemAssignment;
@@ -134,7 +135,9 @@ public class SurveyView extends ViewPart {
 				String criterion = _valuationSelected.getText(0);
 				String alternative = _valuationSelected.getText(1);
 				
-				Map<Key, String> domainAssignments = _problem.getDomainAssignments();
+				DAOProblemDomainAssignments daoProblemDomainAssignments = DAOProblemDomainAssignments.getDAO();
+				Map<Key, String> domainAssignments = daoProblemDomainAssignments.getProblemDomainAssignments(_problem);
+				
 				Key key = new Key(alternative, criterion);
 				String idDomain = domainAssignments.get(key);
 				Domain domain = _problem.getDomains().get(idDomain);

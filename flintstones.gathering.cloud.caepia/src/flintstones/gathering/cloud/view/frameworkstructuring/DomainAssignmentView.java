@@ -107,6 +107,7 @@ public class DomainAssignmentView extends ViewPart {
 					domainAssignment = new HashMap<Key, String>();
 				}
 				domainAssignment.put(key, _domainCombo.getItem(_domainCombo.getSelectionIndex()));
+				_problem.setDomainAssignments(domainAssignment);
 	
 				String[] assignment = new String[3];
 				assignment[0] = key.getCriterion();

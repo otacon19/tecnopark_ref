@@ -63,6 +63,19 @@ public class Problem {
 		setAssignments(assignments);
 	}
 	
+	public Problem(String id, User admin, List<String> criteria, List<String> alternatives, List<String> experts, Map<String, Domain> domains, Map<Key, String> domainAssignments, Map<String, ProblemAssignment> assignments, Map<String, String> domainValuations) {
+		this();
+		setId(id);
+		setAdmin(admin);
+		setCriteria(criteria);
+		setAlternatives(alternatives);
+		setExperts(experts);
+		setDomains(domains);
+		setDomainAssignments(domainAssignments);
+		setAssignments(assignments);
+		setDomainValuations(domainValuations);
+	}
+	
 	private void initAssignments() {
 		_assignments = new HashMap<String, ProblemAssignment>();
 		for (String expert : _experts) {

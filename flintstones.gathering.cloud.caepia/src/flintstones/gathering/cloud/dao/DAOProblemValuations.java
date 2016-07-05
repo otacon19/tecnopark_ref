@@ -2,7 +2,9 @@ package flintstones.gathering.cloud.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.HashMap;
 import java.util.Map;
 
 import flintstones.gathering.cloud.model.Problem;
@@ -33,7 +35,7 @@ public class DAOProblemValuations {
 		String result = null;
 
 		result = "create table " + TABLE + "(" + PROBLEM_ID + " VARCHAR(100) NOT NULL, " + DOMAIN_ID
-				+ " VARCHAR(255) NOT NULL, " + VALUATION_ID + " VARCHAR(255) NOT NULL, PRIMARY KEY(" + PROBLEM_ID + "));";
+				+ " VARCHAR(255) NOT NULL, " + VALUATION_ID + " VARCHAR(255) NOT NULL, PRIMARY KEY(" + DOMAIN_ID  + "));";
 
 		return result;
 	}
@@ -60,6 +62,7 @@ public class DAOProblemValuations {
 			}
 			st.close();
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -72,5 +75,26 @@ public class DAOProblemValuations {
 			pst.close();
 		} catch (Exception e) {
 		}
+	}
+	
+	public Map<String, String> getDomainValuations(String problem) {
+		Map<String, String> result = new HashMap<String, String>();
+		
+		try {
+			Connection c = getConnection();
+			Statement st = c.createStatement();
+
+			String select = "select * from " + TABLE + " where " + PROBLEM_ID + "='" + problem + "';";
+			ResultSet rs = st.executeQuery(select);
+			while (rs.next()) {
+				String domainID = rs.getString(DOMAIN_ID);
+				String valuationID = rs.getString(VALUATION_ID);
+				result.put(domainID, valuationID);
+			}
+		} catch (Exception e) {
+			
+		}
+		
+		return result;
 	}
 }
