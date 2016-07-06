@@ -29,6 +29,7 @@ import org.eclipse.ui.part.ViewPart;
 
 import flintstones.gathering.cloud.dao.DAOProblemAssignments;
 import flintstones.gathering.cloud.dao.DAOProblemDomainAssignments;
+import flintstones.gathering.cloud.dao.DAOValuations;
 import flintstones.gathering.cloud.model.Key;
 import flintstones.gathering.cloud.model.Problem;
 import flintstones.gathering.cloud.model.ProblemAssignment;
@@ -179,37 +180,39 @@ public class SurveyView extends ViewPart {
 
 	private void setModel() {
 		User user = (User) RWT.getUISession().getAttribute("user");
+		
 		Map<Problem, ProblemAssignment> model = DAOProblemAssignments.getDAO().getUserProblemAssignments(user);
-		_problemAssignment = model.get(_problem);
-		
-		Valuations valuations = null;
-		
-		if(_problemAssignment != null) {
-			valuations = _problemAssignment.getValuations();
-		} else {
-			_problemAssignment = new ProblemAssignment(user.getMail(), user);
+		for(Problem p: model.keySet()) {
+			if(p.getId().equals(_problem.getId())) {
+				_problemAssignment = model.get(p);
+			}
 		}
 		
-		List<String[]> input = new LinkedList<String[]>();
-		for(String a: _problem.getAlternatives()) {
-			for(String c: _problem.getCriteria()) {
-				String[] values = new String[3];
-				values[0] = a;
-				values[1] = c;
-				if(valuations != null) {
-					Valuation v = valuations.getValuation(new Key(a, c));
-					if(v != null) {
-						values[2] = v.toString(); 
+		if(_problemAssignment != null) {
+			Valuations valuations = _problemAssignment.getValuations();
+	
+			List<String[]> input = new LinkedList<String[]>();
+			for(String a: _problem.getAlternatives()) {
+				for(String c: _problem.getCriteria()) {
+					String[] values = new String[3];
+					values[0] = a;
+					values[1] = c;
+					if(valuations != null) {
+						Valuation v = valuations.getValuation(new Key(a, c));
+						if(v != null) {
+							values[2] = v.changeFormatValuationToString(); 
+						} else {
+							values[2] = "No asignada";
+						}
 					} else {
 						values[2] = "No asignada";
 					}
-				} else {
-					values[2] = "No asignada";
+					input.add(values);
 				}
-				input.add(values);
 			}
+			_viewer.setInput(input);
+			_viewer.refresh();
 		}
-		_viewer.setInput(input);
 	}
 
 	@Override
@@ -224,20 +227,20 @@ public class SurveyView extends ViewPart {
 	}
 
 	public void addValuation(Valuation valuation) {
-		_valuations.getValuations().put(new Key(_valuationSelected.getText(0), _valuationSelected.getText(1)), valuation);
+		Key key = new Key(_valuationSelected.getText(1), _valuationSelected.getText(0));
+		_valuations.getValuations().put(key, valuation);
 		_problemAssignment.setValuations(_valuations);
-		_problem.setAssignment(_problemAssignment);
-		_valuationSelected.setText(2, valuation.changeFormatValuationToString());
+		DAOValuations.getDAO().insertValuation(_problem, _problemAssignment, key, valuation);
 		
-		DAOProblemAssignments.getDAO().createProblemAssignments(_problem);
+		_valuationSelected.setText(2, valuation.changeFormatValuationToString());
 	}
 	
 	public void removeValuation(Valuation valuation) {
-		_valuations.getValuations().remove(new Key(_valuationSelected.getText(0), _valuationSelected.getText(1)));
+		Key key = new Key(_valuationSelected.getText(1), _valuationSelected.getText(0));
+		_valuations.getValuations().remove(key);
 		_problemAssignment.setValuations(_valuations);
-		_problem.setAssignment(_problemAssignment);
-		_valuationSelected.setText(2, "Not assigned");
+		DAOValuations.getDAO().removeValuation(_problem.getId(), key);
 		
-		DAOProblemAssignments.getDAO().createProblemAssignments(_problem);
+		_valuationSelected.setText(2, "Not assigned");
 	}
 }

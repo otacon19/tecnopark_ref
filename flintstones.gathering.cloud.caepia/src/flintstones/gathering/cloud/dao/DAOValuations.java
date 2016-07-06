@@ -4,11 +4,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.Map;
 
 import flintstones.gathering.cloud.model.Key;
 import flintstones.gathering.cloud.model.Problem;
 import flintstones.gathering.cloud.model.ProblemAssignment;
 import flintstones.gathering.cloud.model.Valuations;
+import mcdacw.valuation.domain.Domain;
 import mcdacw.valuation.domain.fuzzyset.FuzzySet;
 import mcdacw.valuation.domain.numeric.NumericIntegerDomain;
 import mcdacw.valuation.domain.numeric.NumericRealDomain;
@@ -93,7 +95,7 @@ public class DAOValuations {
 						if (assignment != null) {
 							valuation = assignment.getValuations().getValuation(key);
 							if (valuation != null) {
-								value = valuation.toString();
+								value = valuation.changeFormatValuationToString();
 							}
 						}
 						st.executeUpdate("insert into " + TABLE + " values ('"
@@ -125,6 +127,21 @@ public class DAOValuations {
 	public void removeProblemValuations(Problem problem) {
 		removeProblemValuations(problem.getId());
 	}
+	
+	public void removeValuation(String problem, Key key) {
+
+		try {
+			Connection c = getConnection();
+			PreparedStatement pst = c.prepareStatement("delete from " + TABLE + " where " + PROBLEM + " = ?" + " and " + ALTERNATIVE + " = ?" + " and " + CRITERION
+					+ " = ?");
+			pst.setString(1, problem);
+			pst.setString(2, key.getAlternative());
+			pst.setString(2, key.getCriterion());
+			pst.executeUpdate();
+			pst.close();
+		} catch (Exception e) {
+		}
+	}
 
 	public Valuations getValuations(String problem, ProblemAssignment assignment) {
 		Valuations result = new Valuations();
@@ -148,42 +165,42 @@ public class DAOValuations {
 				type = rs.getString(TYPE);
 				Valuation valuation = null;
 				
-				Problem problemDAO = DAOProblem.getDAO().getProblem(problem);
+				Map<String, Domain> domains = DAOProblemDomains.getDAO().getProblemDomains(problem);
 				
 				if(type.equals(IntegerValuation.class.toString())) {
 					
-					valuation = new IntegerValuation((NumericIntegerDomain) problemDAO.getDomains().get(domainId), Double.parseDouble(rs.getString(VALUE)));
+					valuation = new IntegerValuation((NumericIntegerDomain) domains.get(domainId), Double.parseDouble(rs.getString(VALUE)));
 				
 				} else if(type.equals(IntegerIntervalValuation.class.toString())) {
 					
 					String range = rs.getString(VALUE);
 					range = range.replace("[", "").replace("]", "").replace(" ", "");
 					String[] minMax = range.split(",");
-					valuation = new IntegerIntervalValuation((NumericIntegerDomain) problemDAO.getDomains().get(domainId), 
+					valuation = new IntegerIntervalValuation((NumericIntegerDomain) domains.get(domainId), 
 							Long.parseLong(minMax[0]), Long.parseLong(minMax[1]));
 					
 				} else if(type.equals(RealValuation.class.toString())) {
 					
-					valuation = new RealValuation((NumericRealDomain) problemDAO.getDomains().get(domainId), Double.parseDouble(rs.getString(VALUE)));
+					valuation = new RealValuation((NumericRealDomain) domains.get(domainId), Double.parseDouble(rs.getString(VALUE)));
 				
 				} else if(type.equals(RealIntervalValuation.class.toString())) {
 					
 					String range = rs.getString(VALUE);
 					range = range.replace("[", "").replace("]", "").replace(" ", "");
 					String[] minMax = range.split(",");
-					valuation = new RealIntervalValuation((NumericRealDomain) problemDAO.getDomains().get(domainId), 
+					valuation = new RealIntervalValuation((NumericRealDomain) domains.get(domainId), 
 							Double.parseDouble(minMax[0]), Double.parseDouble(minMax[1]));
 					
 				} else if(type.equals(LinguisticValuation.class.toString())) {
 					
 					valuation = new LinguisticValuation();
-					valuation.setDomain((FuzzySet) problemDAO.getDomains().get(domainId));
+					valuation.setDomain((FuzzySet) domains.get(domainId));
 					((LinguisticValuation) valuation).setLabel(rs.getString(VALUE));
 					
 				} else if(type.equals(HesitantValuation.class.toString())) {
 					
 					String hesitant = rs.getString(VALUE);
-					FuzzySet fuzzySet =(FuzzySet) problemDAO.getDomains().get(domainId);
+					FuzzySet fuzzySet =(FuzzySet) domains.get(domainId);
 					if(hesitant.contains("Between")) {
 						hesitant = hesitant.replace("Between", "");
 						String lowerTerm = hesitant.substring(0, hesitant.indexOf(" ") - 1);
@@ -192,7 +209,7 @@ public class DAOValuations {
 						valuation = new HesitantValuation(fuzzySet);
 						((HesitantValuation) valuation).setBinaryRelation(lowerTerm, upperTerm);
 					} else {
-						valuation = new HesitantValuation((FuzzySet) problemDAO.getDomains().get(domainId));
+						valuation = new HesitantValuation((FuzzySet) domains.get(domainId));
 						valuation.setDomain(fuzzySet);
 						String unaryRelation = hesitant.substring(0, hesitant.indexOf(" ") - 1);
 						
@@ -217,6 +234,7 @@ public class DAOValuations {
 		} catch (Exception e) {
 
 		}
+
 		return result;
 
 	}
@@ -233,7 +251,7 @@ public class DAOValuations {
 			for (Key key : valuations.getValuations().keySet()) {
 				String criterion = key.getCriterion().replace("'", "''");
 				String alternative = key.getAlternative().replace("'", "''");
-				value = valuations.getValuation(key).toString();
+				value = valuations.getValuation(key).changeFormatValuationToString();
 
 				String update = "update " + TABLE + " set " + VALUE + " = '"
 						+ value + "' where " + PROBLEM + " = '"
@@ -263,8 +281,8 @@ public class DAOValuations {
 
 			String criterion = key.getCriterion().replace("'", "''");
 			String alternative = key.getAlternative().replace("'", "''");
-			value = valuation.toString();
-
+			value = valuation.changeFormatValuationToString();
+			
 			String update = "update " + TABLE + " set " + VALUE + " = '"
 					+ value + "' where " + PROBLEM + " = '" + problem.getId()
 					+ "' and " + CRITERION + " = '" + criterion + "' and "
@@ -276,7 +294,38 @@ public class DAOValuations {
 			st.close();
 
 		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void insertValuation(Problem problem, ProblemAssignment assignment, Key key, Valuation valuation) {
 
+		try {
+			Connection c = getConnection();
+			Statement st = c.createStatement();
+
+			String value;
+
+			String criterion = key.getCriterion();
+			String alternative = key.getAlternative();
+			value = valuation.changeFormatValuationToString();
+			
+			String statement = "replace into " + TABLE + " values("
+					+ "'" + problem.getId() + "'" + ", "
+					+ "'" + criterion + "'" + ", "
+					+ "'" + alternative + "'" + ", " 
+					+ "'" + assignment.getId() + "'" + ", "
+					+ "'" + valuation.getDomain().getId() + "'" + ", "
+					+ "'" + valuation.getClass().toString() + "'" + ", " 
+					+ "'" + value
+					+ "');";
+			
+			st.executeUpdate(statement);
+
+			st.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 }

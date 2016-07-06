@@ -124,7 +124,7 @@ public class DAOProblemAssignments {
 			while (rs.next()) {
 				uId = rs.getString(ID);
 				assignment = new ProblemAssignment(uId, daoUser.getUser(rs.getString(USER)));
-				assignment.setValuations(daoValuations.getValuations(problem,assignment));
+				assignment.setValuations(daoValuations.getValuations(problem, assignment));
 				assignment.setMake(Boolean.parseBoolean(rs.getString(MAKE)));
 				result.put(uId, assignment);
 			}
