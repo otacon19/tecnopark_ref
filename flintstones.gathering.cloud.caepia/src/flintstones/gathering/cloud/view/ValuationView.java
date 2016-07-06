@@ -32,10 +32,14 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import flintstones.gathering.cloud.model.Problem;
 import flintstones.gathering.cloud.xml.XMLValues;
 import mcdacw.valuation.domain.Domain;
+import mcdacw.valuation.domain.DomainChart;
 import mcdacw.valuation.domain.fuzzyset.FuzzySet;
+import mcdacw.valuation.domain.fuzzyset.jfreechart.LinguisticDomainChart;
 import mcdacw.valuation.domain.fuzzyset.label.LabelLinguisticDomain;
 import mcdacw.valuation.domain.numeric.NumericIntegerDomain;
 import mcdacw.valuation.domain.numeric.NumericRealDomain;
+import mcdacw.valuation.domain.numeric.jfreechart.NumericIntegerDomainChart;
+import mcdacw.valuation.domain.numeric.jfreechart.NumericRealDomainChart;
 import mcdacw.valuation.valuation.IntegerIntervalValuation;
 import mcdacw.valuation.valuation.IntegerValuation;
 import mcdacw.valuation.valuation.LinguisticValuation;
@@ -61,12 +65,16 @@ public class ValuationView extends ViewPart {
 	private Button _unaryRelationshipButton;
 	private Button _binaryRelationshipButton;
 	private Composite _parent;
+	private Composite _valuationComposite;
+	private Composite _chartComposite;
 	private Composite _buttonsPart;
 	private Composite _hesitantRelationshipComposite;
 	private Composite _hesitantValueComposite;
 	
 	private Label _betweenLabel;
 	private Label _andLabel;
+	
+	private DomainChart _chart;
 	
 	private double _value;
 	private Object _valueMax;
@@ -107,6 +115,8 @@ public class ValuationView extends ViewPart {
 	@Override
 	public void createPartControl(Composite parent) {
 		_parent = parent;
+		GridLayout layout = new GridLayout(2, true);
+		_parent.setLayout(layout);
 	}
 
 	public void setDomain(Domain domain) {
@@ -122,21 +132,27 @@ public class ValuationView extends ViewPart {
 			if(_problem.getDomainValuations().get(_domain.getId()).equals(XMLValues.INTEGER)) {
 				createIntegerPanel();
 				createButtons();
+				createIntegerChart();
 			} else if(_problem.getDomainValuations().get(_domain.getId()).equals(XMLValues.INTEGER_INTERVAL)) {
 				createIntegerIntervalPanel();
 				createButtons();
+				createIntegerChart();
 			} else if(_problem.getDomainValuations().get(_domain.getId()).equals(XMLValues.REAL)) {
 				createRealPanel();
 				createButtons();
+				createRealChart();
 			} else if(_problem.getDomainValuations().get(_domain.getId()).equals(XMLValues.REAL_INTERVAL)) {
 				createRealIntervalPanel();
 				createButtons();
+				createRealChart();
 			} else if(_problem.getDomainValuations().get(_domain.getId()).equals(XMLValues.LINGUISTIC)) {
 				createLinguisticPanel();
 				createButtons();
+				createLinguisticChart();
 			} else if(_problem.getDomainValuations().get(_domain.getId()).equals(XMLValues.HESITANT)) {
 				createHesitantPanel();
 				createButtons();
+				createLinguisticChart();
 			}
 			
 		} else {
@@ -150,6 +166,14 @@ public class ValuationView extends ViewPart {
 		for(Control control: _parent.getChildren()) {
 			control.dispose();
 		}
+		
+		if(_valuationComposite != null) {
+			_valuationComposite.dispose();
+		}
+		
+		if(_chartComposite != null) {
+			_chartComposite.dispose();
+		}
 	}
 	
 	private void disposeButtons() {
@@ -158,14 +182,14 @@ public class ValuationView extends ViewPart {
 
 	@SuppressWarnings("serial")
 	private void createButtons() {	
-		_buttonsPart = new Composite(_parent, SWT.NONE);
+		_buttonsPart = new Composite(_valuationComposite, SWT.NONE);
 		_buttonsPart.setLayoutData(new GridData(SWT.CENTER, SWT.FILL, false, true, 5, 1));
 		_buttonsPart.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		GridLayout layout = new GridLayout(2, true);
 		_buttonsPart.setLayout(layout);
 
 		_removeButton = new Button(_buttonsPart, SWT.BORDER);
-		_removeButton.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, true, true, 1, 1));
+		_removeButton.setLayoutData(new GridData(SWT.CENTER, SWT.TOP, true, true, 1, 1));
 		_removeButton.setText("Borrar");
 		_removeButton.setImage(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_DELETE).createImage());
 		_removeButton.addSelectionListener(new SelectionAdapter() {
@@ -177,7 +201,7 @@ public class ValuationView extends ViewPart {
 		
 		
 		_valuateButton = new Button(_buttonsPart, SWT.BORDER);
-		_valuateButton.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, true, true, 1, 1));
+		_valuateButton.setLayoutData(new GridData(SWT.CENTER, SWT.TOP, true, true, 1, 1));
 		_valuateButton.setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/valuation.png").createImage());
 		_valuateButton.setText("Evaluar");
 		_valuateButton.addSelectionListener(new SelectionAdapter() {
@@ -234,9 +258,12 @@ public class ValuationView extends ViewPart {
 	
 	@SuppressWarnings("serial")
 	private void createIntegerPanel() {
-		_parent.setLayout(new GridLayout(5, true));
+		_valuationComposite = new Composite(_parent, SWT.NONE);
+		_valuationComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		_valuationComposite.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+		_valuationComposite.setLayout(new GridLayout(5, true));
 		
-		Label label = new Label(_parent, SWT.NONE);
+		Label label = new Label(_valuationComposite, SWT.NONE);
 		label.setFont(SWTResourceManager.getFont("Cantarell", 17, SWT.BOLD)); //$NON-NLS-1$
 		GridData gd = new GridData(SWT.CENTER, SWT.CENTER, false, false, 5, 1);
 		gd.verticalIndent = 15;
@@ -244,21 +271,21 @@ public class ValuationView extends ViewPart {
 		label.setText("Valoración entera");
 		label.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		
-		Label value = new Label(_parent, SWT.NONE);
-		value = new Label(_parent, SWT.NONE);
+		Label value = new Label(_valuationComposite, SWT.NONE);
+		value = new Label(_valuationComposite, SWT.NONE);
 		gd = new GridData(SWT.CENTER, SWT.BOTTOM, true, false, 3, 1);
 		gd.verticalIndent = 15;
 		value.setLayoutData(gd);
 		value.setText("Valor");
 		value.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
-		new Label(_parent, SWT.NONE);
+		new Label(_valuationComposite, SWT.NONE);
 		
-		new Label(_parent, SWT.NONE);
-		_valueSpinner = new Spinner(_parent, SWT.BORDER | SWT.READ_ONLY);
+		new Label(_valuationComposite, SWT.NONE);
+		_valueSpinner = new Spinner(_valuationComposite, SWT.BORDER | SWT.READ_ONLY);
 		_valueSpinner.setLayoutData(new GridData(SWT.CENTER, SWT.TOP, true, false, 3, 1));
 		_valueSpinner.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
-		new Label(_parent, SWT.NONE);
-		value = new Label(_parent, SWT.NONE);
+		new Label(_valuationComposite, SWT.NONE);
+		value = new Label(_valuationComposite, SWT.NONE);
 		value.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
 		value.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		
@@ -280,11 +307,12 @@ public class ValuationView extends ViewPart {
 	
 	@SuppressWarnings("serial")
 	private void createIntegerIntervalPanel() {
-		GridLayout layout = new GridLayout(2, false);
-		layout.verticalSpacing = 15;
-		_parent.setLayout(layout);
+		_valuationComposite = new Composite(_parent, SWT.NONE);
+		_valuationComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		_valuationComposite.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+		_valuationComposite.setLayout(new GridLayout(2, false));
 		
-		Label label = new Label(_parent, SWT.NONE);
+		Label label = new Label(_valuationComposite, SWT.NONE);
 		label.setFont(SWTResourceManager.getFont("Cantarell", 17, SWT.BOLD)); //$NON-NLS-1$
 		GridData gd = new GridData(SWT.CENTER, SWT.CENTER, false, false, 2, 1);
 		gd.verticalIndent = 15;
@@ -292,7 +320,7 @@ public class ValuationView extends ViewPart {
 		label.setText("Valoración intervalar entera");
 		label.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		
-		Composite spinnerComposite = new Composite(_parent, SWT.NONE);
+		Composite spinnerComposite = new Composite(_valuationComposite, SWT.NONE);
 		spinnerComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		spinnerComposite.setLayout(new GridLayout(1, false));
 		spinnerComposite.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
@@ -366,9 +394,12 @@ public class ValuationView extends ViewPart {
 	
 	@SuppressWarnings("serial")
 	private void createRealPanel() {
-		_parent.setLayout(new GridLayout(5, true));
+		_valuationComposite = new Composite(_parent, SWT.NONE);
+		_valuationComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		_valuationComposite.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+		_valuationComposite.setLayout(new GridLayout(5, true));
 		
-		Label label = new Label(_parent, SWT.NONE);
+		Label label = new Label(_valuationComposite, SWT.NONE);
 		label.setFont(SWTResourceManager.getFont("Cantarell", 17, SWT.BOLD)); //$NON-NLS-1$
 		GridData gd = new GridData(SWT.CENTER, SWT.CENTER, false, false, 5, 1);
 		gd.verticalIndent = 15;
@@ -376,21 +407,21 @@ public class ValuationView extends ViewPart {
 		label.setText("Valoración real");
 		label.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		
-		Label value = new Label(_parent, SWT.NONE);
-		value = new Label(_parent, SWT.NONE);
+		Label value = new Label(_valuationComposite, SWT.NONE);
+		value = new Label(_valuationComposite, SWT.NONE);
 		gd = new GridData(SWT.CENTER, SWT.BOTTOM, true, false, 3, 1);
 		gd.verticalIndent = 15;
 		value.setLayoutData(gd);
 		value.setText("Valor");
 		value.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
-		new Label(_parent, SWT.NONE);
+		new Label(_valuationComposite, SWT.NONE);
 		
-		new Label(_parent, SWT.NONE);
-		_valueSpinner = new Spinner(_parent, SWT.BORDER);
+		new Label(_valuationComposite, SWT.NONE);
+		_valueSpinner = new Spinner(_valuationComposite, SWT.BORDER);
 		_valueSpinner.setLayoutData(new GridData(SWT.CENTER, SWT.TOP, true, false, 3, 1));
 		
-		new Label(_parent, SWT.NONE);
-		value = new Label(_parent, SWT.NONE);
+		new Label(_valuationComposite, SWT.NONE);
+		value = new Label(_valuationComposite, SWT.NONE);
 		value.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
 		value.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		
@@ -413,11 +444,12 @@ public class ValuationView extends ViewPart {
 	
 	@SuppressWarnings("serial")
 	private void createRealIntervalPanel() {
-		GridLayout layout = new GridLayout(2, false);
-		layout.verticalSpacing = 15;
-		_parent.setLayout(layout);
+		_valuationComposite = new Composite(_parent, SWT.NONE);
+		_valuationComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		_valuationComposite.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+		_valuationComposite.setLayout(new GridLayout(2, false));
 		
-		Label label = new Label(_parent, SWT.NONE);
+		Label label = new Label(_valuationComposite, SWT.NONE);
 		label.setFont(SWTResourceManager.getFont("Cantarell", 17, SWT.BOLD)); //$NON-NLS-1$
 		GridData gd = new GridData(SWT.CENTER, SWT.CENTER, false, false, 2, 1);
 		gd.verticalIndent = 15;
@@ -425,7 +457,7 @@ public class ValuationView extends ViewPart {
 		label.setText("Valoración intervalar real");
 		label.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		
-		Composite spinnerComposite = new Composite(_parent, SWT.NONE);
+		Composite spinnerComposite = new Composite(_valuationComposite, SWT.NONE);
 		spinnerComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		spinnerComposite.setLayout(new GridLayout(1, false));
 		spinnerComposite.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
@@ -507,9 +539,12 @@ public class ValuationView extends ViewPart {
 	
 	@SuppressWarnings("serial")
 	private void createLinguisticPanel() {
-		_parent.setLayout(new GridLayout(5, true));
+		_valuationComposite = new Composite(_parent, SWT.NONE);
+		_valuationComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		_valuationComposite.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+		_valuationComposite.setLayout(new GridLayout(5, true));
 		
-		Label label = new Label(_parent, SWT.NONE);
+		Label label = new Label(_valuationComposite, SWT.NONE);
 		label.setFont(SWTResourceManager.getFont("Cantarell", 17, SWT.BOLD)); //$NON-NLS-1$
 		GridData gd = new GridData(SWT.CENTER, SWT.CENTER, false, false, 5, 1);
 		gd.verticalIndent = 15;
@@ -517,14 +552,14 @@ public class ValuationView extends ViewPart {
 		label.setText("Valoración lingüística");
 		label.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 
-		Label value = new Label(_parent, SWT.NONE);
-		value = new Label(_parent, SWT.NONE);
+		Label value = new Label(_valuationComposite, SWT.NONE);
+		value = new Label(_valuationComposite, SWT.NONE);
 		gd = new GridData(SWT.CENTER, SWT.BOTTOM, true, false, 3, 1);
 		gd.verticalIndent = 15;
 		value.setLayoutData(gd);
 		value.setText("Valor");
 		value.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
-		new Label(_parent, SWT.NONE);
+		new Label(_valuationComposite, SWT.NONE);
 		
 		String[] labels = new String[((FuzzySet) _domain).getLabelSet().getCardinality()];
 		
@@ -534,14 +569,14 @@ public class ValuationView extends ViewPart {
 			cont++;
 		}
 		
-		new Label(_parent, SWT.NONE);
-		final Combo labelCombo = new Combo(_parent, SWT.BORDER);
+		new Label(_valuationComposite, SWT.NONE);
+		final Combo labelCombo = new Combo(_valuationComposite, SWT.BORDER);
 		labelCombo.setLayoutData(new GridData(SWT.CENTER, SWT.TOP, true, false, 3, 1));
 		labelCombo.setItems(labels);
 		labelCombo.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		
-		new Label(_parent, SWT.NONE);
-		value = new Label(_parent, SWT.NONE);
+		new Label(_valuationComposite, SWT.NONE);
+		value = new Label(_valuationComposite, SWT.NONE);
 		value.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
 		value.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 
@@ -558,18 +593,19 @@ public class ValuationView extends ViewPart {
 	
 	@SuppressWarnings("serial")
 	private void createHesitantPanel() {
-		GridLayout layout = new GridLayout(4, false);
-		layout.verticalSpacing = 5;
-		_parent.setLayout(layout);
+		_valuationComposite = new Composite(_parent, SWT.NONE);
+		_valuationComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		_valuationComposite.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+		_valuationComposite.setLayout(new GridLayout(4, false));
 		
-		Label label = new Label(_parent, SWT.NONE);
+		Label label = new Label(_valuationComposite, SWT.NONE);
 		label.setFont(SWTResourceManager.getFont("Cantarell", 17, SWT.BOLD)); //$NON-NLS-1$
 		GridData gd = new GridData(SWT.CENTER, SWT.CENTER, true, false, 4, 1);
 		gd.verticalIndent = 15;
 		label.setLayoutData(gd);
 		label.setText("Valoración hesitant");
 		
-		Composite buttonsComposite = new Composite(_parent, SWT.NONE);
+		Composite buttonsComposite = new Composite(_valuationComposite, SWT.NONE);
 		buttonsComposite.setLayoutData(new GridData(SWT.CENTER, SWT.FILL, true, false, 4, 1));
 		buttonsComposite.setLayout(new GridLayout(2, false));
 		
@@ -735,7 +771,7 @@ public class ValuationView extends ViewPart {
 			_hesitantValueComposite.dispose();
 		}
 		
-		_hesitantValueComposite = new Composite(_parent, SWT.NONE);
+		_hesitantValueComposite = new Composite(_valuationComposite, SWT.NONE);
 		_hesitantValueComposite.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 4, 1));
 		GridLayout layout = new GridLayout(fields, false);
 		_hesitantValueComposite.setLayout(layout);
@@ -1142,7 +1178,7 @@ public class ValuationView extends ViewPart {
 		};
 		_hesitantEvaluationCombo2.addModifyListener(_hesitantEvaluationCombo2ModifyListener);
 		_hesitantValueComposite.layout();
-		_parent.layout();
+		_valuationComposite.layout();
 		
 	}
 
@@ -1242,6 +1278,62 @@ public class ValuationView extends ViewPart {
 		} else {
 			_compositeButton.setEnabled(true);
 		}
+	}
+	
+	@SuppressWarnings("serial")
+	private void createIntegerChart() {
+		_chartComposite = new Composite(_parent, SWT.NONE);
+		_chartComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		_chartComposite.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+		GridLayout layout = new GridLayout(1, true);
+		_chartComposite.setLayout(layout);
+		
+		_chartComposite.addControlListener(new ControlAdapter() {
+			@Override
+			public void controlResized(ControlEvent e) {
+				_chart = new NumericIntegerDomainChart();
+				_chart.initialize(_domain, _chartComposite.getSize().x, _chartComposite.getSize().y, SWT.NONE);
+				_chartComposite.setBackgroundImage(_chart.createImage());
+			}
+		});
+	}
+	
+	
+	@SuppressWarnings("serial")
+	private void createRealChart() {
+		_chartComposite = new Composite(_parent, SWT.NONE);
+		_chartComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		_chartComposite.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+		GridLayout layout = new GridLayout(1, true);
+		_chartComposite.setLayout(layout);
+		
+		_chartComposite.addControlListener(new ControlAdapter() {
+			@Override
+			public void controlResized(ControlEvent e) {
+				_chart = new NumericRealDomainChart();
+				_chart.initialize(_domain, _chartComposite.getSize().x, _chartComposite.getSize().y, SWT.NONE);
+				_chartComposite.setBackgroundImage(_chart.createImage());
+			}
+		});
+	}
+
+
+	@SuppressWarnings("serial")
+	private void createLinguisticChart() {
+		_chartComposite = new Composite(_parent, SWT.NONE);
+		_chartComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		_chartComposite.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+		GridLayout layout = new GridLayout(1, true);
+		_chartComposite.setLayout(layout);
+		
+		_chartComposite.addControlListener(new ControlAdapter() {
+			@Override
+			public void controlResized(ControlEvent e) {
+				_chart = new LinguisticDomainChart();
+				_chart.initialize(_domain, _chartComposite.getSize().x, _chartComposite.getSize().y, SWT.NONE);
+				_chartComposite.setBackgroundImage(_chart.createImage());
+			}
+		});
 	}
 	
 	@Override
