@@ -14,6 +14,7 @@ import flintstones.gathering.cloud.model.Problem;
 import flintstones.gathering.cloud.model.ProblemAssignment;
 import flintstones.gathering.cloud.model.User;
 import flintstones.gathering.cloud.view.SurveysView;
+import mcdacw.valuation.domain.Domain;
 import sinbad2.database.Database;
 import sinbad2.database.DatabaseManager;
 
@@ -107,7 +108,7 @@ public class DAOProblemAssignments {
 		removeProblemAssignments(problem.getId());
 	}
 
-	public Map<String, ProblemAssignment> getProblemAssignments(String problem, List<String> experts) {
+	public Map<String, ProblemAssignment> getProblemAssignments(String problem, List<String> experts, Map<String, Domain> domains) {
 		Map<String, ProblemAssignment> result = new HashMap<String, ProblemAssignment>();
 
 		try {
@@ -124,7 +125,7 @@ public class DAOProblemAssignments {
 			while (rs.next()) {
 				uId = rs.getString(ID);
 				assignment = new ProblemAssignment(uId, daoUser.getUser(rs.getString(USER)));
-				assignment.setValuations(daoValuations.getValuations(problem, assignment));
+				assignment.setValuations(daoValuations.getValuations(problem, assignment, domains));
 				assignment.setMake(Boolean.parseBoolean(rs.getString(MAKE)));
 				result.put(uId, assignment);
 			}
@@ -137,10 +138,6 @@ public class DAOProblemAssignments {
 		}
 
 		return result;
-	}
-
-	public Map<String, ProblemAssignment> getProblemAssignments(Problem problem) {
-		return getProblemAssignments(problem.getId(), problem.getExperts());
 	}
 
 	public Map<Problem, ProblemAssignment> getUserProblemAssignments(User user) {

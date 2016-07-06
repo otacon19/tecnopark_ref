@@ -127,9 +127,9 @@ public class DAOProblem {
 				problemCriteria = daoProblemCriteria.getProblemCriteria(problemId);
 				problemAlternatives = daoProblemAlternatives.getProblemAlternatives(problemId);
 				problemExperts = daoProblemExperts.getProblemExperts(problemId);
-				problemAssignments = daoProblemAssignments.getProblemAssignments(problemId, problemExperts);
-				domainAssignments = daoProblemDomainAssignments.getProblemDomainAssignments(problemId);
 				domains = daoProblemDomains.getProblemDomains(problemId);
+				problemAssignments = daoProblemAssignments.getProblemAssignments(problemId, problemExperts, domains);
+				domainAssignments = daoProblemDomainAssignments.getProblemDomainAssignments(problemId);
 				domainValuations = daoProblemValuations.getDomainValuations(problemId);
 				result.add(new Problem(problemId, problemUser, problemCriteria, problemAlternatives, problemExperts, domains, domainAssignments, problemAssignments, domainValuations));
 			}

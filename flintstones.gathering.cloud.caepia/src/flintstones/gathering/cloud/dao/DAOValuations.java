@@ -143,7 +143,7 @@ public class DAOValuations {
 		}
 	}
 
-	public Valuations getValuations(String problem, ProblemAssignment assignment) {
+	public Valuations getValuations(String problem, ProblemAssignment assignment, Map<String, Domain> domains) {
 		Valuations result = new Valuations();
 		try {
 			Connection c = getConnection();
@@ -164,8 +164,6 @@ public class DAOValuations {
 				domainId = rs.getString(DOMAIN);
 				type = rs.getString(TYPE);
 				Valuation valuation = null;
-				
-				Map<String, Domain> domains = DAOProblemDomains.getDAO().getProblemDomains(problem);
 				
 				if(type.equals(IntegerValuation.class.toString())) {
 					
