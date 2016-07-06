@@ -187,7 +187,7 @@ public class ValuationView extends ViewPart {
 					_valuation = new IntegerValuation((NumericIntegerDomain) _domain, _value);
 					_surveyView.addValuation(_valuation);
 				} else if(_problem.getDomainValuations().get(_domain.getId()).equals(XMLValues.INTEGER_INTERVAL)) {
-					_valuation = new IntegerIntervalValuation((NumericIntegerDomain) _domain, (long) _valueMin, (long) _valueMax);
+					_valuation = new IntegerIntervalValuation((NumericIntegerDomain) _domain, (int) _valueMin, (int) _valueMax);
 					_surveyView.addValuation(_valuation);
 				} else if(_problem.getDomainValuations().get(_domain.getId()).equals(XMLValues.REAL)) {
 					_valuation = new RealValuation((NumericRealDomain) _domain, _value);
