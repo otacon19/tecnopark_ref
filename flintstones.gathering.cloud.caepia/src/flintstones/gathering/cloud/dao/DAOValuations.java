@@ -136,10 +136,11 @@ public class DAOValuations {
 					+ " = ?");
 			pst.setString(1, problem);
 			pst.setString(2, key.getAlternative());
-			pst.setString(2, key.getCriterion());
+			pst.setString(3, key.getCriterion());
 			pst.executeUpdate();
 			pst.close();
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 

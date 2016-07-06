@@ -20,9 +20,13 @@ import org.eclipse.ui.ISizeProvider;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
+import flintstones.gathering.cloud.dao.DAOProblemAssignments;
 import flintstones.gathering.cloud.dao.DAOProblemDomainAssignments;
+import flintstones.gathering.cloud.dao.DAOValuations;
 import flintstones.gathering.cloud.model.Key;
 import flintstones.gathering.cloud.model.Problem;
+import flintstones.gathering.cloud.model.ProblemAssignment;
+import flintstones.gathering.cloud.model.User;
 
 public class DomainAssignmentView extends ViewPart {
 
@@ -102,10 +106,25 @@ public class DomainAssignmentView extends ViewPart {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				Key key = new Key(_alternativeCombo.getItem(_alternativeCombo.getSelectionIndex()), _criterionCombo.getItem(_criterionCombo.getSelectionIndex()));
+				
 				Map<Key, String> domainAssignment = _problem.getDomainAssignments();
 				if(domainAssignment == null) {
 					domainAssignment = new HashMap<Key, String>();
+				} else {
+					User user = (User) RWT.getUISession().getAttribute("user");
+					
+					Map<Problem, ProblemAssignment> problemsAssignment = DAOProblemAssignments.getDAO().getUserProblemAssignments(user);
+					ProblemAssignment problemAssignment = null;
+					for(Problem pr: problemsAssignment.keySet()) {
+						if(pr.getId().equals(_problem.getId())) {
+							problemAssignment = problemsAssignment.get(pr);
+						}
+					}
+					
+					problemAssignment.getValuations().getValuations().remove(key);
+					DAOValuations.getDAO().removeValuation(_problem.getId(), key);
 				}
+				
 				domainAssignment.put(key, _domainCombo.getItem(_domainCombo.getSelectionIndex()));
 				_problem.setDomainAssignments(domainAssignment);
 	
