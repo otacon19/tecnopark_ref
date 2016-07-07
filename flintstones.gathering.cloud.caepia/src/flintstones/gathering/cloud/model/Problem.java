@@ -14,7 +14,7 @@ public class Problem {
 	private List<String> _alternatives;
 	private List<String> _experts;
 	private Map<String, Domain> _domains;
-	private Map<Key, String> _domainAssignments;
+	private Map<KeyDomainAssignment, String> _domainAssignments;
 	private Map<String, ProblemAssignment> _assignments;
 	private Map<String, String> _domainValuations;
 
@@ -51,7 +51,7 @@ public class Problem {
 		initAssignments();
 	}
 	
-	public Problem(String id, User admin, List<String> criteria, List<String> alternatives, List<String> experts, Map<String, Domain> domains, Map<Key, String> domainAssignments, Map<String, ProblemAssignment> assignments) {
+	public Problem(String id, User admin, List<String> criteria, List<String> alternatives, List<String> experts, Map<String, Domain> domains, Map<KeyDomainAssignment, String> domainAssignments, Map<String, ProblemAssignment> assignments) {
 		this();
 		setId(id);
 		setAdmin(admin);
@@ -63,7 +63,7 @@ public class Problem {
 		setAssignments(assignments);
 	}
 	
-	public Problem(String id, User admin, List<String> criteria, List<String> alternatives, List<String> experts, Map<String, Domain> domains, Map<Key, String> domainAssignments, Map<String, ProblemAssignment> assignments, Map<String, String> domainValuations) {
+	public Problem(String id, User admin, List<String> criteria, List<String> alternatives, List<String> experts, Map<String, Domain> domains, Map<KeyDomainAssignment, String> domainAssignments, Map<String, ProblemAssignment> assignments, Map<String, String> domainValuations) {
 		this();
 		setId(id);
 		setAdmin(admin);
@@ -132,11 +132,11 @@ public class Problem {
 		return _domains;
 	}
 	
-	public void setDomainAssignments(Map<Key, String> domainAssignments) {
+	public void setDomainAssignments(Map<KeyDomainAssignment, String> domainAssignments) {
 		_domainAssignments = domainAssignments;
 	}
 	
-	public Map<Key, String> getDomainAssignments() {
+	public Map<KeyDomainAssignment, String> getDomainAssignments() {
 		return _domainAssignments;
 	}
 	

@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import flintstones.gathering.cloud.mail.ProblemMailGenerator;
-import flintstones.gathering.cloud.model.Key;
+import flintstones.gathering.cloud.model.KeyDomainAssignment;
 import flintstones.gathering.cloud.model.Problem;
 import flintstones.gathering.cloud.model.ProblemAssignment;
 import flintstones.gathering.cloud.model.User;
@@ -119,7 +119,7 @@ public class DAOProblem {
 			Map<String, ProblemAssignment> problemAssignments;
 			Map<String, Domain> domains;
 			Map<String, String> domainValuations;
-			Map<Key, String> domainAssignments;
+			Map<KeyDomainAssignment, String> domainAssignments;
 			while (rs.next()) {
 				problemId = rs.getString(ID);
 				problemAdmin = rs.getString(ADMIN);

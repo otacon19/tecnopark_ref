@@ -7,6 +7,7 @@ import java.sql.Statement;
 import java.util.Map;
 
 import flintstones.gathering.cloud.model.Key;
+import flintstones.gathering.cloud.model.KeyDomainAssignment;
 import flintstones.gathering.cloud.model.Problem;
 import flintstones.gathering.cloud.model.ProblemAssignment;
 import flintstones.gathering.cloud.model.Valuations;
@@ -128,15 +129,16 @@ public class DAOValuations {
 		removeProblemValuations(problem.getId());
 	}
 	
-	public void removeValuation(String problem, Key key) {
+	public void removeValuation(String problem, KeyDomainAssignment key) {
 
 		try {
 			Connection c = getConnection();
 			PreparedStatement pst = c.prepareStatement("delete from " + TABLE + " where " + PROBLEM + " = ?" + " and " + ALTERNATIVE + " = ?" + " and " + CRITERION
-					+ " = ?");
+					+ " = ?" + " and " + EXPERT + " = ?");
 			pst.setString(1, problem);
 			pst.setString(2, key.getAlternative());
 			pst.setString(3, key.getCriterion());
+			pst.setString(4, key.getExpert());
 			pst.executeUpdate();
 			pst.close();
 		} catch (Exception e) {

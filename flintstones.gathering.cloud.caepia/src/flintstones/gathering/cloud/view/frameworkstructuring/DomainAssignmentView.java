@@ -23,7 +23,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import flintstones.gathering.cloud.dao.DAOProblemAssignments;
 import flintstones.gathering.cloud.dao.DAOProblemDomainAssignments;
 import flintstones.gathering.cloud.dao.DAOValuations;
-import flintstones.gathering.cloud.model.Key;
+import flintstones.gathering.cloud.model.KeyDomainAssignment;
 import flintstones.gathering.cloud.model.Problem;
 import flintstones.gathering.cloud.model.ProblemAssignment;
 import flintstones.gathering.cloud.model.User;
@@ -105,22 +105,23 @@ public class DomainAssignmentView extends ViewPart {
 		_applyButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				Key key = new Key(_alternativeCombo.getItem(_alternativeCombo.getSelectionIndex()), _criterionCombo.getItem(_criterionCombo.getSelectionIndex()));
-				
-				Map<Key, String> domainAssignment = _problem.getDomainAssignments();
-				if(domainAssignment == null) {
-					domainAssignment = new HashMap<Key, String>();
-				} else {
-					User user = (User) RWT.getUISession().getAttribute("user");
-					
-					Map<Problem, ProblemAssignment> problemsAssignment = DAOProblemAssignments.getDAO().getUserProblemAssignments(user);
-					ProblemAssignment problemAssignment = null;
-					for(Problem pr: problemsAssignment.keySet()) {
-						if(pr.getId().equals(_problem.getId())) {
-							problemAssignment = problemsAssignment.get(pr);
-						}
+				User user = (User) RWT.getUISession().getAttribute("user");
+				Map<Problem, ProblemAssignment> problemsAssignment = DAOProblemAssignments.getDAO().getUserProblemAssignments(user);
+				ProblemAssignment problemAssignment = null;
+				for(Problem pr: problemsAssignment.keySet()) {
+					if(pr.getId().equals(_problem.getId())) {
+						problemAssignment = problemsAssignment.get(pr);
 					}
-					
+				}
+				
+				KeyDomainAssignment key = new KeyDomainAssignment(_alternativeCombo.getItem(_alternativeCombo.getSelectionIndex()), 
+						_criterionCombo.getItem(_criterionCombo.getSelectionIndex()),
+						problemAssignment.getId());
+			
+				Map<KeyDomainAssignment, String> domainAssignment = _problem.getDomainAssignments();
+				if(domainAssignment == null) {
+					domainAssignment = new HashMap<KeyDomainAssignment, String>();
+				} else {					
 					problemAssignment.getValuations().getValuations().remove(key);
 					DAOValuations.getDAO().removeValuation(_problem.getId(), key);
 				}
@@ -135,7 +136,7 @@ public class DomainAssignmentView extends ViewPart {
 				
 				notifyListeners(assignment);
 		
-				Map<Key, String> assignmentDAO = new HashMap<Key, String>();
+				Map<KeyDomainAssignment, String> assignmentDAO = new HashMap<KeyDomainAssignment, String>();
 				assignmentDAO.put(key, _domainCombo.getItem(_domainCombo.getSelectionIndex()));
 				DAOProblemDomainAssignments.getDAO().createProblemDomainAssignment(_problem , assignmentDAO);	
 			}
@@ -196,15 +197,17 @@ public class DomainAssignmentView extends ViewPart {
 	}
 	
 	private void setDomainAssignments() {
-		Map<Key, String> domainAssignments = _problem.getDomainAssignments();
+		Map<KeyDomainAssignment, String> domainAssignments = _problem.getDomainAssignments();
 		if(domainAssignments != null) {
 			if(domainAssignments.size() > 0) {
-				for(Key key: domainAssignments.keySet()) {
-					String[] assignment = new String[3];
-					assignment[0] = key.getCriterion();
-					assignment[1] = key.getAlternative();
-					assignment[2] = domainAssignments.get(key);
-					_domainAssignments.add(assignment);
+				for(KeyDomainAssignment key: domainAssignments.keySet()) {
+					if(key.getExpert().equals(_)) {
+						String[] assignment = new String[3];
+						assignment[0] = key.getCriterion();
+						assignment[1] = key.getAlternative();
+						assignment[2] = domainAssignments.get(key);
+						_domainAssignments.add(assignment);
+					}
 				}
 			}
 		}

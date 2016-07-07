@@ -35,6 +35,7 @@ import flintstones.gathering.cloud.dao.DAOProblemAssignments;
 import flintstones.gathering.cloud.dao.DAOProblemDomainAssignments;
 import flintstones.gathering.cloud.dao.DAOValuations;
 import flintstones.gathering.cloud.model.Key;
+import flintstones.gathering.cloud.model.KeyDomainAssignment;
 import flintstones.gathering.cloud.model.Problem;
 import flintstones.gathering.cloud.model.ProblemAssignment;
 import flintstones.gathering.cloud.model.User;
@@ -150,9 +151,9 @@ public class SurveyView extends ViewPart {
 				String alternative = _valuationSelected.getText(1);
 				
 				DAOProblemDomainAssignments daoProblemDomainAssignments = DAOProblemDomainAssignments.getDAO();
-				Map<Key, String> domainAssignments = daoProblemDomainAssignments.getProblemDomainAssignments(_problem);
+				Map<KeyDomainAssignment, String> domainAssignments = daoProblemDomainAssignments.getProblemDomainAssignments(_problem);
 				
-				Key key = new Key(alternative, criterion);
+				KeyDomainAssignment key = new KeyDomainAssignment(alternative, criterion, _problemAssignment.getId());
 				String idDomain = domainAssignments.get(key);
 				Domain domain = _problem.getDomains().get(idDomain);
 				
@@ -279,7 +280,7 @@ public class SurveyView extends ViewPart {
 	}
 
 	public void removeValuation(Valuation valuation) {
-		Key key = new Key(_valuationSelected.getText(1), _valuationSelected.getText(0));
+		KeyDomainAssignment key = new KeyDomainAssignment(_valuationSelected.getText(1), _valuationSelected.getText(0), _problemAssignment.getId());
 		_valuations.getValuations().remove(key);
 		_problemAssignment.setValuations(_valuations);
 		DAOValuations.getDAO().removeValuation(_problem.getId(), key);

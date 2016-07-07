@@ -7,7 +7,7 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
-import flintstones.gathering.cloud.model.Key;
+import flintstones.gathering.cloud.model.KeyDomainAssignment;
 import flintstones.gathering.cloud.model.Problem;
 import sinbad2.database.Database;
 import sinbad2.database.DatabaseManager;
@@ -18,6 +18,7 @@ public class DAOProblemDomainAssignments {
 	public static final String PROBLEM = "problem";
 	public static final String ALTERNATIVE = "alternative";
 	public static final String CRITERION = "criterion";
+	public static final String EXPERT = "expert";
 	public static final String DOMAIN = "domain";
 
 	private static DAOProblemDomainAssignments _dao = null;
@@ -39,8 +40,8 @@ public class DAOProblemDomainAssignments {
 
 		result = "create table " + TABLE + "(" + PROBLEM
 				+ " VARCHAR(50) NOT NULL, " + ALTERNATIVE
-				+ " TEXT NOT NULL, " + CRITERION + " TEXT NOT NULL, " + DOMAIN + " VARCHAR(255) NOT NULL, PRIMARY KEY(" + PROBLEM + ","
-				+ ALTERNATIVE + "(255)," + CRITERION + "(255)));";
+				+ " TEXT NOT NULL, " + CRITERION + " TEXT NOT NULL, " + EXPERT + " TEXT NOT NULL, " + DOMAIN + " VARCHAR(255) NOT NULL, PRIMARY KEY(" + PROBLEM + ","
+				+ ALTERNATIVE + "(255)," + CRITERION + "(255)," + EXPERT + "(255)));";
 
 		return result;
 	}
@@ -61,11 +62,11 @@ public class DAOProblemDomainAssignments {
 			Connection c = getConnection();
 			Statement st = c.createStatement();
 			String problemId = problem.getId();
-			Map<Key, String> domainAssignments = problem.getDomainAssignments();
+			Map<KeyDomainAssignment, String> domainAssignments = problem.getDomainAssignments();
 			String domain = null;
-			for (Key key : domainAssignments.keySet()) {
+			for (KeyDomainAssignment key : domainAssignments.keySet()) {
 				domain = domainAssignments.get(key);
-				st.executeUpdate("insert into " + TABLE + " values ('" + problemId + "','" + key.getAlternative().replace("'", "''") + "','" + key.getCriterion().replace("'", "''") + "','" + domain + "')");
+				st.executeUpdate("insert into " + TABLE + " values ('" + problemId + "','" + key.getAlternative().replace("'", "''") + "','" + key.getCriterion().replace("'", "''") + "','" + key.getExpert().replace("'",  "''") + "','" + domain + "')");
 			}
 			st.close();
 		} catch (Exception e) {
@@ -73,16 +74,16 @@ public class DAOProblemDomainAssignments {
 		}
 	}
 	
-	public void createProblemDomainAssignment(Problem problem, Map<Key, String> assignment) {
+	public void createProblemDomainAssignment(Problem problem, Map<KeyDomainAssignment, String> assignment) {
 		try {
 			Connection c = getConnection();
 			Statement st = c.createStatement();
 			String problemId = problem.getId();
 			String domain = null;
 			
-			for(Key key: assignment.keySet()) {
+			for(KeyDomainAssignment key: assignment.keySet()) {
 				domain = assignment.get(key);
-				st.executeUpdate("replace into " + TABLE + " values ('" + problemId + "','" + key.getAlternative().replace("'", "''") + "','" + key.getCriterion().replace("'", "''") + "','" + domain + "')");
+				st.executeUpdate("replace into " + TABLE + " values ('" + problemId + "','" + key.getAlternative().replace("'", "''") + "','" + key.getCriterion().replace("'", "''") + "','" + key.getExpert().replace("'", "''") + "','" + domain + "')");
 			}
 			st.close();
 		} catch (Exception e) {
@@ -93,8 +94,7 @@ public class DAOProblemDomainAssignments {
 	public void removeProblemDomainAssignments(String problem) {
 		try {
 			Connection c = getConnection();
-			PreparedStatement pst = c.prepareStatement("delete from " + TABLE
-					+ " where " + PROBLEM + " = ?");
+			PreparedStatement pst = c.prepareStatement("delete from " + TABLE + " where " + PROBLEM + " = ?");
 			pst.setString(1, problem);
 			pst.executeUpdate();
 			pst.close();
@@ -106,24 +106,25 @@ public class DAOProblemDomainAssignments {
 		removeProblemDomainAssignments(problem.getId());
 	}
 	
-	public Map<Key, String> getProblemDomainAssignments(String problem) {
-		Map<Key, String> result = new HashMap<Key, String>();
+	public Map<KeyDomainAssignment, String> getProblemDomainAssignments(String problem) {
+		Map<KeyDomainAssignment, String> result = new HashMap<KeyDomainAssignment, String>();
 		
 		try {
 			Connection c = getConnection();
 			Statement st = c.createStatement();
 
-			String select = "select * from " + TABLE + " where " + PROBLEM
-					+ "='" + problem + "';";
+			String select = "select * from " + TABLE + " where " + PROBLEM + "='" + problem + "';";
 			ResultSet rs = st.executeQuery(select);
 			String criterion;
 			String alternative;
+			String expert;
 			String domain;
 			while (rs.next()) {
 				criterion = rs.getString(CRITERION);
 				alternative = rs.getString(ALTERNATIVE);
 				domain = rs.getString(DOMAIN);
-				result.put(new Key(alternative, criterion), domain);
+				expert = rs.getString(EXPERT);
+				result.put(new KeyDomainAssignment(alternative, criterion, expert), domain);
 			}
 		} catch (Exception e) {
 			
@@ -132,7 +133,7 @@ public class DAOProblemDomainAssignments {
 		return result;
 	}
 	
-	public Map<Key, String> getProblemDomainAssignments(Problem problem) {
+	public Map<KeyDomainAssignment, String> getProblemDomainAssignments(Problem problem) {
 		return getProblemDomainAssignments(problem.getId());
 	}
 
