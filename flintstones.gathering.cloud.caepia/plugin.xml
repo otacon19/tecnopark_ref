@@ -268,5 +268,18 @@
          </property>
       </account>
    </extension>
+   <extension
+         point="org.eclipse.rap.ui.layouts">
+      <layout
+            id="flintstones.gathering.cloud.caepia.layout"
+            name="Overriding logo">
+         <layoutSet
+               class="flintstones.gathering.cloud.view.layout.LogoInitializer"
+               id="flintstones.gathering.cloud.caepia.layoutSet"
+               name="Logo initializer"
+               overridesId="org.eclipse.rap.design.example.layoutset.logo">
+         </layoutSet>
+      </layout>
+   </extension>
 
 </plugin>

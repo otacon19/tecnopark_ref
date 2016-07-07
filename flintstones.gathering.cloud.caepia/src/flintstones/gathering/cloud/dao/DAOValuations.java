@@ -96,13 +96,13 @@ public class DAOValuations {
 							valuation = assignment.getValuations().getValuation(key);
 							if (valuation != null) {
 								value = valuation.changeFormatValuationToString();
+								st.executeUpdate("insert into " + TABLE + " values ('"
+										+ problemId + "','"
+										+ criterion.replace("'", "''") + "','"
+										+ alternative.replace("'", "''") + "','" + expert + "','" + valuation.getDomain().getId() + "'," + valuation.getClass().toString() + "','" + value
+										+ "')");
 							}
 						}
-						st.executeUpdate("insert into " + TABLE + " values ('"
-								+ problemId + "','"
-								+ criterion.replace("'", "''") + "','"
-								+ alternative.replace("'", "''") + "','" + expert + "','" + valuation.getDomain().getId() + "'," + valuation.getClass().toString() + "','" + value
-								+ "')");
 					}
 				}
 			}
@@ -201,29 +201,38 @@ public class DAOValuations {
 					String hesitant = rs.getString(VALUE);
 					FuzzySet fuzzySet =(FuzzySet) domains.get(domainId);
 					if(hesitant.contains("Between")) {
-						hesitant = hesitant.replace("Between", "");
-						String lowerTerm = hesitant.substring(0, hesitant.indexOf(" ") - 1);
-						String upperTerm = hesitant.substring(hesitant.lastIndexOf(" "), hesitant.length() - 1);
+			
+						hesitant = hesitant.replace("Between ", "");
+						String lowerTerm = hesitant.substring(0, hesitant.indexOf(" "));
+						String upperTerm = hesitant.substring(hesitant.lastIndexOf(" ") + 1, hesitant.length());
 
 						valuation = new HesitantValuation(fuzzySet);
 						((HesitantValuation) valuation).setBinaryRelation(lowerTerm, upperTerm);
+					
+					} else if(hesitant.contains("At least") || hesitant.contains("At most") || hesitant.contains("Lower than") ||
+							hesitant.contains("Greater than")){
+						
+						valuation = new HesitantValuation((FuzzySet) domains.get(domainId));
+						valuation.setDomain(fuzzySet);
+				
+						EUnaryRelationType unary;
+						if(hesitant.contains("At least")) {
+							unary = EUnaryRelationType.AtLeast;
+						} else if(hesitant.contains("At most")) {
+							unary = EUnaryRelationType.AtMost;
+						} else if(hesitant.contains("Lower than")) {
+							unary = EUnaryRelationType.LowerThan;
+						} else {
+							unary = EUnaryRelationType.GreaterThan;
+						}
+
+						String term = hesitant.substring(hesitant.lastIndexOf(" ") + 1, hesitant.length());
+						((HesitantValuation) valuation).setUnaryRelation(unary, fuzzySet.getLabelSet().getLabel(term));
+					
 					} else {
 						valuation = new HesitantValuation((FuzzySet) domains.get(domainId));
 						valuation.setDomain(fuzzySet);
-						String unaryRelation = hesitant.substring(0, hesitant.indexOf(" ") - 1);
-						
-						EUnaryRelationType unary;
-						if(unaryRelation.equals(EUnaryRelationType.AtLeast.getRelationType())) {
-							unary = EUnaryRelationType.AtLeast;
-						} else if(unaryRelation.equals(EUnaryRelationType.AtMost)) {
-							unary = EUnaryRelationType.AtMost;
-						} else if(unaryRelation.equals(EUnaryRelationType.GreaterThan)) {
-							unary = EUnaryRelationType.GreaterThan;
-						} else {
-							unary = EUnaryRelationType.LowerThan;
-						}
-						String term = hesitant.substring(hesitant.indexOf(" ") - 1, hesitant.length() - 1);
-						((HesitantValuation) valuation).setUnaryRelation(unary, fuzzySet.getLabelSet().getLabel(term));
+						((HesitantValuation) valuation).setLabel(hesitant);
 					}
 					
 				}

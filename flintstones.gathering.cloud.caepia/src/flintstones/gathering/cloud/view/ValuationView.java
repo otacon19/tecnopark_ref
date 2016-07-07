@@ -166,10 +166,6 @@ public class ValuationView extends ViewPart {
 			control.dispose();
 		}
 	}
-	
-	private void disposeButtons() {
-		_buttonsPart.dispose();
-	}
 
 	@SuppressWarnings("serial")
 	private void createButtons() {	
@@ -218,8 +214,11 @@ public class ValuationView extends ViewPart {
 					_valuation = new HesitantValuation((FuzzySet) _domain);
 					if(_upperTerm != null && _lowerTerm != null) {
 						((HesitantValuation) _valuation).setBinaryRelation(_lowerTerm, _upperTerm);
-					} else {
+					} else if(_term != null) {
 						((HesitantValuation) _valuation).setUnaryRelation(_unaryRelation, _term);
+					} else {
+						_label = ((FuzzySet) _domain).getLabelSet().getLabel(_hesitantEvaluationCombo2.getItem(_hesitantEvaluationCombo2.getSelectionIndex()));
+						((HesitantValuation) _valuation).setLabel(_label);
 					}
 					_surveyView.addValuation(_valuation);
 				}
@@ -629,8 +628,6 @@ public class ValuationView extends ViewPart {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				
-				disposeButtons();
-				
 				if(_hesitantRelationshipComposite.getEnabled()) {
 					_hesitantRelationshipComposite.setEnabled(false);
 					_unaryRelationshipButton.setEnabled(false);
@@ -640,8 +637,6 @@ public class ValuationView extends ViewPart {
 				checkHesitantValues(false, false, false, true, false);
 				
 				modifyHesitantSelection();
-				
-				createButtons();
 			}
 		});
 		
@@ -649,9 +644,7 @@ public class ValuationView extends ViewPart {
 			
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				
-				disposeButtons();
-				
+
 				if(!_hesitantRelationshipComposite.getEnabled()) {
 					_hesitantRelationshipComposite.setEnabled(true);
 					_unaryRelationshipButton.setEnabled(true);
@@ -663,7 +656,7 @@ public class ValuationView extends ViewPart {
 						
 						_selectIndexes.add(0);
 						_selectIndexes.add(_hesitantEvaluationCombo2.getSelectionIndex());
-						_unaryRelation = EUnaryRelationType.AtMost;
+						_unaryRelation = EUnaryRelationType.LowerThan;
 						_term = ((FuzzySet) _domain).getLabelSet().getLabel(_hesitantEvaluationCombo2.getSelectionIndex());
 						_unaryIndexes.add(_unaryRelation, _term);
 						
@@ -671,8 +664,6 @@ public class ValuationView extends ViewPart {
 					
 					modifyHesitantSelection();
 				}
-				
-				createButtons();
 			}
 		});
 		
@@ -680,8 +671,6 @@ public class ValuationView extends ViewPart {
 			
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				
-				disposeButtons();
 				
 				if(_hesitantRelationshipComposite.getEnabled()) {
 					if(_compositeButton.getSelection()) {
@@ -692,7 +681,6 @@ public class ValuationView extends ViewPart {
 					
 					modifyHesitantSelection();
 				}
-				createButtons();
 			}
 		});
 		
@@ -700,8 +688,6 @@ public class ValuationView extends ViewPart {
 			
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				
-				disposeButtons();
 				
 				if(_hesitantRelationshipComposite.getEnabled()) {
 					if(_compositeButton.getSelection()) {
@@ -724,7 +710,6 @@ public class ValuationView extends ViewPart {
 
 					modifyHesitantSelection();
 				}
-				createButtons();
 			}
 		});
 	}
