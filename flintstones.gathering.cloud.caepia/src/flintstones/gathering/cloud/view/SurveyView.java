@@ -19,6 +19,9 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
@@ -26,6 +29,7 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 import flintstones.gathering.cloud.dao.DAOProblemAssignments;
 import flintstones.gathering.cloud.dao.DAOProblemDomainAssignments;
@@ -44,6 +48,7 @@ public class SurveyView extends ViewPart {
 
 	private TableViewer _viewer;
 	private TableItem _valuationSelected;
+	private Button _sendAssignmets;
 	
 	private ValuationView _valuationView;
 	
@@ -109,11 +114,18 @@ public class SurveyView extends ViewPart {
 	@SuppressWarnings("serial")
 	@Override
 	public void createPartControl(final Composite parent) {
-		_viewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+		parent.setLayout(new GridLayout(1, true));
+		
+		Composite viewerComposite = new Composite(parent, SWT.NONE);
+		viewerComposite.setLayout(new GridLayout(1, true));
+		viewerComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		
+		_viewer = new TableViewer(viewerComposite, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 		_viewer.setContentProvider(new ViewContentProvider());
 		_viewer.setLabelProvider(new ViewLabelProvider());
 		
 		final Table table = _viewer.getTable();
+		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		table.setLinesVisible(true);
 		table.setVisible(true);
 		table.setHeaderVisible(true);
@@ -174,6 +186,22 @@ public class SurveyView extends ViewPart {
 			}
 		});
 		
+		Composite buttonComposite = new Composite(parent, SWT.NONE);
+		buttonComposite.setLayout(new GridLayout(1, true));
+		buttonComposite.setLayoutData(new GridData(SWT.RIGHT, SWT.RIGHT, true, false, 1, 1));
+		_sendAssignmets = new Button(buttonComposite, SWT.BORDER);
+		_sendAssignmets.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
+		_sendAssignmets.setText("Enviar");
+		_sendAssignmets.setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/mail_20.png").createImage());
+		_sendAssignmets.setEnabled(false);
+		_sendAssignmets.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				_problemAssignment.setMake(true);
+				DAOProblemAssignments.getDAO().makeAssignment(_problem, _problemAssignment);
+			}
+		});
+		
 		if(_problem != null) {
 			setModel();
 		}
@@ -191,7 +219,7 @@ public class SurveyView extends ViewPart {
 		
 		if(_problemAssignment != null) {
 	
-			Valuations valuations = _problemAssignment.getValuations();
+			_valuations = _problemAssignment.getValuations();
 	
 			List<String[]> input = new LinkedList<String[]>();
 			for(String a: _problem.getAlternatives()) {
@@ -199,8 +227,8 @@ public class SurveyView extends ViewPart {
 					String[] values = new String[3];
 					values[0] = a;
 					values[1] = c;
-					if(valuations != null) {
-						Valuation v = valuations.getValuation(new Key(a, c));
+					if(_valuations != null) {
+						Valuation v = _valuations.getValuation(new Key(a, c));
 						if(v != null) {
 							values[2] = v.changeFormatValuationToString(); 
 						} else {
@@ -226,6 +254,8 @@ public class SurveyView extends ViewPart {
 		_problem = (Problem) RWT.getUISession().getAttribute("valuation-problem");
 		setModel();
 		_viewer.refresh();
+		
+		checkMakeAssignment();
 	}
 
 	public void addValuation(Valuation valuation) {
@@ -235,8 +265,19 @@ public class SurveyView extends ViewPart {
 		DAOValuations.getDAO().insertValuation(_problem, _problemAssignment, key, valuation);
 		
 		_valuationSelected.setText(2, valuation.changeFormatValuationToString());
+		
+		checkMakeAssignment();	
+		
 	}
 	
+	private void checkMakeAssignment() {
+		if(_valuations.getValuations().size() == _viewer.getTable().getItemCount()) {
+			_sendAssignmets.setEnabled(true);
+		} else {
+			_sendAssignmets.setEnabled(false);
+		}
+	}
+
 	public void removeValuation(Valuation valuation) {
 		Key key = new Key(_valuationSelected.getText(1), _valuationSelected.getText(0));
 		_valuations.getValuations().remove(key);
