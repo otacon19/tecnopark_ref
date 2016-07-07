@@ -137,7 +137,7 @@ public class DomainAssignmentView extends ViewPart {
 		
 				Map<Key, String> assignmentDAO = new HashMap<Key, String>();
 				assignmentDAO.put(key, _domainCombo.getItem(_domainCombo.getSelectionIndex()));
-				DAOProblemDomainAssignments.getDAO().createProblemDomainAssignment(_problem , assignmentDAO);
+				DAOProblemDomainAssignments.getDAO().createProblemDomainAssignment(_problem , assignmentDAO);	
 			}
 		});
 

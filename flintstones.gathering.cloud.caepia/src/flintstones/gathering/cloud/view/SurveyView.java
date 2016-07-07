@@ -52,6 +52,7 @@ public class SurveyView extends ViewPart {
 	private ProblemAssignment _problemAssignment;
 
 	public SurveyView() {
+		
 		_problem = (Problem) RWT.getUISession().getAttribute("valuation-problem");
 	
 		_valuations = new Valuations();
@@ -189,6 +190,7 @@ public class SurveyView extends ViewPart {
 		}
 		
 		if(_problemAssignment != null) {
+	
 			Valuations valuations = _problemAssignment.getValuations();
 	
 			List<String[]> input = new LinkedList<String[]>();
@@ -241,6 +243,6 @@ public class SurveyView extends ViewPart {
 		_problemAssignment.setValuations(_valuations);
 		DAOValuations.getDAO().removeValuation(_problem.getId(), key);
 		
-		_valuationSelected.setText(2, "Not assigned");
+		_valuationSelected.setText(2, "No asignada");
 	}
 }

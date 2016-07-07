@@ -2,12 +2,14 @@ package flintstones.gathering.cloud.controller;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.rap.rwt.RWT;
+import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.WorkbenchException;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 import flintstones.gathering.cloud.ICommandIds;
+import flintstones.gathering.cloud.view.SurveyView;
 
 /**
  * When run, this action will open another instance of a view.
@@ -30,6 +32,18 @@ public class OpenGatheringPerspective extends Action {
 			this.setEnabled(false);
 			((OpenProblemsPerspective) RWT.getUISession().getAttribute("open-problems-action")).setEnabled(true);
 			((OpenFrameworkStructuringPerspective) RWT.getUISession().getAttribute("open-frameworkstructuring-action")).setEnabled(true);
+			
+			SurveyView surveyView = null;
+			IViewReference viewReferences[] = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences();
+			for (int i = 0; i < viewReferences.length; i++) {
+				if (SurveyView.ID.equals(viewReferences[i].getId())) {
+					surveyView = (SurveyView) viewReferences[i].getView(false);
+				}
+			}
+			if(surveyView != null) {
+				surveyView.refresh();
+			}
+			
 		} catch (WorkbenchException e1) {
 		}
 	}

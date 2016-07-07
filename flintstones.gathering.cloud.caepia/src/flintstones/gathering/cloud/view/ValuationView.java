@@ -12,7 +12,6 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -175,21 +174,12 @@ public class ValuationView extends ViewPart {
 		GridLayout layout = new GridLayout(1, false);
 		_buttonsPart.setLayout(layout);
 
-		_removeButton = new Button(_buttonsPart, SWT.BORDER);
-		_removeButton.setLayoutData(new GridData(SWT.CENTER, SWT.TOP, false, false, 1, 1));
-		_removeButton.setText("Borrar");
-		_removeButton.setImage(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_DELETE).createImage());
-		_removeButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				super.widgetSelected(e);
-			}
-		});
-		
 		_valuateButton = new Button(_buttonsPart, SWT.BORDER);
-		_valuateButton.setLayoutData(new GridData(SWT.CENTER, SWT.TOP, false, false, 1, 1));
+		_valuateButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
+		((GridData) _valuateButton.getLayoutData()).heightHint = 35;
 		_valuateButton.setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/valuation.png").createImage());
 		_valuateButton.setText("Evaluar");
+		_valuateButton.pack();
 		_valuateButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -225,29 +215,23 @@ public class ValuationView extends ViewPart {
 			}
 		});
 		
-		((GridData) _removeButton.getLayoutData()).widthHint = 80;
-		((GridData) _valuateButton.getLayoutData()).widthHint = 80;
-		
-		_buttonsPart.addControlListener(new ControlAdapter() {
+		_removeButton = new Button(_buttonsPart, SWT.BORDER);
+		_removeButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
+		((GridData) _removeButton.getLayoutData()).heightHint = 35;
+		_removeButton.setText("Borrar");
+		_removeButton.setImage(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_DELETE).createImage());
+		_removeButton.pack();
+		_removeButton.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void controlResized(ControlEvent e) {
-				if(!_removeButton.isDisposed() && !_valuateButton.isDisposed()) {
-					Point sizeRemove = _removeButton.getSize();
-					Point sizeValuate = _valuateButton.getSize();
-					
-					Point size = new Point((sizeRemove.x < sizeValuate.x) ? sizeValuate.x : sizeRemove.x, sizeRemove.y);
-					_removeButton.setSize(size);
-					_valuateButton.setSize(size);
-					((GridData) _removeButton.getLayoutData()).widthHint = 80;
-					((GridData) _valuateButton.getLayoutData()).widthHint = 80;
-				}
+			public void widgetSelected(SelectionEvent e) {
+				_surveyView.removeValuation(_valuation);
 			}
 		});
 	}
 	
 	@SuppressWarnings("serial")
 	private void createIntegerPanel() {
-		_valuationComposite = new Composite(_parent, SWT.NONE);
+		_valuationComposite = new Composite(_parent, SWT.BORDER);
 		_valuationComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		_valuationComposite.setLayout(new GridLayout(5, true));
 		
@@ -295,7 +279,7 @@ public class ValuationView extends ViewPart {
 	
 	@SuppressWarnings("serial")
 	private void createIntegerIntervalPanel() {
-		_valuationComposite = new Composite(_parent, SWT.NONE);
+		_valuationComposite = new Composite(_parent, SWT.BORDER);
 		_valuationComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		_valuationComposite.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		_valuationComposite.setLayout(new GridLayout(2, false));
@@ -314,7 +298,7 @@ public class ValuationView extends ViewPart {
 		spinnerComposite.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		
 		Composite intervalSpinnerComposite = new Composite(spinnerComposite, SWT.NONE);
-		intervalSpinnerComposite.setLayoutData(new GridData(SWT.CENTER, SWT.FILL, true, false, 1, 1));
+		intervalSpinnerComposite.setLayoutData(new GridData(SWT.CENTER, SWT.FILL, false, false, 1, 1));
 		intervalSpinnerComposite.setLayout(new GridLayout(2,  false));
 		intervalSpinnerComposite.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		
@@ -326,7 +310,6 @@ public class ValuationView extends ViewPart {
 		
 		_valueSpinnerMin = new Spinner(intervalSpinnerComposite, SWT.BORDER);
 		gd = new GridData(SWT.CENTER, SWT.FILL, false, true, 1, 1);
-		gd.widthHint = 80;
 		_valueSpinnerMin.setLayoutData(gd);
 		_valueSpinnerMin.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		
@@ -337,7 +320,6 @@ public class ValuationView extends ViewPart {
 		
 		_valueSpinnerMax = new Spinner(intervalSpinnerComposite, SWT.BORDER);
 		gd = new GridData(SWT.CENTER, SWT.FILL, false, true, 1, 1);
-		gd.widthHint = 80;
 		_valueSpinnerMax.setLayoutData(gd);
 		_valueSpinnerMax.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		
@@ -348,9 +330,11 @@ public class ValuationView extends ViewPart {
 			int value = ((int) _valueMax / 2);
 			
 			_valueSpinnerMin.setMinimum((int) _valueMin);
+			_valueSpinnerMin.setSelection((int) _valueMin);
 			_valueSpinnerMin.setMaximum(value);
 			_valueSpinnerMax.setMinimum(value);
 			_valueSpinnerMax.setMaximum((int) _valueMax);
+			_valueSpinnerMax.setSelection((int) _valueMax);
 		} else {
 			_valueMin = 0;
 			_valueMax = 0;
@@ -382,7 +366,7 @@ public class ValuationView extends ViewPart {
 	
 	@SuppressWarnings("serial")
 	private void createRealPanel() {
-		_valuationComposite = new Composite(_parent, SWT.NONE);
+		_valuationComposite = new Composite(_parent, SWT.BORDER);
 		_valuationComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		_valuationComposite.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		_valuationComposite.setLayout(new GridLayout(5, true));
@@ -432,7 +416,7 @@ public class ValuationView extends ViewPart {
 	
 	@SuppressWarnings("serial")
 	private void createRealIntervalPanel() {
-		_valuationComposite = new Composite(_parent, SWT.NONE);
+		_valuationComposite = new Composite(_parent, SWT.BORDER);
 		_valuationComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		_valuationComposite.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		_valuationComposite.setLayout(new GridLayout(2, false));
@@ -463,7 +447,6 @@ public class ValuationView extends ViewPart {
 		
 		_valueSpinnerMin = new Spinner(intervalSpinnerComposite, SWT.BORDER);
 		gd = new GridData(SWT.CENTER, SWT.CENTER, false, true, 1, 1);
-		gd.widthHint = 80;
 		_valueSpinnerMin.setLayoutData(gd);
 		_valueSpinnerMin.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		
@@ -474,14 +457,12 @@ public class ValuationView extends ViewPart {
 		
 		_valueSpinnerMax = new Spinner(intervalSpinnerComposite, SWT.BORDER);
 		gd = new GridData(SWT.FILL, SWT.FILL, false, true, 1, 1);
-		gd.widthHint = 80;
 		_valueSpinnerMax.setLayoutData(gd);
 		_valueSpinnerMax.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		
 		int value = 0;
 		
 		if(((NumericRealDomain) _domain).getInRange()) {
-			
 			_valueMin = ((NumericRealDomain) _domain).getMin();
 			_valueMax = ((NumericRealDomain) _domain).getMax();
 			
@@ -489,10 +470,12 @@ public class ValuationView extends ViewPart {
 			
 			_valueSpinnerMin.setDigits(2);
 			_valueSpinnerMin.setMinimum((int) ((double)  _valueMin * 100d));
+			_valueSpinnerMin.setSelection((int) ((double)  _valueMin * 100d));
 			_valueSpinnerMin.setMaximum((int) (value * 100d));
 			_valueSpinnerMax.setDigits(2);
 			_valueSpinnerMax.setMinimum((int) (value * 100d));
 			_valueSpinnerMax.setMaximum((int) ((double) _valueMax * 100d));
+			_valueSpinnerMax.setSelection((int) ((double) _valueMax * 100d));
 		} else {
 			_valueMin = 0;
 			_valueMax = 0;
@@ -527,7 +510,7 @@ public class ValuationView extends ViewPart {
 	
 	@SuppressWarnings("serial")
 	private void createLinguisticPanel() {
-		_valuationComposite = new Composite(_parent, SWT.NONE);
+		_valuationComposite = new Composite(_parent, SWT.BORDER);
 		_valuationComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		_valuationComposite.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		_valuationComposite.setLayout(new GridLayout(5, true));
@@ -581,7 +564,7 @@ public class ValuationView extends ViewPart {
 	
 	@SuppressWarnings("serial")
 	private void createHesitantPanel() {
-		_valuationComposite = new Composite(_parent, SWT.NONE);
+		_valuationComposite = new Composite(_parent, SWT.BORDER);
 		_valuationComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		_valuationComposite.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		_valuationComposite.setLayout(new GridLayout(4, false));
