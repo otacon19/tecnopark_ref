@@ -87,7 +87,7 @@ public class DAOProblemDomainAssignments {
 			}
 			st.close();
 		} catch (Exception e) {
-			
+			e.printStackTrace();
 		}
 	}
 	

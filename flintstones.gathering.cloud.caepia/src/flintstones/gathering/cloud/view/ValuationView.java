@@ -471,7 +471,7 @@ public class ValuationView extends ViewPart {
 			_valueSpinnerMin.setDigits(2);
 			_valueSpinnerMin.setMinimum((int) ((double)  _valueMin * 100d));
 			_valueSpinnerMin.setSelection((int) ((double)  _valueMin * 100d));
-			_valueSpinnerMin.setMaximum((int) (value * 100d));
+			_valueSpinnerMin.setMaximum((int) ((double) _valueMax * 100d));
 			_valueSpinnerMax.setDigits(2);
 			_valueSpinnerMax.setMinimum((int) (value * 100d));
 			_valueSpinnerMax.setMaximum((int) ((double) _valueMax * 100d));

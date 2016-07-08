@@ -209,8 +209,8 @@ public class SurveyView extends ViewPart {
 	}
 
 	private void setModel() {
-		User user = (User) RWT.getUISession().getAttribute("user");
 		
+		User user = (User) RWT.getUISession().getAttribute("user");
 		Map<Problem, ProblemAssignment> model = DAOProblemAssignments.getDAO().getUserProblemAssignments(user);
 		for(Problem p: model.keySet()) {
 			if(p.getId().equals(_problem.getId())) {

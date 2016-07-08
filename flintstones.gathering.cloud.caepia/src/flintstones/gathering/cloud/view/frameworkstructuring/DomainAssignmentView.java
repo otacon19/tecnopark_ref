@@ -115,8 +115,7 @@ public class DomainAssignmentView extends ViewPart {
 				}
 				
 				KeyDomainAssignment key = new KeyDomainAssignment(_alternativeCombo.getItem(_alternativeCombo.getSelectionIndex()), 
-						_criterionCombo.getItem(_criterionCombo.getSelectionIndex()),
-						problemAssignment.getId());
+						_criterionCombo.getItem(_criterionCombo.getSelectionIndex()), problemAssignment.getId());
 			
 				Map<KeyDomainAssignment, String> domainAssignment = _problem.getDomainAssignments();
 				if(domainAssignment == null) {
@@ -197,11 +196,21 @@ public class DomainAssignmentView extends ViewPart {
 	}
 	
 	private void setDomainAssignments() {
+		String expert = "";
+		
+		User user = (User) RWT.getUISession().getAttribute("user");
+		Map<Problem, ProblemAssignment> model = DAOProblemAssignments.getDAO().getUserProblemAssignments(user);
+		for(Problem p: model.keySet()) {
+			if(p.getId().equals(_problem.getId())) {
+				expert = model.get(p).getId();
+			}
+		}
+	
 		Map<KeyDomainAssignment, String> domainAssignments = _problem.getDomainAssignments();
 		if(domainAssignments != null) {
 			if(domainAssignments.size() > 0) {
 				for(KeyDomainAssignment key: domainAssignments.keySet()) {
-					if(key.getExpert().equals(_)) {
+					if(key.getExpert().equals(expert)) {
 						String[] assignment = new String[3];
 						assignment[0] = key.getCriterion();
 						assignment[1] = key.getAlternative();
