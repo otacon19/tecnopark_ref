@@ -272,7 +272,7 @@ public class SurveyView extends ViewPart {
 	}
 	
 	private void checkMakeAssignment() {
-		if(_valuations.getValuations().size() == _viewer.getTable().getItemCount()) {
+		if((_valuations.getValuations().size() == _viewer.getTable().getItemCount()) && _viewer.getTable().getItemCount() > 0) {
 			_sendAssignmets.setEnabled(true);
 		} else {
 			_sendAssignmets.setEnabled(false);
