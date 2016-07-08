@@ -35,7 +35,7 @@ public class DAOProblemValuations {
 		String result = null;
 
 		result = "create table " + TABLE + "(" + PROBLEM_ID + " VARCHAR(100) NOT NULL, " + DOMAIN_ID
-				+ " VARCHAR(255) NOT NULL, " + VALUATION_ID + " VARCHAR(255) NOT NULL, PRIMARY KEY(" + DOMAIN_ID  + "));";
+				+ " VARCHAR(255) NOT NULL, " + VALUATION_ID + " VARCHAR(255) NOT NULL, PRIMARY KEY(" + PROBLEM_ID + "," + DOMAIN_ID  + "));";
 
 		return result;
 	}
@@ -72,8 +72,10 @@ public class DAOProblemValuations {
 			PreparedStatement pst = null;
 			pst = c.prepareStatement("delete from " + TABLE + " where " + PROBLEM_ID + " = ?");
 			pst.setString(1, id);
+			pst.executeUpdate();
 			pst.close();
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 	
