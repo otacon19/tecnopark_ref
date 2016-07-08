@@ -8,12 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.rap.rwt.RWT;
-
 import flintstones.gathering.cloud.model.Problem;
 import flintstones.gathering.cloud.model.ProblemAssignment;
 import flintstones.gathering.cloud.model.User;
-import flintstones.gathering.cloud.view.SurveysView;
 import mcdacw.valuation.domain.Domain;
 import sinbad2.database.Database;
 import sinbad2.database.DatabaseManager;
@@ -135,6 +132,7 @@ public class DAOProblemAssignments {
 				}
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 		return result;
@@ -199,11 +197,6 @@ public class DAOProblemAssignments {
 					+ assignment.getUser().getMail() + "';";
 			st.executeUpdate(update);
 			st.close();
-			DAOValuations.getDAO().setValuations(problem, assignment);
-			SurveysView view = (SurveysView) RWT.getUISession().getAttribute(SurveysView.ID);
-			if (view != null) {
-				view.refreshModel();
-			}
 			
 			DAOProblem daoProblem = DAOProblem.getDAO();
 			Problem p = daoProblem.getProblem(problem.getId());

@@ -161,15 +161,22 @@ public class SurveysView extends ViewPart {
 					Point vBarSize = viewer.getTable().getVerticalBar().getSize();
 					width -= vBarSize.x;
 				}
-				Point oldSize = viewer.getTable().getSize();
-				if (oldSize.x > area.width) {
-					viewer.getTable().getColumn(0).pack();
-					viewer.getTable().getColumn(1).setWidth(width - viewer.getTable().getColumn(0).getWidth());
+				
+				if(viewer.getTable().getItemCount() == 0) {
+					viewer.getTable().getColumn(0).setWidth(parent.getSize().x / 2 - 1);
+					viewer.getTable().getColumn(1).setWidth(parent.getSize().x / 2 - 1);
 					viewer.getTable().setSize(area.width, area.height);
 				} else {
-					viewer.getTable().setSize(area.width, area.height);
-					viewer.getTable().getColumn(0).pack();
-					viewer.getTable().getColumn(1).setWidth(width - viewer.getTable().getColumn(0).getWidth());
+					Point oldSize = viewer.getTable().getSize();
+					if (oldSize.x > area.width) {
+						viewer.getTable().getColumn(0).pack();
+						viewer.getTable().getColumn(1).setWidth(width - viewer.getTable().getColumn(0).getWidth());
+						viewer.getTable().setSize(area.width, area.height);
+					} else {
+						viewer.getTable().setSize(area.width, area.height);
+						viewer.getTable().getColumn(0).pack();
+						viewer.getTable().getColumn(1).setWidth(width - viewer.getTable().getColumn(0).getWidth());
+					}
 				}
 			}
 		});

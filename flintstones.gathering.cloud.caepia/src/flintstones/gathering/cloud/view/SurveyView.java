@@ -34,7 +34,6 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import flintstones.gathering.cloud.dao.DAOProblemAssignments;
 import flintstones.gathering.cloud.dao.DAOProblemDomainAssignments;
 import flintstones.gathering.cloud.dao.DAOValuations;
-import flintstones.gathering.cloud.model.Key;
 import flintstones.gathering.cloud.model.KeyDomainAssignment;
 import flintstones.gathering.cloud.model.Problem;
 import flintstones.gathering.cloud.model.ProblemAssignment;
@@ -134,14 +133,17 @@ public class SurveyView extends ViewPart {
 		TableViewerColumn tc_criterion = new TableViewerColumn(_viewer, SWT.NONE);
 		tc_criterion.getColumn().setText("Criterio");
 		tc_criterion.setLabelProvider(new CriterionLabelProvider());
+		tc_criterion.getColumn().setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/criterion_20.png").createImage());
 		
 		TableViewerColumn tc_alternative = new TableViewerColumn(_viewer, SWT.NONE);
 		tc_alternative.getColumn().setText("Alternativa");
 		tc_alternative.setLabelProvider(new AlternativeLabelProvider());
+		tc_alternative.getColumn().setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/alternative_20.png").createImage());
 		
 		TableViewerColumn tc_valuation = new TableViewerColumn(_viewer, SWT.NONE);
 		tc_valuation.getColumn().setText("Valoración");
 		tc_valuation.setLabelProvider(new ValuationLabelProvider());
+		tc_valuation.getColumn().setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/valuation.png").createImage());
 		
 		table.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -229,7 +231,7 @@ public class SurveyView extends ViewPart {
 					values[0] = a;
 					values[1] = c;
 					if(_valuations != null) {
-						Valuation v = _valuations.getValuation(new Key(a, c));
+						Valuation v = _valuations.getValuation(new KeyDomainAssignment(a, c, _problemAssignment.getId()));
 						if(v != null) {
 							values[2] = v.changeFormatValuationToString(); 
 						} else {
@@ -260,7 +262,7 @@ public class SurveyView extends ViewPart {
 	}
 
 	public void addValuation(Valuation valuation) {
-		Key key = new Key(_valuationSelected.getText(1), _valuationSelected.getText(0));
+		KeyDomainAssignment key = new KeyDomainAssignment(_valuationSelected.getText(1), _valuationSelected.getText(0), _problemAssignment.getId());
 		_valuations.getValuations().put(key, valuation);
 		_problemAssignment.setValuations(_valuations);
 		DAOValuations.getDAO().insertValuation(_problem, _problemAssignment, key, valuation);

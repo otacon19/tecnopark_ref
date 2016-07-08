@@ -7,29 +7,29 @@ import mcdacw.valuation.valuation.Valuation;
 
 public class Valuations {
 
-	private Map<Key, Valuation> _valuations;
+	private Map<KeyDomainAssignment, Valuation> _valuations;
 	
 	public Valuations() {
-		_valuations = new HashMap<Key, Valuation>();
+		_valuations = new HashMap<KeyDomainAssignment, Valuation>();
 	}
 	
-	public void setValuations(Map<Key, Valuation> valuations) {
+	public void setValuations(Map<KeyDomainAssignment, Valuation> valuations) {
 		_valuations = valuations;
 	}
 	
-	public Map<Key, Valuation> getValuations() {
+	public Map<KeyDomainAssignment, Valuation> getValuations() {
 		return _valuations;
 	}
 	 
-	public void setValuation(Key key, Valuation valuation) {
+	public void setValuation(KeyDomainAssignment key, Valuation valuation) {
 		_valuations.put(key, valuation);
 	}
 	
-	public Valuation getValuation(Key key) {
+	public Valuation getValuation(KeyDomainAssignment key) {
 		return _valuations.get(key);
 	}
 	
-	public void removeValuation(Key key) {
+	public void removeValuation(KeyDomainAssignment key) {
 		_valuations.remove(key);
 	}
 }

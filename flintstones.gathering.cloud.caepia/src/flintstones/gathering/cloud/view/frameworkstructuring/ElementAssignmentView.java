@@ -23,6 +23,7 @@ import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 public class ElementAssignmentView extends ViewPart implements IAssignmentDomain {
 
@@ -119,14 +120,17 @@ public class ElementAssignmentView extends ViewPart implements IAssignmentDomain
 		_tvcCriterion = new TableViewerColumn(_viewer, SWT.NONE);
 		_tvcCriterion.getColumn().setText("Criterio");
 		_tvcCriterion.setLabelProvider(new CriterionLabelProvider());
+		_tvcCriterion.getColumn().setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/criterion_20.png").createImage());
 		
 		_tvcAlternative = new TableViewerColumn(_viewer, SWT.NONE);
 		_tvcAlternative.getColumn().setText("Alternativa");
 		_tvcAlternative.setLabelProvider(new AlternativeLabelProvider());
+		_tvcAlternative.getColumn().setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/alternative_20.png").createImage());
 		
 		_tvcDomain = new TableViewerColumn(_viewer, SWT.NONE);
 		_tvcDomain.getColumn().setText("Dominio");
 		_tvcDomain.setLabelProvider(new DomainLabelProvider());
+		_tvcDomain.getColumn().setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/domain_id.png").createImage());
 		
 		parent.addControlListener(new ControlAdapter() {
 			public void controlResized(ControlEvent e) {

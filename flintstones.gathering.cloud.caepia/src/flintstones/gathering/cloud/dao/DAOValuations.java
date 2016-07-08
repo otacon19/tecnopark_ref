@@ -87,11 +87,11 @@ public class DAOValuations {
 			ProblemAssignment assignment;
 			Valuation valuation = null;
 			String value = "";
-			Key key;
+			KeyDomainAssignment key;
 			for (String criterion : problem.getCriteria()) {
 				for (String alternative : problem.getAlternatives()) {
-					key = new Key(alternative, criterion);
 					for (String expert : problem.getExperts()) {
+						key = new KeyDomainAssignment(alternative, criterion, expert);
 						assignment = problem.getAssignment(expert);
 						if (assignment != null) {
 							valuation = assignment.getValuations().getValuation(key);
@@ -157,19 +157,21 @@ public class DAOValuations {
 
 			String criterion;
 			String alternative;
+			String expert;
 			String type;
 			String domainId;
-			Key key;
+			KeyDomainAssignment key;
 			while (rs.next()) {
 				criterion = rs.getString(CRITERION);
 				alternative = rs.getString(ALTERNATIVE);
-				key = new Key(alternative, criterion);
+				expert = rs.getString(EXPERT);
+				key = new KeyDomainAssignment(alternative, criterion, expert);
 				domainId = rs.getString(DOMAIN);
 				type = rs.getString(TYPE);
 				Valuation valuation = null;
 				
 				if(type.equals(IntegerValuation.class.toString())) {
-					
+			
 					valuation = new IntegerValuation((NumericIntegerDomain) domains.get(domainId), Double.parseDouble(rs.getString(VALUE)));
 				
 				} else if(type.equals(IntegerIntervalValuation.class.toString())) {
@@ -181,7 +183,7 @@ public class DAOValuations {
 							Long.parseLong(minMax[0]), Long.parseLong(minMax[1]));
 					
 				} else if(type.equals(RealValuation.class.toString())) {
-					
+		
 					valuation = new RealValuation((NumericRealDomain) domains.get(domainId), Double.parseDouble(rs.getString(VALUE)));
 				
 				} else if(type.equals(RealIntervalValuation.class.toString())) {
@@ -193,14 +195,15 @@ public class DAOValuations {
 							Double.parseDouble(minMax[0]), Double.parseDouble(minMax[1]));
 					
 				} else if(type.equals(LinguisticValuation.class.toString())) {
-					
+	
 					valuation = new LinguisticValuation();
 					valuation.setDomain((FuzzySet) domains.get(domainId));
 					((LinguisticValuation) valuation).setLabel(rs.getString(VALUE));
 					
 				} else if(type.equals(HesitantValuation.class.toString())) {
-					
+			
 					String hesitant = rs.getString(VALUE);
+	
 					FuzzySet fuzzySet =(FuzzySet) domains.get(domainId);
 					if(hesitant.contains("Between")) {
 			
@@ -238,11 +241,12 @@ public class DAOValuations {
 					}
 					
 				}
+				
 				result.setValuation(key, valuation);
 			}
 			st.close();
 		} catch (Exception e) {
-
+			e.printStackTrace();
 		}
 
 		return result;
@@ -258,9 +262,10 @@ public class DAOValuations {
 			Valuations valuations = assignment.getValuations();
 			String value;
 
-			for (Key key : valuations.getValuations().keySet()) {
+			for (KeyDomainAssignment key : valuations.getValuations().keySet()) {
 				String criterion = key.getCriterion().replace("'", "''");
 				String alternative = key.getAlternative().replace("'", "''");
+				String expert = key.getExpert().replace("'", "''");
 				value = valuations.getValuation(key).changeFormatValuationToString();
 
 				String update = "update " + TABLE + " set " + VALUE + " = '"
@@ -268,7 +273,7 @@ public class DAOValuations {
 						+ problem.getId() + "' and " + CRITERION + " = '"
 						+ criterion + "' and " + ALTERNATIVE + " = '"
 						+ alternative + "' and " + EXPERT + " = '"
-						+ assignment.getId() + "';";
+						+ expert + "';";
 
 				st.executeUpdate(update);
 			}
@@ -308,7 +313,7 @@ public class DAOValuations {
 		}
 	}
 	
-	public void insertValuation(Problem problem, ProblemAssignment assignment, Key key, Valuation valuation) {
+	public void insertValuation(Problem problem, ProblemAssignment assignment, KeyDomainAssignment key, Valuation valuation) {
 
 		try {
 			Connection c = getConnection();
@@ -318,13 +323,14 @@ public class DAOValuations {
 
 			String criterion = key.getCriterion();
 			String alternative = key.getAlternative();
+			String expert = key.getExpert();
 			value = valuation.changeFormatValuationToString();
 			
 			String statement = "replace into " + TABLE + " values("
 					+ "'" + problem.getId() + "'" + ", "
 					+ "'" + criterion + "'" + ", "
 					+ "'" + alternative + "'" + ", " 
-					+ "'" + assignment.getId() + "'" + ", "
+					+ "'" + expert + "'" + ", "
 					+ "'" + valuation.getDomain().getId() + "'" + ", "
 					+ "'" + valuation.getClass().toString() + "'" + ", " 
 					+ "'" + value

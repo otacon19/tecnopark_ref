@@ -137,15 +137,22 @@ public class DomainIndexView extends ViewPart {
 					Point vBarSize = _viewer.getTable().getVerticalBar().getSize();
 					width -= vBarSize.x;
 				}
-				Point oldSize = _viewer.getTable().getSize();
-				if (oldSize.x > area.width) {
-					_viewer.getTable().getColumn(0).pack();
-					_viewer.getTable().getColumn(1).setWidth(width - _viewer.getTable().getColumn(0).getWidth());
+				
+				if(_viewer.getTable().getItemCount() == 0) {
+					_viewer.getTable().getColumn(0).setWidth(parent.getSize().x / 2 - 1);
+					_viewer.getTable().getColumn(1).setWidth(parent.getSize().x / 2 - 1);
 					_viewer.getTable().setSize(area.width, area.height);
 				} else {
-					_viewer.getTable().setSize(area.width, area.height);
-					_viewer.getTable().getColumn(0).pack();
-					_viewer.getTable().getColumn(1).setWidth(width - _viewer.getTable().getColumn(0).getWidth());
+					Point oldSize = _viewer.getTable().getSize();
+					if (oldSize.x > area.width) {
+						_viewer.getTable().getColumn(0).pack();
+						_viewer.getTable().getColumn(1).setWidth(width - _viewer.getTable().getColumn(0).getWidth());
+						_viewer.getTable().setSize(area.width, area.height);
+					} else {
+						_viewer.getTable().setSize(area.width, area.height);
+						_viewer.getTable().getColumn(0).pack();
+						_viewer.getTable().getColumn(1).setWidth(width - _viewer.getTable().getColumn(0).getWidth());
+					}
 				}
 			}
 		});
