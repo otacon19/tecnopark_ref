@@ -30,6 +30,8 @@ public class XMLValues {
 	public static final String RESOLUTION_PHASE_FRAMEWORK = "flintstones.resolutionphase.framework";
 	public static final String RESOLUTION_PHASE_FRAMEWORK_STRUCTURING = "flintstones.resolutionphase.frameworkstructuring";
 	public static final String RESOLUTION_PHASE_GATHERING = "flintstones.resolutionphase.gathering";
+	public static final String RESOLUTION_PHASE_RATING = "flintstones.resolutionphase.rating";
+	public static final String RESOLUTION_PHASE_SENSITIVITY_ANALYSIS = "flintstones.resolutionphase.sensitivityanalysis";
 	
 	private XMLValues() {
 		

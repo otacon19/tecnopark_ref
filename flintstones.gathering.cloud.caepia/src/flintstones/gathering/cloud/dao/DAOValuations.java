@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Map;
 
-import flintstones.gathering.cloud.model.Key;
 import flintstones.gathering.cloud.model.KeyDomainAssignment;
 import flintstones.gathering.cloud.model.Problem;
 import flintstones.gathering.cloud.model.ProblemAssignment;
@@ -277,34 +276,6 @@ public class DAOValuations {
 
 				st.executeUpdate(update);
 			}
-
-			st.close();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void setValuation(Problem problem, ProblemAssignment assignment,
-			Key key, Valuation valuation) {
-
-		try {
-			Connection c = getConnection();
-			Statement st = c.createStatement();
-
-			String value;
-
-			String criterion = key.getCriterion().replace("'", "''");
-			String alternative = key.getAlternative().replace("'", "''");
-			value = valuation.changeFormatValuationToString();
-			
-			String update = "update " + TABLE + " set " + VALUE + " = '"
-					+ value + "' where " + PROBLEM + " = '" + problem.getId()
-					+ "' and " + CRITERION + " = '" + criterion + "' and "
-					+ ALTERNATIVE + " = '" + alternative + "' and " + EXPERT
-					+ " = '" + assignment.getId() + "';";
-
-			st.executeUpdate(update);
 
 			st.close();
 

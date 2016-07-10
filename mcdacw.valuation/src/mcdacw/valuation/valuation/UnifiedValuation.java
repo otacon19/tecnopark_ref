@@ -2,6 +2,9 @@ package mcdacw.valuation.valuation;
 
 import java.util.List;
 
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+
 import mcdacw.paremetervalidator.ParameterValidator;
 import mcdacw.valuation.domain.Domain;
 import mcdacw.valuation.domain.fuzzyset.FuzzySet;
@@ -90,4 +93,7 @@ public class UnifiedValuation extends Valuation {
 	public Domain unification(Domain fuzzySet) {
 		return null;
 	}
+
+	@Override
+	public void save(XMLStreamWriter writer) throws XMLStreamException {}
 }
