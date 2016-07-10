@@ -10,7 +10,6 @@ import javax.xml.stream.XMLStreamWriter;
 import org.eclipse.rap.rwt.RWT;
 
 import flintstones.gathering.cloud.dao.DAOProblemAlternatives;
-import flintstones.gathering.cloud.dao.DAOProblemAssignments;
 import flintstones.gathering.cloud.dao.DAOProblemCriteria;
 import flintstones.gathering.cloud.dao.DAOProblemDomainAssignments;
 import flintstones.gathering.cloud.dao.DAOProblemDomains;
@@ -19,10 +18,11 @@ import flintstones.gathering.cloud.dao.DAOProblemValuations;
 import flintstones.gathering.cloud.dao.DAOValuations;
 import flintstones.gathering.cloud.model.KeyDomainAssignment;
 import flintstones.gathering.cloud.model.Problem;
-import flintstones.gathering.cloud.model.ProblemAssignment;
-import flintstones.gathering.cloud.model.User;
 import flintstones.gathering.cloud.model.Valuations;
 import mcdacw.valuation.domain.Domain;
+import mcdacw.valuation.domain.fuzzyset.FuzzySet;
+import mcdacw.valuation.domain.numeric.NumericIntegerDomain;
+import mcdacw.valuation.domain.numeric.NumericRealDomain;
 import mcdacw.valuation.valuation.IntegerIntervalValuation;
 import mcdacw.valuation.valuation.IntegerValuation;
 import mcdacw.valuation.valuation.LinguisticValuation;
@@ -103,24 +103,30 @@ public class ExportXML {
 		List<String> experts = DAOProblemExperts.getDAO().getProblemExperts(_problem);
 		_writer.writeStartElement("experts");
 		for(String experto: experts) {
+			_writer.writeStartElement("expert");
 			_writer.writeAttribute("id", experto);
 			_writer.writeEndElement();
 		}
+		_writer.writeEndElement();
 		
-		_writer.writeStartElement("alternatives");
 		List<String> alternatives = DAOProblemAlternatives.getDAO().getProblemAlternatives(_problem);
+		_writer.writeStartElement("alternatives");
 		for(String alternative: alternatives) {
+			_writer.writeStartElement("alternative");
 			_writer.writeAttribute("id", alternative);
 			_writer.writeEndElement();
 		}
+		_writer.writeEndElement();
 		
-		_writer.writeStartElement("criteria");
 		List<String> criteria = DAOProblemCriteria.getDAO().getProblemCriteria(_problem);
+		_writer.writeStartElement("criteria");
 		for(String criterion: criteria) {
+			_writer.writeStartElement("criterion");
 			_writer.writeAttribute("id", criterion);
 			_writer.writeAttribute("cost", "false");
 			_writer.writeEndElement();
 		}
+		_writer.writeEndElement();
 		
 		_writer.writeEndElement();
 	}
@@ -128,12 +134,26 @@ public class ExportXML {
 	private void createDomains() throws Exception {
 		_writer.writeStartElement("domain-set");
 		
+		String domainType = null;
 		Map<String, Domain> domains = DAOProblemDomains.getDAO().getProblemDomains(_problem);
 		for(String domainId: domains.keySet()) {
+			
 			Domain domain = domains.get(domainId);
+			
+			if(domain instanceof FuzzySet) {
+				domainType = "flintstones.domain.linguistic";
+			} else if(domain instanceof NumericIntegerDomain) {
+				domainType = "flintstones.domain.numeric.integer";
+			} else if(domain instanceof NumericRealDomain) {
+				domainType = "flintstones.domain.numeric.real";
+			}
+			
+			_writer.writeStartElement(domainType);
+			_writer.writeAttribute("id", domainId);
 			domain.save(_writer);
+			_writer.writeEndElement();
+			
 		}
-		
 		_writer.writeEndElement();
 	}
 	
@@ -172,47 +192,43 @@ public class ExportXML {
 	}
 	
 	private void createValuations() throws Exception {
-		ProblemAssignment problemAssignment = null;
-		User user = (User) RWT.getUISession().getAttribute("user");
-		Map<Problem, ProblemAssignment> model = DAOProblemAssignments.getDAO().getUserProblemAssignments(user);
-		for(Problem p: model.keySet()) {
-			if(p.getId().equals(_problem.getId())) {
-				problemAssignment = model.get(p);
-			}
-		}
-		
+		List<String> experts = DAOProblemExperts.getDAO().getProblemExperts(_problem);
+	
 		_writer.writeStartElement("valuations");
-		Valuations v = DAOValuations.getDAO().getValuations(_problem.getId(), problemAssignment, _problem.getDomains());
 		
-		Map<KeyDomainAssignment, Valuation> valuations = v.getValuations();
-		String valuationType = null;
-		for(KeyDomainAssignment key: valuations.keySet()) {
-			Valuation valuation = valuations.get(key);
+		for(String expert: experts) {
+			Valuations v = DAOValuations.getDAO().getValuations(_problem.getId(), _problem.getAssignment(expert), _problem.getDomains());
 			
-			if(valuation instanceof HesitantValuation) {
-				valuationType = "flintstones.valuation.hesitant";
-			} else if(valuation instanceof IntegerValuation) {
-				valuationType = "flintstones.valuation.integer";
-			} else if(valuation instanceof IntegerIntervalValuation) {
-				valuationType = "flintstones.valuation.integer.interval";
-			} else if(valuation instanceof LinguisticValuation) {
-				valuationType = "flintstones.valuation.linguistic";
-			} else if(valuation instanceof RealValuation) {
-				valuationType = "flintstones.valuation.real";
-			} else if(valuation instanceof RealIntervalValuation) {
-				valuationType = "flintstones.valuation.real.interval";
-			} 
-			
-			_writer.writeStartElement(valuationType);
-			
-			_writer.writeAttribute("domain-id", valuation.getDomain().getId());
-			_writer.writeAttribute("expert", key.getExpert());
-			_writer.writeAttribute("alternative", key.getAlternative());
-			_writer.writeAttribute("criterion", key.getCriterion());
-			
-			valuation.save(_writer);
-			
-			_writer.writeEndElement();
+			Map<KeyDomainAssignment, Valuation> valuations = v.getValuations();
+			String valuationType = null;
+			for(KeyDomainAssignment key: valuations.keySet()) {
+				Valuation valuation = valuations.get(key);
+				
+				if(valuation instanceof HesitantValuation) {
+					valuationType = "flintstones.valuation.hesitant";
+				} else if(valuation instanceof IntegerValuation) {
+					valuationType = "flintstones.valuation.integer";
+				} else if(valuation instanceof IntegerIntervalValuation) {
+					valuationType = "flintstones.valuation.integer.interval";
+				} else if(valuation instanceof LinguisticValuation) {
+					valuationType = "flintstones.valuation.linguistic";
+				} else if(valuation instanceof RealValuation) {
+					valuationType = "flintstones.valuation.real";
+				} else if(valuation instanceof RealIntervalValuation) {
+					valuationType = "flintstones.valuation.real.interval";
+				} 
+				
+				_writer.writeStartElement(valuationType);
+				
+				_writer.writeAttribute("domain-id", valuation.getDomain().getId());
+				_writer.writeAttribute("expert", key.getExpert());
+				_writer.writeAttribute("alternative", key.getAlternative());
+				_writer.writeAttribute("criterion", key.getCriterion());
+				
+				valuation.save(_writer);
+				
+				_writer.writeEndElement();
+			}
 		}
 		
 		_writer.writeEndElement();
