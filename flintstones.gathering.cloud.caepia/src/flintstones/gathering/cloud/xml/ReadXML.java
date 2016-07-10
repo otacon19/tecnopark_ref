@@ -57,7 +57,7 @@ public class ReadXML {
 		
 		readProblemElements();
 	}
-
+	
 	private void readProblemElements() throws Exception {
 
 		readExperts();
@@ -90,7 +90,6 @@ public class ReadXML {
 		}
 	}
 	
-	//TODO cost?
 	public void readCriteria() throws XMLStreamException {
 		goToStartElement("criteria"); //$NON-NLS-1$
 

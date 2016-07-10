@@ -1,5 +1,8 @@
 package mcdacw.valuation.domain.fuzzyset.semantic;
 
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+
 import mcdacw.valuation.domain.fuzzyset.function.FragmentFunction;
 import mcdacw.valuation.domain.numeric.NumericRealDomain;
 
@@ -24,5 +27,7 @@ public interface IMembershipFunction extends Cloneable, Comparable<IMembershipFu
 	public double maxMin(IMembershipFunction function);
 	
 	public Object clone();
+	
+	public void save(XMLStreamWriter writer) throws XMLStreamException;
 
 }

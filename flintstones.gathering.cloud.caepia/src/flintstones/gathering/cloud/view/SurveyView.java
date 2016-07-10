@@ -202,6 +202,7 @@ public class SurveyView extends ViewPart {
 			public void widgetSelected(SelectionEvent e) {
 				_problemAssignment.setMake(true);
 				DAOProblemAssignments.getDAO().makeAssignment(_problem, _problemAssignment);
+				_sendAssignmets.setEnabled(false);
 			}
 		});
 		
@@ -255,7 +256,9 @@ public class SurveyView extends ViewPart {
 
 	public void refresh() {
 		_problem = (Problem) RWT.getUISession().getAttribute("valuation-problem");
-		setModel();
+		if(_problem != null) {
+			setModel();
+		}
 		_viewer.refresh();
 		
 		checkMakeAssignment();
@@ -274,7 +277,7 @@ public class SurveyView extends ViewPart {
 	}
 	
 	private void checkMakeAssignment() {
-		if((_valuations.getValuations().size() == _viewer.getTable().getItemCount()) && _viewer.getTable().getItemCount() > 0) {
+		if((_valuations.getValuations().size() == _viewer.getTable().getItemCount()) && _viewer.getTable().getItemCount() > 0 && !_problemAssignment.getMake()) {
 			_sendAssignmets.setEnabled(true);
 		} else {
 			_sendAssignmets.setEnabled(false);

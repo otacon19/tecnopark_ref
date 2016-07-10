@@ -1,5 +1,8 @@
 package mcdacw.valuation.domain;
 
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
@@ -100,5 +103,6 @@ public abstract class Domain implements Cloneable, Comparable<Domain> {
 		
 		return _id.compareTo(domain.getId());
 	}
-
+	
+	public abstract void save(XMLStreamWriter writer) throws XMLStreamException;
 }

@@ -1,5 +1,8 @@
 package mcdacw.valuation.domain.numeric;
 
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
@@ -106,4 +109,10 @@ public static final String ID = "flintstones.domain.numeric.real"; //$NON-NLS-1$
 		return result;
 	}
 		
+	@Override
+	public void save(XMLStreamWriter writer) throws XMLStreamException {
+		writer.writeAttribute("inRange", Boolean.toString(_inRange)); //$NON-NLS-1$
+		writer.writeAttribute("min", _min.toString()); //$NON-NLS-1$
+		writer.writeAttribute("max", _max.toString()); //$NON-NLS-1$
+	}
 }

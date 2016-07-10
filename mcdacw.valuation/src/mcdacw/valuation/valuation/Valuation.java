@@ -1,5 +1,8 @@
 package mcdacw.valuation.valuation;
 
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import mcdacw.paremetervalidator.ParameterValidator;
@@ -84,5 +87,7 @@ public abstract class Valuation implements Cloneable, Comparable<Valuation> {
 	public abstract Domain unification(Domain fuzzySet);
 	
 	public abstract String changeFormatValuationToString();
+	
+	public abstract void save(XMLStreamWriter writer) throws XMLStreamException;
 	
 }

@@ -4,6 +4,9 @@ package mcdacw.valuation.domain.fuzzyset.function.types;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import mcdacw.paremetervalidator.ParameterValidator;
@@ -340,5 +343,12 @@ public class TrapezoidalFunction implements IMembershipFunction {
 		
 		return Double.compare(this.centroid(), other.centroid());
 	}
-	
+
+	@Override
+	public void save(XMLStreamWriter writer) throws XMLStreamException {
+		writer.writeAttribute("a",Double.toString(_a)); //$NON-NLS-1$
+		writer.writeAttribute("b",Double.toString(_b)); //$NON-NLS-1$
+		writer.writeAttribute("c",Double.toString(_c)); //$NON-NLS-1$
+		writer.writeAttribute("d",Double.toString(_d)); //$NON-NLS-1$
+	}
 }

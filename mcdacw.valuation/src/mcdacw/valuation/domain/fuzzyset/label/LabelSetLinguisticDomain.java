@@ -3,6 +3,9 @@ package mcdacw.valuation.domain.fuzzyset.label;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
@@ -190,6 +193,21 @@ public class LabelSetLinguisticDomain implements Cloneable {
 		((LabelSetLinguisticDomain) result)._labels = resultLabels;
 		
 		return result;
+	}
+	
+	public void save(XMLStreamWriter writer) throws XMLStreamException {
+		writer.writeStartElement("labels"); //$NON-NLS-1$
+		
+		int cont = 0;
+		for(LabelLinguisticDomain label: _labels) {
+			writer.writeStartElement("label_" + cont); //$NON-NLS-1$
+			writer.writeAttribute("label", label.getName()); //$NON-NLS-1$
+			label.save(writer);
+			writer.writeEndElement();
+			cont++;
+		}
+		writer.writeEndElement();
+		
 	}
 	
 }

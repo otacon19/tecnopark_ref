@@ -1,5 +1,8 @@
 package mcdacw.valuation.valuation.hesitant;
 
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
@@ -372,4 +375,43 @@ public class HesitantValuation extends Valuation {
 	public FuzzySet unification(Domain fuzzySet) {
 		return null;
 	}
+	
+	@Override
+	public void save(XMLStreamWriter writer) throws XMLStreamException {
+
+		writer.writeStartElement("hesitant"); //$NON-NLS-1$
+
+		if (_label != null) {
+			writer.writeStartElement("labelv"); //$NON-NLS-1$
+			writer.writeAttribute("label", _label.getName()); //$NON-NLS-1$
+			_label.save(writer);
+			writer.writeEndElement();
+		}
+		if (_term != null) {
+			writer.writeStartElement("termv"); //$NON-NLS-1$
+			writer.writeAttribute("term", _term.getName()); //$NON-NLS-1$
+			_term.save(writer);
+			writer.writeEndElement();
+
+			writer.writeStartElement("relation"); //$NON-NLS-1$
+			writer.writeAttribute("unaryRelation", _unaryRelation.getRelationType()); //$NON-NLS-1$
+			writer.writeEndElement();
+		}
+		if (_upperTerm != null) {
+			writer.writeStartElement("upperTermv"); //$NON-NLS-1$
+			writer.writeAttribute("upperTerm", _upperTerm.getName()); //$NON-NLS-1$
+			_upperTerm.save(writer);
+			writer.writeEndElement();
+		}
+		if (_lowerTerm != null) {
+			writer.writeStartElement("lowerTermv"); //$NON-NLS-1$
+			writer.writeAttribute("lowerTerm", _lowerTerm.getName()); //$NON-NLS-1$
+			_lowerTerm.save(writer);
+			writer.writeEndElement();
+		}
+
+		writer.writeEndElement();
+
+	}
+
 }

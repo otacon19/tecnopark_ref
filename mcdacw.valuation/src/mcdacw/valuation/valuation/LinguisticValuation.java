@@ -1,5 +1,8 @@
 package mcdacw.valuation.valuation;
 
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
@@ -145,5 +148,17 @@ public class LinguisticValuation extends Valuation {
 		result = super.clone();
 		
 		return result;
+	}
+	
+	@Override
+	public void save(XMLStreamWriter writer) throws XMLStreamException {
+		writer.writeStartElement("labelvaluation"); //$NON-NLS-1$
+		
+		writer.writeStartElement("labelv"); //$NON-NLS-1$
+		writer.writeAttribute("label", _label.getName()); //$NON-NLS-1$
+		_label.save(writer);
+		writer.writeEndElement();
+		
+		writer.writeEndElement();
 	}
 }

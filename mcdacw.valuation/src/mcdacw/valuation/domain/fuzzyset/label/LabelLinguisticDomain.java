@@ -1,5 +1,8 @@
 package mcdacw.valuation.domain.fuzzyset.label;
 
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
@@ -100,4 +103,10 @@ public class LabelLinguisticDomain implements Cloneable, Comparable<LabelLinguis
 		return _semantic.compareTo(other._semantic);
 	}
 	
+	public void save(XMLStreamWriter writer) throws XMLStreamException {		
+		writer.writeStartElement("semantic"); //$NON-NLS-1$
+		writer.writeAttribute("type", _semantic.getClass().getName()); //$NON-NLS-1$
+		_semantic.save(writer);
+		writer.writeEndElement();
+	}
 }

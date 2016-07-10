@@ -25,48 +25,12 @@ public class XMLValues {
 	public static final String CRITERIA = "criteria";
 	public static final String CRITERION = "criterion";
 	public static final String NAME = "name";
-	public static final String COST = "cost";
-	public static final String DOMAINS = "domains";
-	public static final String DOMAIN = "domain";
-	public static final String TYPE = "type";
-	public static final String MIN = "min";
-	public static final String MAX = "max";
-	public static final String VALUES = "values";
-	public static final String RANGE = "range";
-	public static final String LABELS = "labels";
-	public static final String LABEL = "label";
-	public static final String SEMANTIC = "semantic";
-	public static final String A = "a";
-	public static final String B = "b";
-	public static final String C = "c";
-	public static final String D = "d";
-	public static final String MEASURE = "measure";
-	public static final String UNBALANCED_INFO = "unbalancedInfo";
-	public static final String CARDINALITY = "cardinality";
-	public static final String SL = "sl";
-	public static final String DENSITY = "density";
-	public static final String SR = "sr";
-	public static final String LH = "lh";
-	public static final String POS = "pos";
-	public static final String SIZE = "size";
-	public static final String ASSIGNMENTS = "assignments";
-	public static final String ASSIGNMENT = "assignment";
-	public static final String DOMAIN_ASSIGNMENTS = "domainAssignments";
-	public static final String NULL = "null";
-	public static final String BLOCK = "block";
-	public static final String EVALUATIONS = "evaluations";
-	public static final String EVALUATION = "evaluation";
-	public static final String VALUATION = "valuation";
-	public static final String ALPHA = "alpha";
-	public static final String HESITANT_TYPE = "hesitantType";
-	public static final String PRIMARY = "primary";
-	public static final String UNARY = "unary";
-	public static final String RELATION = "relation";
-	public static final String BINARY = "binary";
-	public static final String TERM = "term";
-	public static final String LOWER_TERM = "lowerTerm";
-	public static final String UPPER_TERM = "upperTerm";
-	public static final String EMPTY = "";
+	
+	public static final String RESOLUTION_SCHEME = "flintstones.resolutionscheme.dm";
+	public static final String RESOLUTION_PHASE_FRAMEWORK = "flintstones.resolutionphase.framework";
+	public static final String RESOLUTION_PHASE_FRAMEWORK_STRUCTURING = "flintstones.resolutionphase.frameworkstructuring";
+	public static final String RESOLUTION_PHASE_GATHERING = "flintstones.resolutionphase.gathering";
+	
 	private XMLValues() {
 		
 	}

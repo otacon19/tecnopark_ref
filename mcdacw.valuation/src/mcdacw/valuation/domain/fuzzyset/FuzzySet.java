@@ -4,6 +4,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
@@ -517,5 +520,20 @@ public class FuzzySet extends Linguistic {
 		((FuzzySet) result)._values = values;
 		
 		return result;
+	}
+
+	@Override
+	public void save(XMLStreamWriter writer) throws XMLStreamException {
+		writer.writeStartElement("values"); //$NON-NLS-1$
+		for (int i = 0; i < _values.size(); ++i) {
+			writer.writeStartElement("value"); //$NON-NLS-1$
+			writer.writeAttribute("v", Double.toString(_values.get(i))); //$NON-NLS-1$
+			writer.writeEndElement();
+		}
+		writer.writeEndElement();
+		
+		writer.writeStartElement("labelSet"); //$NON-NLS-1$
+		_labelSet.save(writer);
+		writer.writeEndElement();
 	}
 }

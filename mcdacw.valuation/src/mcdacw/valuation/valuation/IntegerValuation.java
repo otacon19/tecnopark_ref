@@ -1,5 +1,8 @@
 package mcdacw.valuation.valuation;
 
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
@@ -116,5 +119,10 @@ public class IntegerValuation extends Valuation {
 	@Override
 	public String changeFormatValuationToString() {
 		return Double.toString(_value);
+	}
+	
+	@Override
+	public void save(XMLStreamWriter writer) throws XMLStreamException {
+		writer.writeAttribute("value", Double.toString(_value)); //$NON-NLS-1$
 	}
 }

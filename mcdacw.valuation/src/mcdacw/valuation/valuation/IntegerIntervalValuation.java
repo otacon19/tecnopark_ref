@@ -1,5 +1,8 @@
 package mcdacw.valuation.valuation;
 
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
@@ -133,5 +136,11 @@ public class IntegerIntervalValuation extends Valuation {
 	@Override
 	public String changeFormatValuationToString() {
 		return "[" + Long.toString(_min) + ", " + Long.toString(_max) + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	}
+	
+	@Override
+	public void save(XMLStreamWriter writer) throws XMLStreamException {
+		writer.writeAttribute("min", Long.toString(_min)); //$NON-NLS-1$
+		writer.writeAttribute("max", Long.toString(_max));	 //$NON-NLS-1$
 	}
 }
