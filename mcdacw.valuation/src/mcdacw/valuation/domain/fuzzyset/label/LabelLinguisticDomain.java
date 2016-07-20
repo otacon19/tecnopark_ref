@@ -105,7 +105,7 @@ public class LabelLinguisticDomain implements Cloneable, Comparable<LabelLinguis
 	
 	public void save(XMLStreamWriter writer) throws XMLStreamException {		
 		writer.writeStartElement("semantic"); //$NON-NLS-1$
-		writer.writeAttribute("type", _semantic.getClass().getName()); //$NON-NLS-1$
+		writer.writeAttribute("type", "sinbad2.domain.linguistic.fuzzy.function.types.TrapezoidalFunction"); //$NON-NLS-1$
 		_semantic.save(writer);
 		writer.writeEndElement();
 	}
