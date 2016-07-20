@@ -42,7 +42,6 @@ public class ExportProblemAction extends Action {
 			e.printStackTrace();
 		}
 		
-		
 		Path path = Paths.get(file.getAbsolutePath());
 		byte[] data = null;
 		try {
