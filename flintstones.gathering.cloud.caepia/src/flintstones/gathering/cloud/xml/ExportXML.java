@@ -152,8 +152,17 @@ public class ExportXML {
 			_writer.writeAttribute("id", domainId);
 			domain.save(_writer);
 			_writer.writeEndElement();
-
 		}
+		
+		NumericRealDomain confidenceDomain = new NumericRealDomain();
+		confidenceDomain.setId("confiance");
+		confidenceDomain.setMinMax(0.0, 0.5);
+		_writer.writeStartElement("flintstones.domain.numeric.real");
+		_writer.writeAttribute("id", confidenceDomain.getId());
+		confidenceDomain.save(_writer);
+		_writer.writeEndElement();
+		
+		
 		_writer.writeEndElement();
 	}
 

@@ -107,6 +107,13 @@
             id="flintstones.gathering.cloud.view.valuationview"
             name="Valoración">
       </view>
+      <view
+            allowMultiple="true"
+            class="flintstones.gathering.cloud.view.ConfidenceView"
+            icon="icons/sample3.gif"
+            id="flintstones.gathering.cloud.view.confidenceview"
+            name="Confidence">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
@@ -267,19 +274,6 @@
                value="587">
          </property>
       </account>
-   </extension>
-   <extension
-         point="org.eclipse.rap.ui.layouts">
-      <layout
-            id="flintstones.gathering.cloud.caepia.layout"
-            name="Overriding logo">
-         <layoutSet
-               class="flintstones.gathering.cloud.view.layout.LogoInitializer"
-               id="flintstones.gathering.cloud.caepia.layoutSet"
-               name="Flintstones logo"
-               overridesId="org.eclipse.rap.design.example.layoutset.logo">
-         </layoutSet>
-      </layout>
    </extension>
 
 </plugin>
