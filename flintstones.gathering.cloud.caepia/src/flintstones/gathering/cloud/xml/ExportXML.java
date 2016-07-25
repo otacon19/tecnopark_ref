@@ -1,6 +1,7 @@
 package flintstones.gathering.cloud.xml;
 
 import java.io.FileWriter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -155,8 +156,9 @@ public class ExportXML {
 		}
 		
 		NumericRealDomain confidenceDomain = new NumericRealDomain();
-		confidenceDomain.setId("confiance");
+		confidenceDomain.setId("c");
 		confidenceDomain.setMinMax(0.0, 0.5);
+		
 		_writer.writeStartElement("flintstones.domain.numeric.real");
 		_writer.writeAttribute("id", confidenceDomain.getId());
 		confidenceDomain.save(_writer);
@@ -179,14 +181,23 @@ public class ExportXML {
 			_writer.writeAttribute("id", domainValuations.get(domain));
 			_writer.writeEndElement();
 		}
+		
+		_writer.writeStartElement("domain-id");
+		_writer.writeAttribute("id", "confidence");
+		_writer.writeEndElement();
+
+		_writer.writeStartElement("valuation-id");
+		_writer.writeAttribute("id", "flintstones.domain.numeric.real");
+		_writer.writeEndElement();
+		
+		
 		_writer.writeEndElement();
 	}
 
 	private void createDomainAssignments() throws Exception {
 		_writer.writeStartElement("domain-assignments");
 
-		Map<KeyDomainAssignment, String> domainAssignments = DAOProblemDomainAssignments.getDAO()
-				.getProblemDomainAssignments(_problem);
+		Map<KeyDomainAssignment, String> domainAssignments = DAOProblemDomainAssignments.getDAO().getProblemDomainAssignments(_problem);
 		for (KeyDomainAssignment key : domainAssignments.keySet()) {
 			_writer.writeStartElement("assignment");
 
@@ -207,8 +218,7 @@ public class ExportXML {
 		_writer.writeStartElement("valuations");
 
 		for (String expert : experts) {
-			Valuations v = DAOValuations.getDAO().getValuations(_problem.getId(), _problem.getAssignment(expert),
-					_problem.getDomains());
+			Valuations v = DAOValuations.getDAO().getValuations(_problem.getId(), _problem.getAssignment(expert), _problem.getDomains());
 
 			Map<KeyDomainAssignment, Valuation> valuations = v.getValuations();
 			String valuationType = null;
@@ -241,7 +251,28 @@ public class ExportXML {
 				_writer.writeEndElement();
 			}
 		}
+		
+		NumericRealDomain confidenceDomain = new NumericRealDomain();
+		confidenceDomain.setId("confidence");
+		confidenceDomain.setMinMax(0d, 0.5d);
+		confidenceDomain.setInRange(true);
+		
+		Map<KeyDomainAssignment, Double> confidences = new HashMap<KeyDomainAssignment, Double>();
+		for(KeyDomainAssignment key: confidences.keySet()) {
+			RealValuation valuation = new RealValuation(confidenceDomain, confidences.get(key));
+			_writer.writeStartElement("flintstones.valuation.real");
 
+			_writer.writeAttribute("domain-id", valuation.getDomain().getId());
+			_writer.writeAttribute("expert", key.getExpert());
+			_writer.writeAttribute("alternative", key.getAlternative());
+			_writer.writeAttribute("criterion", key.getCriterion());
+
+			valuation.save(_writer);
+
+			_writer.writeEndElement();
+		}
+		
+		
 		_writer.writeEndElement();
 	}
 }

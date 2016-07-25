@@ -14,17 +14,18 @@ import sinbad2.database.DatabaseManager;
 
 public class DAOConfidence {
 
-	public static final String TABLE = "experts_condifence";
+	public static final String TABLE = "experts_confidences";
 	public static final String PROBLEM = "problem";
-	public static final String EXPERT = "expert";
-	public static final String ALTERNATIVE = "alternative";
 	public static final String CRITERION = "criterion";
+	public static final String ALTERNATIVE = "alternative";
+	public static final String EXPERT = "expert";
 	public static final String CONFIDENCE = "confidence";
-	
+
 	private static DAOConfidence _dao = null;
-	
-	public DAOConfidence() {}
-	
+
+	private DAOConfidence() {
+	}
+
 	public static DAOConfidence getDAO() {
 
 		if (_dao == null) {
@@ -38,11 +39,12 @@ public class DAOConfidence {
 		String result = null;
 
 		result = "create table " + TABLE + "(" + PROBLEM
-				+ " VARCHAR(50) NOT NULL, " + CRITERION + " TEXT NOT NULL, "
-				+ ALTERNATIVE + " TEXT NOT NULL, "
-				+ EXPERT + " VARCHAR(255) NOT NULL, "
-				+ CONFIDENCE + " VARCHAR(255) NOT NULL,"
-				+ "PRIMARY KEY(" + PROBLEM + "," + CRITERION + "(255)," + ALTERNATIVE + "(255)," + EXPERT + "));";
+				+ " VARCHAR(50) NOT NULL, " + CRITERION
+				+ " TEXT NOT NULL, " + ALTERNATIVE
+				+ " TEXT NOT NULL, " + EXPERT
+				+ " VARCHAR(255) NOT NULL, " + CONFIDENCE
+				+ " VARCHAR(255) NOT NULL, PRIMARY KEY(" + PROBLEM + ","
+				+ CRITERION + "(255)," + ALTERNATIVE + "(255)," + EXPERT + "));";
 
 		return result;
 	}
@@ -58,7 +60,8 @@ public class DAOConfidence {
 		return result;
 	}
 
-	public void removeConfidenceProblem(String problem) {
+
+	public void removeProblemConfidences(String problem) {
 
 		try {
 			Connection c = getConnection();
@@ -70,8 +73,8 @@ public class DAOConfidence {
 		}
 	}
 
-	public void removeConfidencesProblem(Problem problem) {
-		removeConfidenceProblem(problem.getId());
+	public void removeProblemConfidences(Problem problem) {
+		removeProblemConfidences(problem.getId());
 	}
 	
 	public void removeConfidence(String problem, KeyDomainAssignment key) {
@@ -91,22 +94,28 @@ public class DAOConfidence {
 		}
 	}
 
-	public Map<KeyDomainAssignment, Double> getConfidencesExpert(String problem, String expertId) {
+	public Map<KeyDomainAssignment, Double> getConfidences(String problem) {
 		Map<KeyDomainAssignment, Double> result = new HashMap<KeyDomainAssignment, Double>();
-		
 		try {
 			Connection c = getConnection();
 			Statement st = c.createStatement();
 
-			String select = "select * from " + TABLE + " where " + PROBLEM + " = '" + problem + "' and " + EXPERT + " = '" + expertId + "';";
+			String select = "select * from " + TABLE + " where " + PROBLEM + " = '" + problem + "';";
 			ResultSet rs = st.executeQuery(select);
 
-			String criterion, alternative, expert;
+			String criterion;
+			String alternative;
+			String expert;
+			KeyDomainAssignment key;
+			double confidence;
 			while (rs.next()) {
 				criterion = rs.getString(CRITERION);
 				alternative = rs.getString(ALTERNATIVE);
 				expert = rs.getString(EXPERT);
-				result.put(new KeyDomainAssignment(alternative, criterion, expert), Double.parseDouble(rs.getString(CONFIDENCE)));
+				key = new KeyDomainAssignment(alternative, criterion, expert);
+				confidence = rs.getDouble(CONFIDENCE);
+				
+				result.put(key, confidence);
 			}
 			st.close();
 		} catch (Exception e) {
@@ -122,7 +131,7 @@ public class DAOConfidence {
 		try {
 			Connection c = getConnection();
 			Statement st = c.createStatement();
-			
+
 			String criterion = key.getCriterion();
 			String alternative = key.getAlternative();
 			String expert = key.getExpert();

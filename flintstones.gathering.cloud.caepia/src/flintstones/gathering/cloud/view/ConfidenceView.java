@@ -2,6 +2,7 @@ package flintstones.gathering.cloud.view;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -17,26 +18,43 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
+import flintstones.gathering.cloud.dao.DAOConfidence;
+import flintstones.gathering.cloud.dao.DAOProblemAssignments;
+import flintstones.gathering.cloud.model.KeyDomainAssignment;
 import flintstones.gathering.cloud.model.Problem;
+import flintstones.gathering.cloud.model.ProblemAssignment;
+import flintstones.gathering.cloud.model.User;
+
+import org.eclipse.swt.widgets.Table;
 
 public class ConfidenceView extends ViewPart {
 
 	public static final String ID = "flintstones.gathering.cloud.view.confidenceview";
 	
+	private Button _saveConfidenceButton;
 	private TableViewer _viewer;
+	
+	private List<Spinner> _spinners;
 
 	private Problem _problem;
 	
 	public ConfidenceView() {
 		_problem = (Problem) RWT.getUISession().getAttribute("valuation-problem");
+		
+		_spinners = new LinkedList<Spinner>();
 	}
-	
+
 	@SuppressWarnings("serial")
 	class ViewContentProvider implements IStructuredContentProvider {
 
@@ -76,7 +94,15 @@ public class ConfidenceView extends ViewPart {
 	@SuppressWarnings("serial")
 	@Override
 	public void createPartControl(final Composite parent) {
-		_viewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+		parent.setLayout(new GridLayout(1, true));
+		
+		Composite compositeTable = new Composite(parent, SWT.NONE);
+		compositeTable.setLayout(new GridLayout(1, false));
+		compositeTable.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, true, true, 1, 1));
+		
+		_viewer = new TableViewer(compositeTable, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+		Table table = _viewer.getTable();
+		table.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
 		_viewer.setContentProvider(new ViewContentProvider());
 		_viewer.getTable().setHeaderVisible(true);
 		_viewer.getTable().setLinesVisible(true);
@@ -130,11 +156,43 @@ public class ConfidenceView extends ViewPart {
 				}
 			}
 		});
-
+		
+		Composite compositeButton = new Composite(parent, SWT.NONE);
+		compositeButton.setLayout(new GridLayout(1, false));
+		compositeButton.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, true, false, 1, 1));
+		_saveConfidenceButton = new Button(compositeButton, SWT.NONE);
+		_saveConfidenceButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1 ,1));
+		_saveConfidenceButton.setText("Save");
+		_saveConfidenceButton.setImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_ETOOL_SAVE_EDIT));
+		_saveConfidenceButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				
+				User user = (User) RWT.getUISession().getAttribute("user");
+				Map<Problem, ProblemAssignment> problemsAssignment = DAOProblemAssignments.getDAO().getUserProblemAssignments(user);
+				ProblemAssignment problemAssignment = null;
+				for(Problem pr: problemsAssignment.keySet()) {
+					if(pr.getId().equals(_problem.getId())) {
+						problemAssignment = problemsAssignment.get(pr);
+					}
+				}
+				
+				if(problemAssignment != null) {
+					for(Spinner s: _spinners) {
+						String a = (String) s.getData("alternative");
+						String c = (String) s.getData("criterion");
+						double confidence = s.getSelection() / 100d;
+						KeyDomainAssignment key = new KeyDomainAssignment(a, c, problemAssignment.getId());
+						DAOConfidence.getDAO().insertConfidence(_problem, key, confidence);
+					}
+				}
+			}
+			
+		});
+		
 		setInput();
 	}
 	
-	@SuppressWarnings("serial")
 	private void setInput() {
 		List<String[]> input = new LinkedList<String[]>();
 		
@@ -171,12 +229,8 @@ public class ConfidenceView extends ViewPart {
 		    editor.minimumWidth = spinner.getSize().x;
 		    editor.horizontalAlignment = SWT.CENTER;
 		    editor.setEditor(spinner, items[i], 2);
-		    spinner.addSelectionListener(new SelectionAdapter() {
-		    	@Override
-		    	public void widgetSelected(SelectionEvent e) {
 		    
-		    	}
-			});
+		    _spinners.add(spinner);
 		}
 	}
 	
