@@ -38,7 +38,8 @@ public class ExportXML {
 	private XMLStreamWriter _writer;
 
 	private String _file;
-
+	private NumericRealDomain _confidenceDomain;
+	
 	private Problem _problem;
 
 	public ExportXML(String file) {
@@ -155,13 +156,14 @@ public class ExportXML {
 			_writer.writeEndElement();
 		}
 		
-		NumericRealDomain confidenceDomain = new NumericRealDomain();
-		confidenceDomain.setId("c");
-		confidenceDomain.setMinMax(0.0, 0.5);
+		_confidenceDomain = new NumericRealDomain();
+		_confidenceDomain.setId("confidence");
+		_confidenceDomain.setMinMax(0.0, 0.5);
+		_confidenceDomain.setInRange(true);
 		
 		_writer.writeStartElement("flintstones.domain.numeric.real");
-		_writer.writeAttribute("id", confidenceDomain.getId());
-		confidenceDomain.save(_writer);
+		_writer.writeAttribute("id", _confidenceDomain.getId());
+		_confidenceDomain.save(_writer);
 		_writer.writeEndElement();
 		
 		
@@ -187,7 +189,7 @@ public class ExportXML {
 		_writer.writeEndElement();
 
 		_writer.writeStartElement("valuation-id");
-		_writer.writeAttribute("id", "flintstones.domain.numeric.real");
+		_writer.writeAttribute("id", "flintstones.valuation.real");
 		_writer.writeEndElement();
 		
 		
@@ -252,14 +254,9 @@ public class ExportXML {
 			}
 		}
 		
-		NumericRealDomain confidenceDomain = new NumericRealDomain();
-		confidenceDomain.setId("confidence");
-		confidenceDomain.setMinMax(0d, 0.5d);
-		confidenceDomain.setInRange(true);
-		
 		Map<KeyDomainAssignment, Double> confidences = new HashMap<KeyDomainAssignment, Double>();
 		for(KeyDomainAssignment key: confidences.keySet()) {
-			RealValuation valuation = new RealValuation(confidenceDomain, confidences.get(key));
+			RealValuation valuation = new RealValuation(_confidenceDomain, confidences.get(key));
 			_writer.writeStartElement("flintstones.valuation.real");
 
 			_writer.writeAttribute("domain-id", valuation.getDomain().getId());
