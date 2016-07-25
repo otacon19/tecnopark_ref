@@ -126,6 +126,38 @@ public class DAOConfidence {
 
 	}
 	
+	public Map<KeyDomainAssignment, Double> getConfidencesExpert(String problem, String expertId) {
+		Map<KeyDomainAssignment, Double> result = new HashMap<KeyDomainAssignment, Double>();
+		try {
+			Connection c = getConnection();
+			Statement st = c.createStatement();
+
+			String select = "select * from " + TABLE + " where " + PROBLEM + " = '" + problem + " and " + EXPERT + " = '" + expertId + "';";
+			ResultSet rs = st.executeQuery(select);
+
+			String criterion;
+			String alternative;
+			String expert;
+			KeyDomainAssignment key;
+			double confidence;
+			while (rs.next()) {
+				criterion = rs.getString(CRITERION);
+				alternative = rs.getString(ALTERNATIVE);
+				expert = rs.getString(EXPERT);
+				key = new KeyDomainAssignment(alternative, criterion, expert);
+				confidence = rs.getDouble(CONFIDENCE);
+				
+				result.put(key, confidence);
+			}
+			st.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return result;
+
+	}
+	
 	public void insertConfidence(Problem problem, KeyDomainAssignment key, double confidence) {
 
 		try {

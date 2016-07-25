@@ -215,5 +215,26 @@ public class DAOProblemAssignments {
 
 		}
 	}
+	
+	public boolean isAvailableToExport(Problem problem) {
+		
+		try {
+			Connection c = getConnection();
+			Statement st = c.createStatement();
 
+			String select = "select * from " + TABLE + " where " + PROBLEM + "='" + problem + "';";
+			ResultSet rs = st.executeQuery(select);
+			
+			while (rs.next()) {
+				if(!Boolean.parseBoolean(rs.getString(MAKE))) {
+					return false;
+				}
+			}
+
+		} catch (Exception e) {
+
+		}
+		
+		return true;
+	}
 }

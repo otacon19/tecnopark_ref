@@ -59,9 +59,11 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		register(importProblemActionMenu);
 
 		exportProblemAction = new ExportProblemAction(window);
+		exportProblemAction.setEnabled(false);
 		register(exportProblemAction);
 		
 		exportProblemActionMenu = new ExportProblemActionMenu(window);
+		exportProblemActionMenu.setEnabled(false);
 		register(exportProblemActionMenu);		
 
 		userAccountAction = new UserAccountAction(window);

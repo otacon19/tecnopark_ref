@@ -9,7 +9,11 @@ import org.eclipse.ui.IViewLayout;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 
+import flintstones.gathering.cloud.controller.ExportProblemAction;
+import flintstones.gathering.cloud.controller.ExportProblemActionMenu;
 import flintstones.gathering.cloud.controller.OpenFrameworkStructuringPerspective;
+import flintstones.gathering.cloud.dao.DAOProblemAssignments;
+import flintstones.gathering.cloud.model.Problem;
 import flintstones.gathering.cloud.model.User;
 
 /**
@@ -50,6 +54,11 @@ public class ProblemsPerspective implements IPerspectiveFactory {
 						} else {
 							((OpenFrameworkStructuringPerspective) RWT.getUISession().getAttribute("open-frameworkstructuring-action")).run();
 						}
+					}
+					
+					if(DAOProblemAssignments.getDAO().isAvailableToExport((Problem) RWT.getUISession().getAttribute("problem"))) {
+						((ExportProblemAction) RWT.getUISession().getAttribute("export-action")).setEnabled(true);
+						((ExportProblemActionMenu) RWT.getUISession().getAttribute("export-action-menu")).setEnabled(true);
 					}
 				}
 			}

@@ -55,6 +55,7 @@ public class SurveyView extends ViewPart {
 	private Problem _problem;
 	private Valuations _valuations;
 	private ProblemAssignment _problemAssignment;
+	private boolean _confidencesSaved = false;
 
 	public SurveyView() {
 		
@@ -62,7 +63,13 @@ public class SurveyView extends ViewPart {
 	
 		_valuations = new Valuations();
 	}
-
+	
+	public void confidencesSaved() {
+		_confidencesSaved = true;
+		
+		checkMakeAssignment();
+	}
+	
 	@SuppressWarnings("serial")
 	class ViewContentProvider implements IStructuredContentProvider {
 
@@ -277,7 +284,8 @@ public class SurveyView extends ViewPart {
 	}
 	
 	private void checkMakeAssignment() {
-		if((_valuations.getValuations().size() == _viewer.getTable().getItemCount()) && _viewer.getTable().getItemCount() > 0 && !_problemAssignment.getMake()) {
+		if((_valuations.getValuations().size() == _viewer.getTable().getItemCount()) && _viewer.getTable().getItemCount() > 0 && 
+				!_problemAssignment.getMake() && _confidencesSaved) {
 			_sendAssignmets.setEnabled(true);
 		} else {
 			_sendAssignmets.setEnabled(false);

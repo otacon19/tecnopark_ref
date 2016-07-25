@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.rap.rwt.RWT;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
@@ -32,6 +33,7 @@ public class ExportProblemActionMenu extends Action {
 		setActionDefinitionId(ICommandIds.CMD_EXPORT_PROBLEM_MENU);
 		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
 				"flintstones.gathering.cloud", "/icons/export.png"));
+		RWT.getUISession().setAttribute("export-action-menu", this);
 	}
 
 	public void run() {

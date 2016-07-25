@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -47,12 +48,21 @@ public class ConfidenceView extends ViewPart {
 	
 	private List<Spinner> _spinners;
 
+	private SurveyView _surveyView;
+	
 	private Problem _problem;
 	
 	public ConfidenceView() {
 		_problem = (Problem) RWT.getUISession().getAttribute("valuation-problem");
 		
 		_spinners = new LinkedList<Spinner>();
+		
+		IViewReference viewReferences[] = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences();
+		for (int i = 0; i < viewReferences.length; i++) {
+			if (SurveyView.ID.equals(viewReferences[i].getId())) {
+				_surveyView = (SurveyView) viewReferences[i];
+			}
+		}
 	}
 
 	@SuppressWarnings("serial")
@@ -186,6 +196,8 @@ public class ConfidenceView extends ViewPart {
 						DAOConfidence.getDAO().insertConfidence(_problem, key, confidence);
 					}
 				}
+				
+				_surveyView.confidencesSaved();
 			}
 			
 		});
