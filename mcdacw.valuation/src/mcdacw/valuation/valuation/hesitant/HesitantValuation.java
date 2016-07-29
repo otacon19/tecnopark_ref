@@ -145,7 +145,7 @@ public class HesitantValuation extends Valuation {
 		LabelLinguisticDomain upperTerm = ((FuzzySet) _domain).getLabelSet().getLabel(upperTermName);
 		ParameterValidator.notNull(upperTerm, "upperTerm");
 
-		if (upperTermName.compareTo(lowerTermName) <= 0) {
+		if (((FuzzySet) _domain).getLabelSet().getPos(lowerTermName) > ((FuzzySet) _domain).getLabelSet().getPos(upperTermName)) {
 			throw new IllegalArgumentException("Hesitant valuation upper term is bigger than lower term");
 		}
 

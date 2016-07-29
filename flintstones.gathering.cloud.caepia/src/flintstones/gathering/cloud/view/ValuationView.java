@@ -211,6 +211,11 @@ public class ValuationView extends ViewPart {
 						((HesitantValuation) _valuation).setLabel(_label);
 					}
 					_surveyView.addValuation(_valuation);
+					
+					_upperTerm = null;
+					_lowerTerm = null;
+					_term = null;
+					_label = null;
 				}
 			}
 		});

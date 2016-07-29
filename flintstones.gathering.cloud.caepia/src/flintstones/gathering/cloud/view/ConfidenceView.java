@@ -57,12 +57,6 @@ public class ConfidenceView extends ViewPart {
 		
 		_spinners = new LinkedList<Spinner>();
 		
-		IViewReference viewReferences[] = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences();
-		for (int i = 0; i < viewReferences.length; i++) {
-			if (SurveyView.ID.equals(viewReferences[i].getId())) {
-				_surveyView = (SurveyView) viewReferences[i];
-			}
-		}
 	}
 
 	@SuppressWarnings("serial")
@@ -197,6 +191,14 @@ public class ConfidenceView extends ViewPart {
 					}
 				}
 				
+				if(_surveyView == null) {
+					IViewReference viewReferences[] = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences();
+					for (int i = 0; i < viewReferences.length; i++) {
+						if (SurveyView.ID.equals(viewReferences[i].getId())) {
+							_surveyView = (SurveyView) viewReferences[i].getView(false);
+						}
+					}
+				}
 				_surveyView.confidencesSaved();
 			}
 			

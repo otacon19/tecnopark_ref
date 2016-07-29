@@ -24,6 +24,8 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
 import flintstones.gathering.cloud.controller.CloseViewAction;
+import flintstones.gathering.cloud.controller.ExportProblemAction;
+import flintstones.gathering.cloud.controller.ExportProblemActionMenu;
 import flintstones.gathering.cloud.controller.OpenViewAction;
 import flintstones.gathering.cloud.dao.DAOProblem;
 import flintstones.gathering.cloud.model.Problem;
@@ -124,9 +126,10 @@ public class ProblemsView extends ViewPart {
 		List<Problem> input = (List<Problem>) viewer.getInput();
 		if (input.isEmpty()) {
 			viewer.setSelection(new StructuredSelection(), false);
+			((ExportProblemAction) RWT.getUISession().getAttribute("export-action")).setEnabled(false);
+			((ExportProblemActionMenu) RWT.getUISession().getAttribute("export-action-menu")).setEnabled(false);
 		} else {
-			viewer.setSelection(
-					new StructuredSelection(viewer.getElementAt(0)), true);
+			viewer.setSelection(new StructuredSelection(viewer.getElementAt(0)), true);
 		}
 		updateSelection();
 	}
@@ -142,12 +145,10 @@ public class ProblemsView extends ViewPart {
 		RWT.getUISession().setAttribute("problem", problem);
 
 		if (problem != null) {
-			OpenViewAction ova = new OpenViewAction(getSite()
-					.getWorkbenchWindow(), "problem", ProblemView.ID);
+			OpenViewAction ova = new OpenViewAction(getSite().getWorkbenchWindow(), "problem", ProblemView.ID);
 			ova.run();
 		} else {
-			CloseViewAction cva = new CloseViewAction(getSite()
-					.getWorkbenchWindow(), "problem", ProblemView.ID);
+			CloseViewAction cva = new CloseViewAction(getSite().getWorkbenchWindow(), "problem", ProblemView.ID);
 			cva.run();
 		}
 	}

@@ -15,8 +15,8 @@ public class IntegerIntervalValuation extends Valuation {
 
 	public static final String ID = "flintstones.valuation.integer.interval"; //$NON-NLS-1$
 	
-	public long _min;
-	public long _max;
+	public double _min;
+	public double _max;
 	
 	public IntegerIntervalValuation() {
 		super();
@@ -35,7 +35,7 @@ public class IntegerIntervalValuation extends Valuation {
 		_min = min;
 	}
 	
-	public long getMin() {
+	public double getMin() {
 		return _min;
 	}
 	
@@ -43,11 +43,11 @@ public class IntegerIntervalValuation extends Valuation {
 		_max = max;
 	}
 	
-	public long getMax() {
+	public double getMax() {
 		return _max;
 	}
 	
-	public void setMinMax(Long min, Long max) {
+	public void setMinMax(Double min, Double max) {
 		ParameterValidator.notNull(_domain, "min-max");
 		ParameterValidator.notDisorder(new double[] {min,  max}, "min-max", false);
 		
@@ -115,9 +115,9 @@ public class IntegerIntervalValuation extends Valuation {
 		ParameterValidator.notIllegalElementType(other, new String[] {Integer.class.toString()}, "other");
 		
 		if(_domain.equals(other.getDomain())) {
-			long middle = (_max + _min) / 2l;
-			long otherMidle = (((IntegerIntervalValuation) other)._max + ((IntegerIntervalValuation) other)._min) / 2l;
-			return Long.valueOf(middle).compareTo(Long.valueOf(otherMidle));
+			double middle = (_max + _min) / 2l;
+			double otherMidle = (((IntegerIntervalValuation) other)._max + ((IntegerIntervalValuation) other)._min) / 2l;
+			return Double.valueOf(middle).compareTo(Double.valueOf(otherMidle));
 		} else {
 			throw new IllegalArgumentException("Different domains");
 		}
@@ -127,20 +127,20 @@ public class IntegerIntervalValuation extends Valuation {
 	public Object clone() {
 		IntegerIntervalValuation result = null;
 		result = (IntegerIntervalValuation) super.clone();
-		result._min = new Long(_min);
-		result._max = new Long(_max);
+		result._min = new Double(_min);
+		result._max = new Double(_max);
 		
 		return result;
 	}
 
 	@Override
 	public String changeFormatValuationToString() {
-		return "[" + Long.toString(_min) + ", " + Long.toString(_max) + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		return "[" + Long.toString((long) _min) + ", " + Long.toString((long) _max) + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 	
 	@Override
 	public void save(XMLStreamWriter writer) throws XMLStreamException {
-		writer.writeAttribute("min", Long.toString(_min)); //$NON-NLS-1$
-		writer.writeAttribute("max", Long.toString(_max));	 //$NON-NLS-1$
+		writer.writeAttribute("min", Long.toString((long) _min)); //$NON-NLS-1$
+		writer.writeAttribute("max", Long.toString((long) _max));	 //$NON-NLS-1$
 	}
 }

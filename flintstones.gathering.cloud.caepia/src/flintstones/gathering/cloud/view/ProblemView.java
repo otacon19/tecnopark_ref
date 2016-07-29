@@ -130,8 +130,7 @@ public class ProblemView extends ViewPart {
 		tvc = new TableViewerColumn(viewer, SWT.NONE);
 		tc = tvc.getColumn();
 		tc.setText("¿El experto ha enviado sus valoraciones?");
-		tc.setImage(AbstractUIPlugin.imageDescriptorFromPlugin(
-				"flintstones.gathering.cloud", "/icons/vote_20.png").createImage());
+		tc.setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/vote_20.png").createImage());
 		tvc.setLabelProvider(new MakeLabelProvider());
 		
 		refresh();
