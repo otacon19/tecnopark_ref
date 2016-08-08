@@ -23,6 +23,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.TabFolder;
+import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.ISharedImages;
@@ -46,9 +48,14 @@ public class SurveyView extends ViewPart {
 
 	public static final String ID = "flintstones.gathering.cloud.view.surveyView";
 
-	private TableViewer _viewer;
+	private TableViewer _assignmentsViewer;
+	private TableViewer _importanceViewer;
+	private TabFolder _tabFolder;
 	private TableItem _valuationSelected;
+	private TableItem _importanceSelected;
 	private Button _sendAssignmets;
+	private Composite _assignmentsComposite;
+	private Composite _importanceComposite;
 	
 	private ValuationView _valuationView;
 	
@@ -120,34 +127,67 @@ public class SurveyView extends ViewPart {
 	
 	@SuppressWarnings("serial")
 	@Override
-	public void createPartControl(final Composite parent) {
-		parent.setLayout(new GridLayout(1, true));
+	public void createPartControl(Composite parent) {
+		parent.setLayout(new GridLayout(1, false));
 		
-		Composite viewerComposite = new Composite(parent, SWT.NONE);
+		_tabFolder = new TabFolder(parent, SWT.NONE);
+		_tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		
+		createAssignmentsComposite();
+		createImportanceComposite();
+		
+		Composite buttonComposite = new Composite(parent, SWT.NONE);
+		buttonComposite.setLayout(new GridLayout(1, true));
+		buttonComposite.setLayoutData(new GridData(SWT.RIGHT, SWT.RIGHT, true, false, 1, 1));
+		_sendAssignmets = new Button(buttonComposite, SWT.BORDER);
+		_sendAssignmets.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
+		_sendAssignmets.setText("Enviar");
+		_sendAssignmets.setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/mail_20.png").createImage());
+		_sendAssignmets.setEnabled(false);
+		_sendAssignmets.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				_problemAssignment.setMake(true);
+				DAOProblemAssignments.getDAO().makeAssignment(_problem, _problemAssignment);
+				_sendAssignmets.setEnabled(false);
+			}
+		});
+		
+		if(_problem != null) {
+			setModel();
+		}
+	}
+
+	@SuppressWarnings("serial")
+	private void createAssignmentsComposite() {
+		_assignmentsComposite = new Composite(_tabFolder, SWT.NONE);
+		_assignmentsComposite.setLayout(new GridLayout(1, false));
+		
+		Composite viewerComposite = new Composite(_assignmentsComposite, SWT.NONE);
 		viewerComposite.setLayout(new GridLayout(1, true));
 		viewerComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
-		_viewer = new TableViewer(viewerComposite, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
-		_viewer.setContentProvider(new ViewContentProvider());
-		_viewer.setLabelProvider(new ViewLabelProvider());
+		_assignmentsViewer = new TableViewer(viewerComposite, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
+		_assignmentsViewer.setContentProvider(new ViewContentProvider());
+		_assignmentsViewer.setLabelProvider(new ViewLabelProvider());
 		
-		final Table table = _viewer.getTable();
+		final Table table = _assignmentsViewer.getTable();
 		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		table.setLinesVisible(true);
 		table.setVisible(true);
 		table.setHeaderVisible(true);
 		
-		TableViewerColumn tc_criterion = new TableViewerColumn(_viewer, SWT.NONE);
+		TableViewerColumn tc_criterion = new TableViewerColumn(_assignmentsViewer, SWT.NONE);
 		tc_criterion.getColumn().setText("Criterio");
 		tc_criterion.setLabelProvider(new CriterionLabelProvider());
 		tc_criterion.getColumn().setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/criterion_20.png").createImage());
 		
-		TableViewerColumn tc_alternative = new TableViewerColumn(_viewer, SWT.NONE);
+		TableViewerColumn tc_alternative = new TableViewerColumn(_assignmentsViewer, SWT.NONE);
 		tc_alternative.getColumn().setText("Alternativa");
 		tc_alternative.setLabelProvider(new AlternativeLabelProvider());
 		tc_alternative.getColumn().setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/alternative_20.png").createImage());
 		
-		TableViewerColumn tc_valuation = new TableViewerColumn(_viewer, SWT.NONE);
+		TableViewerColumn tc_valuation = new TableViewerColumn(_assignmentsViewer, SWT.NONE);
 		tc_valuation.getColumn().setText("Valoración");
 		tc_valuation.setLabelProvider(new ValuationLabelProvider());
 		tc_valuation.getColumn().setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/valuation.png").createImage());
@@ -155,6 +195,8 @@ public class SurveyView extends ViewPart {
 		table.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				_importanceSelected = null;
+				
 				_valuationSelected = (TableItem) e.item;
 				String criterion = _valuationSelected.getText(0);
 				String alternative = _valuationSelected.getText(1);
@@ -178,44 +220,98 @@ public class SurveyView extends ViewPart {
 			}
 		});
 		
-		parent.addControlListener(new ControlAdapter() {
+		TabItem tabItem = new TabItem(_tabFolder, SWT.NONE, 0);
+		tabItem.setText("Valoraciones");
+		tabItem.setControl(_assignmentsComposite);
+		
+		_assignmentsComposite.addControlListener(new ControlAdapter() {
 			public void controlResized(ControlEvent e) {
-				Rectangle area = parent.getClientArea();
-				Point oldSize = _viewer.getTable().getSize();
+				Rectangle area = _assignmentsComposite.getClientArea();
+				Point oldSize = _assignmentsViewer.getTable().getSize();
 				if (oldSize.x > area.width) {
-					_viewer.getTable().getColumn(0).setWidth(parent.getSize().x / 3);
-					_viewer.getTable().getColumn(1).setWidth(parent.getSize().x / 3 - 1);
-					_viewer.getTable().getColumn(2).setWidth(parent.getSize().x / 3 - 1);
-					_viewer.getTable().setSize(area.width, area.height);
+					_assignmentsViewer.getTable().getColumn(0).setWidth(_assignmentsComposite.getSize().x / 3);
+					_assignmentsViewer.getTable().getColumn(1).setWidth(_assignmentsComposite.getSize().x / 3 - 1);
+					_assignmentsViewer.getTable().getColumn(2).setWidth(_assignmentsComposite.getSize().x / 3 - 1);
+					_assignmentsViewer.getTable().setSize(area.width, area.height);
 				} else {
-					_viewer.getTable().setSize(area.width, area.height);
-					_viewer.getTable().getColumn(0).setWidth(parent.getSize().x / 3);
-					_viewer.getTable().getColumn(1).setWidth(parent.getSize().x / 3 - 1);
-					_viewer.getTable().getColumn(2).setWidth(parent.getSize().x / 3 - 1);
+					_assignmentsViewer.getTable().setSize(area.width, area.height);
+					_assignmentsViewer.getTable().getColumn(0).setWidth(_assignmentsComposite.getSize().x / 3);
+					_assignmentsViewer.getTable().getColumn(1).setWidth(_assignmentsComposite.getSize().x / 3 - 1);
+					_assignmentsViewer.getTable().getColumn(2).setWidth(_assignmentsComposite.getSize().x / 3 - 1);
+				}
+			}
+		});
+	}
+	
+	@SuppressWarnings("serial")
+	private void createImportanceComposite() {
+		_importanceComposite = new Composite(_tabFolder, SWT.NONE);
+		_importanceComposite.setLayout(new GridLayout(1, true));
+		
+		Composite viewerComposite = new Composite(_importanceComposite, SWT.NONE);
+		viewerComposite.setLayout(new GridLayout(1, true));
+		viewerComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		
+		_importanceViewer = new TableViewer(viewerComposite, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
+		_importanceViewer.setContentProvider(new ViewContentProvider());
+		_importanceViewer.setLabelProvider(new ViewLabelProvider());
+		
+		final Table table = _importanceViewer.getTable();
+		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		table.setLinesVisible(true);
+		table.setVisible(true);
+		table.setHeaderVisible(true);
+		
+		TableViewerColumn tc_criterion = new TableViewerColumn(_importanceViewer, SWT.NONE);
+		tc_criterion.getColumn().setText("Criterio");
+		tc_criterion.setLabelProvider(new CriterionLabelProvider());
+		tc_criterion.getColumn().setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/criterion_20.png").createImage());
+		
+		TableViewerColumn tc_valuation = new TableViewerColumn(_importanceViewer, SWT.NONE);
+		tc_valuation.getColumn().setText("Valoración");
+		tc_valuation.setLabelProvider(new ValuationLabelProvider());
+		tc_valuation.getColumn().setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/valuation.png").createImage());
+		
+		table.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				_valuationSelected = null;
+				
+				_importanceSelected = (TableItem) e.item;
+				
+				if(_valuationView == null) {
+					IViewReference viewReferences[] = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences();
+					for (int i = 0; i < viewReferences.length; i++) {
+						if (ValuationView.ID.equals(viewReferences[i].getId())) {
+							_valuationView = (ValuationView) viewReferences[i].getView(false);
+						}
+					}
+				}
+				
+				Domain domain = _problem.getDomains().get("importance");
+				_valuationView.setDomain(domain);
+			}
+		});
+		
+		_importanceComposite.addControlListener(new ControlAdapter() {
+			public void controlResized(ControlEvent e) {
+				Rectangle area = _importanceComposite.getClientArea();
+				Point oldSize = _importanceViewer.getTable().getSize();
+				if (oldSize.x > area.width) {
+					_importanceViewer.getTable().getColumn(0).setWidth(_importanceComposite.getSize().x / 2 - 1);
+					_importanceViewer.getTable().getColumn(1).setWidth(_importanceComposite.getSize().x / 2 - 1);
+					_importanceViewer.getTable().setSize(area.width, area.height);
+				} else {
+					_importanceViewer.getTable().setSize(area.width, area.height);
+					_importanceViewer.getTable().getColumn(0).setWidth(_importanceComposite.getSize().x / 2 - 1);
+					_importanceViewer.getTable().getColumn(1).setWidth(_importanceComposite.getSize().x / 2 - 1);
 				}
 			}
 		});
 		
-		Composite buttonComposite = new Composite(parent, SWT.NONE);
-		buttonComposite.setLayout(new GridLayout(1, true));
-		buttonComposite.setLayoutData(new GridData(SWT.RIGHT, SWT.RIGHT, true, false, 1, 1));
-		_sendAssignmets = new Button(buttonComposite, SWT.BORDER);
-		_sendAssignmets.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
-		_sendAssignmets.setText("Enviar");
-		_sendAssignmets.setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/mail_20.png").createImage());
-		_sendAssignmets.setEnabled(false);
-		_sendAssignmets.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				_problemAssignment.setMake(true);
-				DAOProblemAssignments.getDAO().makeAssignment(_problem, _problemAssignment);
-				_sendAssignmets.setEnabled(false);
-			}
-		});
-		
-		if(_problem != null) {
-			setModel();
-		}
+		TabItem tabItem = new TabItem(_tabFolder, SWT.NONE, 1);
+		tabItem.setText("Importancia");
+		tabItem.setControl(_importanceComposite);
 	}
 
 	private void setModel() {
@@ -251,14 +347,35 @@ public class SurveyView extends ViewPart {
 					input.add(values);
 				}
 			}
-			_viewer.setInput(input);
-			_viewer.refresh();
+			_assignmentsViewer.setInput(input);
+			_assignmentsViewer.refresh();
+			
+			input = new LinkedList<String[]>();
+			for(String c: _problem.getCriteria()) {
+				String[] values = new String[3];
+				values[0] = c;
+				
+				if(_valuations != null) {
+					Valuation v = _valuations.getValuation(new KeyDomainAssignment(null, c, _problemAssignment.getId()));
+					if(v != null) {
+						values[2] = v.changeFormatValuationToString(); 
+					} else {
+						values[2] = "No asignada";
+					}
+				} else {
+					values[2] = "No asignada";
+				}
+				input.add(values);
+			}
+			
+			_importanceViewer.setInput(input);
+			_importanceViewer.refresh();
 		}
 	}
 
 	@Override
 	public void setFocus() {
-		_viewer.getTable().setFocus();
+		_assignmentsViewer.getTable().setFocus();
 	}
 
 	public void refresh() {
@@ -266,25 +383,35 @@ public class SurveyView extends ViewPart {
 		if(_problem != null) {
 			setModel();
 		}
-		_viewer.refresh();
+		_assignmentsViewer.refresh();
 		
 		checkMakeAssignment();
 	}
 
 	public void addValuation(Valuation valuation) {
-		KeyDomainAssignment key = new KeyDomainAssignment(_valuationSelected.getText(1), _valuationSelected.getText(0), _problemAssignment.getId());
-		_valuations.getValuations().put(key, valuation);
-		_problemAssignment.setValuations(_valuations);
-		DAOValuations.getDAO().insertValuation(_problem, _problemAssignment, key, valuation);
-		
-		_valuationSelected.setText(2, valuation.changeFormatValuationToString());
+		if(_valuationSelected != null) {
+			KeyDomainAssignment key = new KeyDomainAssignment(_valuationSelected.getText(1), _valuationSelected.getText(0), _problemAssignment.getId());
+			_valuations.getValuations().put(key, valuation);
+			_problemAssignment.setValuations(_valuations);
+			DAOValuations.getDAO().insertValuation(_problem, _problemAssignment, key, valuation);
+			
+			_valuationSelected.setText(2, valuation.changeFormatValuationToString());
+		} else {
+			KeyDomainAssignment key = new KeyDomainAssignment(null, _importanceSelected.getText(0), _problemAssignment.getId());
+			_valuations.getValuations().put(key, valuation);
+			_problemAssignment.setValuations(_valuations);
+			DAOValuations.getDAO().insertValuation(_problem, _problemAssignment, key, valuation);
+			
+			_valuationSelected.setText(1, valuation.changeFormatValuationToString());
+		}
 		
 		checkMakeAssignment();	
 		
 	}
 	
 	private void checkMakeAssignment() {
-		if((_valuations.getValuations().size() == _viewer.getTable().getItemCount()) && _viewer.getTable().getItemCount() > 0 && 
+		if((_valuations.getValuations().size() == _assignmentsViewer.getTable().getItemCount() + _importanceViewer.getTable().getItemCount()) 
+				&& _assignmentsViewer.getTable().getItemCount() > 0 && _importanceViewer.getTable().getItemCount() > 0 &&
 				!_problemAssignment.getMake() && _confidencesSaved) {
 			_sendAssignmets.setEnabled(true);
 		} else {
@@ -293,11 +420,20 @@ public class SurveyView extends ViewPart {
 	}
 
 	public void removeValuation(Valuation valuation) {
-		KeyDomainAssignment key = new KeyDomainAssignment(_valuationSelected.getText(1), _valuationSelected.getText(0), _problemAssignment.getId());
-		_valuations.getValuations().remove(key);
-		_problemAssignment.setValuations(_valuations);
-		DAOValuations.getDAO().removeValuation(_problem.getId(), key);
-		
-		_valuationSelected.setText(2, "No asignada");
+		if(_valuationSelected != null) {
+			KeyDomainAssignment key = new KeyDomainAssignment(_valuationSelected.getText(1), _valuationSelected.getText(0), _problemAssignment.getId());
+			_valuations.getValuations().remove(key);
+			_problemAssignment.setValuations(_valuations);
+			DAOValuations.getDAO().removeValuation(_problem.getId(), key);
+			
+			_valuationSelected.setText(2, "No asignada");
+		} else {
+			KeyDomainAssignment key = new KeyDomainAssignment(null, _importanceSelected.getText(0), _problemAssignment.getId());
+			_valuations.getValuations().remove(key);
+			_problemAssignment.setValuations(_valuations);
+			DAOValuations.getDAO().removeValuation(_problem.getId(), key);
+			
+			_importanceSelected.setText(1, "No asignada");
+		}
 	}
 }

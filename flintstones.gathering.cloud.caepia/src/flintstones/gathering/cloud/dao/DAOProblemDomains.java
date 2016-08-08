@@ -66,6 +66,8 @@ public class DAOProblemDomains {
 	}
 
 	public void createProblemDomains(Problem problem) {
+		boolean importanceDomain = false;
+		
 		try {
 			Connection c = getConnection();
 			Statement st = c.createStatement();
@@ -73,12 +75,43 @@ public class DAOProblemDomains {
 			Map<String, Domain> domains = problem.getDomains();
 			Domain domain = null;
 			for (String id : domains.keySet()) {
+				
+				if(id.equals("importance")) {
+					importanceDomain = true;
+				}
+				
 				domain = domains.get(id);
 				st.executeUpdate("insert into " + TABLE + " values ('" + id + "','" + problemId + "','" + domain.getType() + "','" + domain.toString() + "')");
 			}
+			
+			if(!importanceDomain) {
+				
+				List<LabelLinguisticDomain> labels = new LinkedList<LabelLinguisticDomain>();
+				LabelLinguisticDomain nothing = new LabelLinguisticDomain("Nothing", new TrapezoidalFunction(new double[]{0, 0, 0, 0.17}));
+				labels.add(nothing);
+				LabelLinguisticDomain veryBad = new LabelLinguisticDomain("Very_bad", new TrapezoidalFunction(new double[]{0, 0.17, 0.17, 0.33}));
+				labels.add(veryBad);
+				LabelLinguisticDomain bad = new LabelLinguisticDomain("Bad", new TrapezoidalFunction(new double[]{0.17, 0.33, 0.33, 0.5}));
+				labels.add(bad);
+				LabelLinguisticDomain medium = new LabelLinguisticDomain("Medium", new TrapezoidalFunction(new double[]{0.33, 0.5, 0.5, 0.67}));
+				labels.add(medium);
+				LabelLinguisticDomain good = new LabelLinguisticDomain("Good", new TrapezoidalFunction(new double[]{0.5, 0.67, 0.67, 0.83}));
+				labels.add(good);
+				LabelLinguisticDomain veryGood = new LabelLinguisticDomain("Very_good", new TrapezoidalFunction(new double[]{0.67, 0.83, 0.83, 1}));
+				labels.add(veryGood);
+				LabelLinguisticDomain perfect = new LabelLinguisticDomain("Perfect", new TrapezoidalFunction(new double[]{0.83, 0.83, 0.83, 1}));
+				labels.add(perfect);
+			
+				FuzzySet importance = new FuzzySet(labels);
+				importance.setId("importance");
+				importance.setType("Lingüístico");
+				
+				st.executeUpdate("insert into " + TABLE + " values ('" + importance.getId() + "','" + problemId + "','" + importance.getType() + "','" + importance.toString() + "')");
+			}
+			
 			st.close();
 		} catch (Exception e) {
-			
+			e.printStackTrace();
 		}
 	}
 	

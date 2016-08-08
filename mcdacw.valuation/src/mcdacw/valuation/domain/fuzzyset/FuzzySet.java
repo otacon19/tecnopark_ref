@@ -42,6 +42,11 @@ public class FuzzySet extends Linguistic {
 	}
 	
 	public FuzzySet(List<LabelLinguisticDomain> labels) {
+		super();
+		
+		_labelSet = new LabelSetLinguisticDomain();
+		_values = new LinkedList<Double>();
+		
 		_labelSet.setLabels(labels);
 		addValues(labels);
 	}
