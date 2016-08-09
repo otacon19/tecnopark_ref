@@ -173,7 +173,9 @@ public class DomainAssignmentView extends ViewPart {
 	
 	private void extractDomainValues() {
 		for(String id: _problem.getDomains().keySet()) {
-			_domainValues.add(id);
+			if(!id.equals("auto_generated_importance")) {
+				_domainValues.add(id);
+			}
 		}	
 	}
 

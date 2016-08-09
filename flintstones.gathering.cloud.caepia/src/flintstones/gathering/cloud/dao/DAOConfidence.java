@@ -132,7 +132,7 @@ public class DAOConfidence {
 			Connection c = getConnection();
 			Statement st = c.createStatement();
 
-			String select = "select * from " + TABLE + " where " + PROBLEM + " = '" + problem + " and " + EXPERT + " = '" + expertId + "';";
+			String select = "select * from " + TABLE + " where " + PROBLEM + " = '" + problem + "' and " + EXPERT + " = '" + expertId + "';";
 			ResultSet rs = st.executeQuery(select);
 
 			String criterion;

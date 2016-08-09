@@ -33,6 +33,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
+import flintstones.gathering.cloud.dao.DAOConfidence;
 import flintstones.gathering.cloud.dao.DAOProblemAssignments;
 import flintstones.gathering.cloud.dao.DAOProblemDomainAssignments;
 import flintstones.gathering.cloud.dao.DAOValuations;
@@ -62,12 +63,29 @@ public class SurveyView extends ViewPart {
 	private Problem _problem;
 	private Valuations _valuations;
 	private ProblemAssignment _problemAssignment;
-	private boolean _confidencesSaved = false;
+	private boolean _confidencesSaved;
 
 	public SurveyView() {
 		
 		_problem = (Problem) RWT.getUISession().getAttribute("valuation-problem");
-	
+		
+		User user = (User) RWT.getUISession().getAttribute("user");
+		Map<Problem, ProblemAssignment> model = DAOProblemAssignments.getDAO().getUserProblemAssignments(user);
+		for(Problem p: model.keySet()) {
+			if(p.getId().equals(_problem.getId())) {
+				_problemAssignment = model.get(p);
+			}
+		}
+		
+		if(_problemAssignment != null) {
+			Map<KeyDomainAssignment, Double> confidences = DAOConfidence.getDAO().getConfidencesExpert(_problem.getId(), _problemAssignment.getId());
+			if(confidences.isEmpty()) {
+				_confidencesSaved = false;
+			} else {
+				_confidencesSaved = true;
+			}
+		}
+		
 		_valuations = new Valuations();
 	}
 	
@@ -288,7 +306,7 @@ public class SurveyView extends ViewPart {
 					}
 				}
 				
-				Domain domain = _problem.getDomains().get("importance");
+				Domain domain = _problem.getDomains().get("auto_generated_importance");
 				_valuationView.setDomain(domain);
 			}
 		});
@@ -315,14 +333,6 @@ public class SurveyView extends ViewPart {
 	}
 
 	private void setModel() {
-		
-		User user = (User) RWT.getUISession().getAttribute("user");
-		Map<Problem, ProblemAssignment> model = DAOProblemAssignments.getDAO().getUserProblemAssignments(user);
-		for(Problem p: model.keySet()) {
-			if(p.getId().equals(_problem.getId())) {
-				_problemAssignment = model.get(p);
-			}
-		}
 		
 		if(_problemAssignment != null) {
 	
@@ -353,7 +363,7 @@ public class SurveyView extends ViewPart {
 			input = new LinkedList<String[]>();
 			for(String c: _problem.getCriteria()) {
 				String[] values = new String[3];
-				values[0] = c;
+				values[1] = c;
 				
 				if(_valuations != null) {
 					Valuation v = _valuations.getValuation(new KeyDomainAssignment(null, c, _problemAssignment.getId()));
@@ -393,16 +403,16 @@ public class SurveyView extends ViewPart {
 			KeyDomainAssignment key = new KeyDomainAssignment(_valuationSelected.getText(1), _valuationSelected.getText(0), _problemAssignment.getId());
 			_valuations.getValuations().put(key, valuation);
 			_problemAssignment.setValuations(_valuations);
-			DAOValuations.getDAO().insertValuation(_problem, _problemAssignment, key, valuation);
+			DAOValuations.getDAO().insertValuation(_problem, key, valuation);
 			
 			_valuationSelected.setText(2, valuation.changeFormatValuationToString());
 		} else {
 			KeyDomainAssignment key = new KeyDomainAssignment(null, _importanceSelected.getText(0), _problemAssignment.getId());
 			_valuations.getValuations().put(key, valuation);
 			_problemAssignment.setValuations(_valuations);
-			DAOValuations.getDAO().insertValuation(_problem, _problemAssignment, key, valuation);
+			DAOValuations.getDAO().insertValuation(_problem, key, valuation);
 			
-			_valuationSelected.setText(1, valuation.changeFormatValuationToString());
+			_importanceSelected.setText(1, valuation.changeFormatValuationToString());
 		}
 		
 		checkMakeAssignment();	
@@ -410,6 +420,7 @@ public class SurveyView extends ViewPart {
 	}
 	
 	private void checkMakeAssignment() {
+		
 		if((_valuations.getValuations().size() == _assignmentsViewer.getTable().getItemCount() + _importanceViewer.getTable().getItemCount()) 
 				&& _assignmentsViewer.getTable().getItemCount() > 0 && _importanceViewer.getTable().getItemCount() > 0 &&
 				!_problemAssignment.getMake() && _confidencesSaved) {

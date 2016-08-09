@@ -17,7 +17,7 @@ public static final String ID = "flintstones.gathering.cloud.frameworkstructurin
 		String editorArea = layout.getEditorArea();
 		layout.setEditorAreaVisible(false);
 		
-		layout.addView(DomainAssignmentView.ID, IPageLayout.TOP, 0.12f, editorArea);
+		layout.addView(DomainAssignmentView.ID, IPageLayout.TOP, 0.15f, editorArea);
 		IViewLayout viewLayout = layout.getViewLayout(DomainAssignmentView.ID);
 		viewLayout.setCloseable(false);
 		viewLayout.setMoveable(false);

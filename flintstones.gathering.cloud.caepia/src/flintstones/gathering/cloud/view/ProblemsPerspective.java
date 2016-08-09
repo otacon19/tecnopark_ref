@@ -59,6 +59,9 @@ public class ProblemsPerspective implements IPerspectiveFactory {
 					if(DAOProblemAssignments.getDAO().isAvailableToExport((Problem) RWT.getUISession().getAttribute("problem"))) {
 						((ExportProblemAction) RWT.getUISession().getAttribute("export-action")).setEnabled(true);
 						((ExportProblemActionMenu) RWT.getUISession().getAttribute("export-action-menu")).setEnabled(true);
+					} else {
+						((ExportProblemAction) RWT.getUISession().getAttribute("export-action")).setEnabled(false);
+						((ExportProblemActionMenu) RWT.getUISession().getAttribute("export-action-menu")).setEnabled(false);
 					}
 				}
 			}

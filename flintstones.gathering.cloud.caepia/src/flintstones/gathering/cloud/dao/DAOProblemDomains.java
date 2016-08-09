@@ -99,11 +99,11 @@ public class DAOProblemDomains {
 				labels.add(good);
 				LabelLinguisticDomain veryGood = new LabelLinguisticDomain("Very_good", new TrapezoidalFunction(new double[]{0.67, 0.83, 0.83, 1}));
 				labels.add(veryGood);
-				LabelLinguisticDomain perfect = new LabelLinguisticDomain("Perfect", new TrapezoidalFunction(new double[]{0.83, 0.83, 0.83, 1}));
+				LabelLinguisticDomain perfect = new LabelLinguisticDomain("Perfect", new TrapezoidalFunction(new double[]{0.83, 1, 1, 1}));
 				labels.add(perfect);
 			
 				FuzzySet importance = new FuzzySet(labels);
-				importance.setId("importance");
+				importance.setId("auto_generated_importance");
 				importance.setType("Lingüístico");
 				
 				st.executeUpdate("insert into " + TABLE + " values ('" + importance.getId() + "','" + problemId + "','" + importance.getType() + "','" + importance.toString() + "')");

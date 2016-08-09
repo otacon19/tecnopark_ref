@@ -56,7 +56,6 @@ public class ConfidenceView extends ViewPart {
 		_problem = (Problem) RWT.getUISession().getAttribute("valuation-problem");
 		
 		_spinners = new LinkedList<Spinner>();
-		
 	}
 
 	@SuppressWarnings("serial")
@@ -98,15 +97,33 @@ public class ConfidenceView extends ViewPart {
 	@SuppressWarnings("serial")
 	@Override
 	public void createPartControl(final Composite parent) {
-		parent.setLayout(new GridLayout(1, true));
+		GridLayout layout = new GridLayout(1, false);
+		layout.marginBottom = 0;
+		layout.marginTop = 0;
+		layout.marginLeft = 0;
+		layout.marginRight = 0;
+		layout.marginHeight = 0;
+		layout.marginWidth = 0;
+		layout.verticalSpacing = 0;
+		layout.horizontalSpacing = 0;
+		parent.setLayout(layout);
 		
 		Composite compositeTable = new Composite(parent, SWT.NONE);
-		compositeTable.setLayout(new GridLayout(1, false));
-		compositeTable.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, true, true, 1, 1));
+		GridLayout layout_2 = new GridLayout(1, false);
+		layout.marginBottom = 0;
+		layout.marginTop = 0;
+		layout.marginLeft = 0;
+		layout.marginRight = 0;
+		layout.marginHeight = 0;
+		layout.marginWidth = 0;
+		layout.verticalSpacing = 0;
+		layout.horizontalSpacing = 0;
+		compositeTable.setLayout(layout_2);
+		compositeTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
-		_viewer = new TableViewer(compositeTable, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+		_viewer = new TableViewer(compositeTable, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.NONE);
 		Table table = _viewer.getTable();
-		table.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
+		table.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
 		_viewer.setContentProvider(new ViewContentProvider());
 		_viewer.getTable().setHeaderVisible(true);
 		_viewer.getTable().setLinesVisible(true);
@@ -166,11 +183,13 @@ public class ConfidenceView extends ViewPart {
 		compositeButton.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, true, false, 1, 1));
 		_saveConfidenceButton = new Button(compositeButton, SWT.NONE);
 		_saveConfidenceButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1 ,1));
-		_saveConfidenceButton.setText("Save");
+		_saveConfidenceButton.setText("Guardar");
 		_saveConfidenceButton.setImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_ETOOL_SAVE_EDIT));
 		_saveConfidenceButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				
+				_saveConfidenceButton.setEnabled(false);
 				
 				User user = (User) RWT.getUISession().getAttribute("user");
 				Map<Problem, ProblemAssignment> problemsAssignment = DAOProblemAssignments.getDAO().getUserProblemAssignments(user);
@@ -207,6 +226,7 @@ public class ConfidenceView extends ViewPart {
 		setInput();
 	}
 	
+	@SuppressWarnings("serial")
 	private void setInput() {
 		List<String[]> input = new LinkedList<String[]>();
 		
@@ -223,6 +243,18 @@ public class ConfidenceView extends ViewPart {
 		
 		_viewer.setInput(input);
 		
+		User user = (User) RWT.getUISession().getAttribute("user");
+		ProblemAssignment problemAssignment = null;
+		Map<Problem, ProblemAssignment> model = DAOProblemAssignments.getDAO().getUserProblemAssignments(user);
+		for(Problem p: model.keySet()) {
+			if(p.getId().equals(_problem.getId())) {
+				problemAssignment = model.get(p);
+			}
+		}
+		
+		Map<KeyDomainAssignment, Double> confidences = DAOConfidence.getDAO().getConfidencesExpert(_problem.getId(), problemAssignment.getId());
+		double value;
+		
 		TableItem[] items = _viewer.getTable().getItems();
 		for(int i = 0; i < items.length; ++i) {
 			TableEditor editor = new TableEditor(_viewer.getTable());
@@ -230,12 +262,26 @@ public class ConfidenceView extends ViewPart {
 			spinner.setDigits(2);
 			spinner.setMinimum((int) (0 * 100d));
 			spinner.setMaximum((int) (0.5 * 100d));
-			spinner.setSelection((int) (0.25 * 100d));
 			spinner.pack();
+			spinner.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					if(!_saveConfidenceButton.isEnabled()) {
+						_saveConfidenceButton.setEnabled(true);
+					}
+				}
+			});
 			
 			TableItem item = items[i];
 			String criterion = item.getText(0);
 			String alternative = item.getText(1);
+			
+			if(!confidences.isEmpty()) {
+				value = confidences.get(new KeyDomainAssignment(alternative, criterion, problemAssignment.getId()));
+				spinner.setSelection((int) (value * 100d));
+			} else {
+				spinner.setSelection((int) (0.25 * 100d));
+			}
 			
 			spinner.setData("criterion", criterion);
 			spinner.setData("alternative", alternative);

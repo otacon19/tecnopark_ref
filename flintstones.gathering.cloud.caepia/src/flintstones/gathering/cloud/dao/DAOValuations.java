@@ -284,7 +284,7 @@ public class DAOValuations {
 		}
 	}
 	
-	public void insertValuation(Problem problem, ProblemAssignment assignment, KeyDomainAssignment key, Valuation valuation) {
+	public void insertValuation(Problem problem, KeyDomainAssignment key, Valuation valuation) {
 
 		try {
 			Connection c = getConnection();

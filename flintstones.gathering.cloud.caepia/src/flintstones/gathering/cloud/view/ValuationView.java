@@ -119,6 +119,8 @@ public class ValuationView extends ViewPart {
 	}
 
 	public void setDomain(Domain domain) {
+		disposeControls();
+		
 		_domain = domain;
 		setPanelValuation();
 	}
@@ -128,7 +130,11 @@ public class ValuationView extends ViewPart {
 		
 		if(_domain != null) {
 			disposeControls();
-			if(_problem.getDomainValuations().get(_domain.getId()).equals(XMLValues.INTEGER)) {
+			if(_domain.getId().equals("auto_generated_importance")) {
+				createLinguisticPanel();
+				createButtons();
+				createLinguisticChart();
+			} else if(_problem.getDomainValuations().get(_domain.getId()).equals(XMLValues.INTEGER)) {
 				createIntegerPanel();
 				createButtons();
 				createIntegerChart();
@@ -183,23 +189,22 @@ public class ValuationView extends ViewPart {
 		_valuateButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if(_problem.getDomainValuations().get(_domain.getId()).equals(XMLValues.INTEGER)) {
+				if(_domain.getId().equals("auto_generated_importance")) {
+					_valuation = new LinguisticValuation();
+					_valuation.setDomain(_domain);
+					((LinguisticValuation) _valuation).setLabel(_label);
+				}else if(_problem.getDomainValuations().get(_domain.getId()).equals(XMLValues.INTEGER)) {
 					_valuation = new IntegerValuation((NumericIntegerDomain) _domain, _value);
-					_surveyView.addValuation(_valuation);
 				} else if(_problem.getDomainValuations().get(_domain.getId()).equals(XMLValues.INTEGER_INTERVAL)) {
 					_valuation = new IntegerIntervalValuation((NumericIntegerDomain) _domain, (int) _valueMin, (int) _valueMax);
-					_surveyView.addValuation(_valuation);
 				} else if(_problem.getDomainValuations().get(_domain.getId()).equals(XMLValues.REAL)) {
 					_valuation = new RealValuation((NumericRealDomain) _domain, _value);
-					_surveyView.addValuation(_valuation);
 				} else if(_problem.getDomainValuations().get(_domain.getId()).equals(XMLValues.REAL_INTERVAL)) {
 					_valuation = new RealIntervalValuation((NumericRealDomain) _domain, (double) _valueMin, (double) _valueMax);
-					_surveyView.addValuation(_valuation);
 				} else if(_problem.getDomainValuations().get(_domain.getId()).equals(XMLValues.LINGUISTIC)) {
 					_valuation = new LinguisticValuation();
 					_valuation.setDomain(_domain);
 					((LinguisticValuation) _valuation).setLabel(_label);
-					_surveyView.addValuation(_valuation);
 				} else if(_problem.getDomainValuations().get(_domain.getId()).equals(XMLValues.HESITANT)) {
 					_valuation = new HesitantValuation((FuzzySet) _domain);
 					if(_upperTerm != null && _lowerTerm != null) {
@@ -210,13 +215,14 @@ public class ValuationView extends ViewPart {
 						_label = ((FuzzySet) _domain).getLabelSet().getLabel(_hesitantEvaluationCombo2.getItem(_hesitantEvaluationCombo2.getSelectionIndex()));
 						((HesitantValuation) _valuation).setLabel(_label);
 					}
-					_surveyView.addValuation(_valuation);
 					
 					_upperTerm = null;
 					_lowerTerm = null;
 					_term = null;
 					_label = null;
 				}
+				
+				_surveyView.addValuation(_valuation);
 			}
 		});
 		
