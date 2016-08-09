@@ -87,19 +87,19 @@ public class DAOProblemDomains {
 			if(!importanceDomain) {
 				
 				List<LabelLinguisticDomain> labels = new LinkedList<LabelLinguisticDomain>();
-				LabelLinguisticDomain nothing = new LabelLinguisticDomain("Nothing", new TrapezoidalFunction(new double[]{0, 0, 0, 0.17}));
+				LabelLinguisticDomain nothing = new LabelLinguisticDomain("Absolutely_low_importance", new TrapezoidalFunction(new double[]{0, 0, 0, 0.17}));
 				labels.add(nothing);
-				LabelLinguisticDomain veryBad = new LabelLinguisticDomain("Very_bad", new TrapezoidalFunction(new double[]{0, 0.17, 0.17, 0.33}));
+				LabelLinguisticDomain veryBad = new LabelLinguisticDomain("Very_low_importance", new TrapezoidalFunction(new double[]{0, 0.17, 0.17, 0.33}));
 				labels.add(veryBad);
-				LabelLinguisticDomain bad = new LabelLinguisticDomain("Bad", new TrapezoidalFunction(new double[]{0.17, 0.33, 0.33, 0.5}));
+				LabelLinguisticDomain bad = new LabelLinguisticDomain("Low_importance", new TrapezoidalFunction(new double[]{0.17, 0.33, 0.33, 0.5}));
 				labels.add(bad);
-				LabelLinguisticDomain medium = new LabelLinguisticDomain("Medium", new TrapezoidalFunction(new double[]{0.33, 0.5, 0.5, 0.67}));
+				LabelLinguisticDomain medium = new LabelLinguisticDomain("Medium_importance", new TrapezoidalFunction(new double[]{0.33, 0.5, 0.5, 0.67}));
 				labels.add(medium);
-				LabelLinguisticDomain good = new LabelLinguisticDomain("Good", new TrapezoidalFunction(new double[]{0.5, 0.67, 0.67, 0.83}));
+				LabelLinguisticDomain good = new LabelLinguisticDomain("High_importance", new TrapezoidalFunction(new double[]{0.5, 0.67, 0.67, 0.83}));
 				labels.add(good);
-				LabelLinguisticDomain veryGood = new LabelLinguisticDomain("Very_good", new TrapezoidalFunction(new double[]{0.67, 0.83, 0.83, 1}));
+				LabelLinguisticDomain veryGood = new LabelLinguisticDomain("Very_high_importance", new TrapezoidalFunction(new double[]{0.67, 0.83, 0.83, 1}));
 				labels.add(veryGood);
-				LabelLinguisticDomain perfect = new LabelLinguisticDomain("Perfect", new TrapezoidalFunction(new double[]{0.83, 1, 1, 1}));
+				LabelLinguisticDomain perfect = new LabelLinguisticDomain("Absolutely_high_importance", new TrapezoidalFunction(new double[]{0.83, 1, 1, 1}));
 				labels.add(perfect);
 			
 				FuzzySet importance = new FuzzySet(labels);

@@ -131,7 +131,7 @@ public class ValuationView extends ViewPart {
 		if(_domain != null) {
 			disposeControls();
 			if(_domain.getId().equals("auto_generated_importance")) {
-				createLinguisticPanel();
+				createHesitantPanel();
 				createButtons();
 				createLinguisticChart();
 			} else if(_problem.getDomainValuations().get(_domain.getId()).equals(XMLValues.INTEGER)) {
@@ -190,9 +190,21 @@ public class ValuationView extends ViewPart {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if(_domain.getId().equals("auto_generated_importance")) {
-					_valuation = new LinguisticValuation();
-					_valuation.setDomain(_domain);
-					((LinguisticValuation) _valuation).setLabel(_label);
+					_valuation = new HesitantValuation((FuzzySet) _domain);
+					if(_upperTerm != null && _lowerTerm != null) {
+						((HesitantValuation) _valuation).setBinaryRelation(_lowerTerm, _upperTerm);
+					} else if(_term != null) {
+						((HesitantValuation) _valuation).setUnaryRelation(_unaryRelation, _term);
+					} else {
+						_label = ((FuzzySet) _domain).getLabelSet().getLabel(_hesitantEvaluationCombo2.getItem(_hesitantEvaluationCombo2.getSelectionIndex()));
+						((HesitantValuation) _valuation).setLabel(_label);
+					}
+					
+					_upperTerm = null;
+					_lowerTerm = null;
+					_term = null;
+					_label = null;
+					
 				}else if(_problem.getDomainValuations().get(_domain.getId()).equals(XMLValues.INTEGER)) {
 					_valuation = new IntegerValuation((NumericIntegerDomain) _domain, _value);
 				} else if(_problem.getDomainValuations().get(_domain.getId()).equals(XMLValues.INTEGER_INTERVAL)) {
