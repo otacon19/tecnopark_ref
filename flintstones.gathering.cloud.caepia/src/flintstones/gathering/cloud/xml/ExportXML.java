@@ -198,7 +198,7 @@ public class ExportXML {
 		_writer.writeEndElement();
 
 		_writer.writeStartElement("valuation-id");
-		_writer.writeAttribute("id", "flintstones.valuation.linguistic");
+		_writer.writeAttribute("id", "flintstones.valuation.hesitant");
 		_writer.writeEndElement();
 		
 		
@@ -235,7 +235,7 @@ public class ExportXML {
 			String valuationType = null;
 			for (KeyDomainAssignment key : valuations.keySet()) {
 				Valuation valuation = valuations.get(key);
-
+				
 				if (valuation instanceof HesitantValuation) {
 					valuationType = "flintstones.valuation.hesitant";
 				} else if (valuation instanceof IntegerValuation) {

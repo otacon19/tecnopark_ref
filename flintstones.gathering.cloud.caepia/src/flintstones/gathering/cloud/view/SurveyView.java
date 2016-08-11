@@ -150,6 +150,15 @@ public class SurveyView extends ViewPart {
 		
 		_tabFolder = new TabFolder(parent, SWT.NONE);
 		_tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		_tabFolder.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if(_valuationView != null) {
+					System.out.println("entra");
+					_valuationView.dispose();
+				}
+			}
+		});
 		
 		createAssignmentsComposite();
 		createImportanceComposite();

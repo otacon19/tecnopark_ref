@@ -119,7 +119,7 @@ public class ValuationView extends ViewPart {
 	}
 
 	public void setDomain(Domain domain) {
-		disposeControls();
+		dispose();
 		
 		_domain = domain;
 		setPanelValuation();
@@ -129,7 +129,7 @@ public class ValuationView extends ViewPart {
 		_valuation = null;
 		
 		if(_domain != null) {
-			disposeControls();
+			dispose();
 			if(_domain.getId().equals("auto_generated_importance")) {
 				createHesitantPanel();
 				createButtons();
@@ -167,8 +167,12 @@ public class ValuationView extends ViewPart {
 
 	private void disposeControls() {
 		
-		for(Control control: _parent.getChildren()) {
-			control.dispose();
+		if(!_parent.isDisposed()) {
+			for(Control control: _parent.getChildren()) {
+				if(!control.isDisposed()) {
+					control.dispose();
+				}
+			}
 		}
 	}
 
@@ -205,7 +209,7 @@ public class ValuationView extends ViewPart {
 					_term = null;
 					_label = null;
 					
-				}else if(_problem.getDomainValuations().get(_domain.getId()).equals(XMLValues.INTEGER)) {
+				} else if(_problem.getDomainValuations().get(_domain.getId()).equals(XMLValues.INTEGER)) {
 					_valuation = new IntegerValuation((NumericIntegerDomain) _domain, _value);
 				} else if(_problem.getDomainValuations().get(_domain.getId()).equals(XMLValues.INTEGER_INTERVAL)) {
 					_valuation = new IntegerIntervalValuation((NumericIntegerDomain) _domain, (int) _valueMin, (int) _valueMax);
@@ -1319,6 +1323,8 @@ public class ValuationView extends ViewPart {
 	@Override
 	public void dispose() {
 		super.dispose();
+		
+		disposeControls();
 	}
 
 	@Override
