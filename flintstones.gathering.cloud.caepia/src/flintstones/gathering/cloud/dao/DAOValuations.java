@@ -53,15 +53,19 @@ public class DAOValuations {
 	public static String getCreationTableSql() {
 		String result = null;
 
-		result = "create table " + TABLE + "(" + PROBLEM
-				+ " VARCHAR(50) NOT NULL, " + CRITERION
-				+ " TEXT NOT NULL, " + ALTERNATIVE
-				+ " TEXT NOT NULL, " + EXPERT
-				+ " VARCHAR (50) NOT NULL, " + DOMAIN
-				+ " VARCHAR(255) NOT NULL, " + TYPE
-				+ " VARCHAR(255) NOT NULL, " + VALUE
-				+ " VARCHAR(255) NOT NULL, PRIMARY KEY(" + PROBLEM + ","
-				+ CRITERION + ", " + ALTERNATIVE + "," + EXPERT + "," + DOMAIN + ");";
+		try {
+			result = "create table " + TABLE + "(" + PROBLEM
+					+ " VARCHAR(50) NOT NULL, " + CRITERION
+					+ " VARCHAR(255) NOT NULL, " + ALTERNATIVE
+					+ " VARCHAR(255) NOT NULL, " + EXPERT
+					+ " VARCHAR (50) NOT NULL, " + DOMAIN
+					+ " VARCHAR(255) NOT NULL, " + TYPE
+					+ " VARCHAR(255) NOT NULL, " + VALUE
+					+ " VARCHAR(255) NOT NULL, PRIMARY KEY(" + PROBLEM + ","
+					+ CRITERION + "," + ALTERNATIVE + "," + EXPERT + "," + DOMAIN + "));";
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 
 		return result;
 	}

@@ -1,7 +1,6 @@
 package flintstones.gathering.cloud.xml;
 
 import java.io.FileWriter;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,7 +9,6 @@ import javax.xml.stream.XMLStreamWriter;
 
 import org.eclipse.rap.rwt.RWT;
 
-import flintstones.gathering.cloud.dao.DAOConfidence;
 import flintstones.gathering.cloud.dao.DAOProblemAlternatives;
 import flintstones.gathering.cloud.dao.DAOProblemCriteria;
 import flintstones.gathering.cloud.dao.DAOProblemDomainAssignments;
@@ -39,7 +37,6 @@ public class ExportXML {
 	private XMLStreamWriter _writer;
 
 	private String _file;
-	private NumericRealDomain _confidenceDomain;
 	
 	private Problem _problem;
 
@@ -251,23 +248,6 @@ public class ExportXML {
 				_writer.writeEndElement();
 			}
 		}
-		
-		Map<KeyDomainAssignment, Double> confidences = new HashMap<KeyDomainAssignment, Double>();
-		confidences = DAOConfidence.getDAO().getConfidences(_problem.getId());
-		for(KeyDomainAssignment key: confidences.keySet()) {
-			RealValuation valuation = new RealValuation(_confidenceDomain, confidences.get(key));
-			_writer.writeStartElement("flintstones.valuation.real");
-
-			_writer.writeAttribute("domain-id", valuation.getDomain().getId());
-			_writer.writeAttribute("expert", key.getExpert() + "flintstones_gathering_cloud");
-			_writer.writeAttribute("alternative", key.getAlternative());
-			_writer.writeAttribute("criterion", key.getCriterion());
-
-			valuation.save(_writer);
-
-			_writer.writeEndElement();
-		}
-		
 		
 		_writer.writeEndElement();
 	}

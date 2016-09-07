@@ -434,7 +434,7 @@ public class SurveyView extends ViewPart {
 				values[1] = c;
 				
 				if(_valuations != null) {
-					Valuation v = _valuations.getValuation(new KeyDomainAssignment(null, c, _problemAssignment.getId()));
+					Valuation v = _valuations.getValuation(new KeyDomainAssignment("null_importance", c, _problemAssignment.getId()));
 					if(v != null) {
 						values[2] = v.changeFormatValuationToString(); 
 					} else {
@@ -448,6 +448,25 @@ public class SurveyView extends ViewPart {
 			
 			_importanceViewer.setInput(input);
 			_importanceViewer.refresh();
+			
+			input = new LinkedList<String[]>();
+			for(String c: _problem.getCriteria()) {
+				String[] values = new String[3];
+				values[1] = c;
+				
+				if(_valuations != null) {
+					Valuation v = _valuations.getValuation(new KeyDomainAssignment("null_threshold", c, _problemAssignment.getId()));
+					if(v != null) {
+						values[2] = v.changeFormatValuationToString(); 
+					} else {
+						values[2] = "No asignada";
+					}
+				} else {
+					values[2] = "No asignada";
+				}
+				input.add(values);
+			}
+			
 			_thresholdViewer.setInput(input);
 			_thresholdViewer.refresh();
 		}
@@ -477,14 +496,14 @@ public class SurveyView extends ViewPart {
 			
 			_valuationSelected.setText(2, valuation.changeFormatValuationToString());
 		} else if(_importanceSelected != null) {
-			KeyDomainAssignment key = new KeyDomainAssignment(null, _importanceSelected.getText(0), _problemAssignment.getId());
+			KeyDomainAssignment key = new KeyDomainAssignment("null_importance", _importanceSelected.getText(0), _problemAssignment.getId());
 			_valuations.getValuations().put(key, valuation);
 			_problemAssignment.setValuations(_valuations);
 			DAOValuations.getDAO().insertValuation(_problem, key, valuation);
 			
 			_importanceSelected.setText(1, valuation.changeFormatValuationToString());
 		} else if(_thresholdSelected != null) {
-			KeyDomainAssignment key = new KeyDomainAssignment(null, _thresholdSelected.getText(0), _problemAssignment.getId());
+			KeyDomainAssignment key = new KeyDomainAssignment("null_threshold", _thresholdSelected.getText(0), _problemAssignment.getId());
 			_valuations.getValuations().put(key, valuation);
 			_problemAssignment.setValuations(_valuations);
 			DAOValuations.getDAO().insertValuation(_problem, key, valuation);
@@ -492,12 +511,10 @@ public class SurveyView extends ViewPart {
 			_thresholdSelected.setText(1, valuation.changeFormatValuationToString());
 		}
  		
-		checkMakeAssignment();	
-		
+		checkMakeAssignment();		
 	}
 	
 	private void checkMakeAssignment() {
-		
 		if((_valuations.getValuations().size() == _assignmentsViewer.getTable().getItemCount() + _importanceViewer.getTable().getItemCount() + _thresholdViewer.getTable().getItemCount()) 
 				&& _assignmentsViewer.getTable().getItemCount() > 0 && _importanceViewer.getTable().getItemCount() > 0 
 				&& _thresholdViewer.getTable().getItemCount() > 0 && !_problemAssignment.getMake()) {
@@ -516,14 +533,14 @@ public class SurveyView extends ViewPart {
 			
 			_valuationSelected.setText(2, "No asignada");
 		} else if(_importanceSelected != null) {
-			KeyDomainAssignment key = new KeyDomainAssignment(null, _importanceSelected.getText(0), _problemAssignment.getId());
+			KeyDomainAssignment key = new KeyDomainAssignment("null_importance", _importanceSelected.getText(0), _problemAssignment.getId());
 			_valuations.getValuations().remove(key);
 			_problemAssignment.setValuations(_valuations);
 			DAOValuations.getDAO().removeValuation(_problem.getId(), key);
 			
 			_importanceSelected.setText(1, "No asignada");
 		} else if(_thresholdSelected != null) {
-			KeyDomainAssignment key = new KeyDomainAssignment(null, _thresholdSelected.getText(0), _problemAssignment.getId());
+			KeyDomainAssignment key = new KeyDomainAssignment("null_threshold", _thresholdSelected.getText(0), _problemAssignment.getId());
 			_valuations.getValuations().remove(key);
 			_problemAssignment.setValuations(_valuations);
 			DAOValuations.getDAO().removeValuation(_problem.getId(), key);
