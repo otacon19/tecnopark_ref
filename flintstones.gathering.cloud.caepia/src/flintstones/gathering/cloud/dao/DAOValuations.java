@@ -61,7 +61,7 @@ public class DAOValuations {
 				+ " VARCHAR(255) NOT NULL, " + TYPE
 				+ " VARCHAR(255) NOT NULL, " + VALUE
 				+ " VARCHAR(255) NOT NULL, PRIMARY KEY(" + PROBLEM + ","
-				+ CRITERION + "(255)," + ALTERNATIVE + "(255)," + EXPERT + "));";
+				+ CRITERION + ", " + ALTERNATIVE + "," + EXPERT + "," + DOMAIN + ");";
 
 		return result;
 	}

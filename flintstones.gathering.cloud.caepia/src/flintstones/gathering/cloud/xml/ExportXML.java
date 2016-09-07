@@ -157,17 +157,6 @@ public class ExportXML {
 			_writer.writeEndElement();
 		}
 		
-		_confidenceDomain = new NumericRealDomain();
-		_confidenceDomain.setId("auto_generated_confidence");
-		_confidenceDomain.setMinMax(0.0, 0.5);
-		_confidenceDomain.setInRange(true);
-		
-		_writer.writeStartElement("flintstones.domain.numeric.real");
-		_writer.writeAttribute("id", _confidenceDomain.getId());
-		_confidenceDomain.save(_writer);
-		_writer.writeEndElement();
-		
-		
 		_writer.writeEndElement();
 	}
 
@@ -185,16 +174,16 @@ public class ExportXML {
 			_writer.writeEndElement();
 		}
 		
-		_writer.writeStartElement("domain-id");
-		_writer.writeAttribute("id", "auto_generated_confidence");
-		_writer.writeEndElement();
-
 		_writer.writeStartElement("valuation-id");
 		_writer.writeAttribute("id", "flintstones.valuation.real");
 		_writer.writeEndElement();
 		
 		_writer.writeStartElement("domain-id");
 		_writer.writeAttribute("id", "auto_generated_importance");
+		_writer.writeEndElement();
+		
+		_writer.writeStartElement("domain-id");
+		_writer.writeAttribute("id", "auto_generated_knowledge");
 		_writer.writeEndElement();
 
 		_writer.writeStartElement("valuation-id");

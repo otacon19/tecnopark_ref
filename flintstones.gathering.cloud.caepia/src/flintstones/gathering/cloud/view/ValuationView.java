@@ -134,6 +134,10 @@ public class ValuationView extends ViewPart {
 				createHesitantPanel();
 				createButtons();
 				createLinguisticChart();
+			} else if(_domain.getId().endsWith("auto_generated_knowledge")) {
+				createLinguisticPanel();
+				createButtons();
+				createLinguisticChart();
 			} else if(_problem.getDomainValuations().get(_domain.getId()).equals(XMLValues.INTEGER)) {
 				createIntegerPanel();
 				createButtons();
@@ -209,6 +213,10 @@ public class ValuationView extends ViewPart {
 					_term = null;
 					_label = null;
 					
+				} else if(_domain.getId().equals("auto_generated_knowledge")) {
+					_valuation = new LinguisticValuation();
+					_valuation.setDomain(_domain);
+					((LinguisticValuation) _valuation).setLabel(_label);
 				} else if(_problem.getDomainValuations().get(_domain.getId()).equals(XMLValues.INTEGER)) {
 					_valuation = new IntegerValuation((NumericIntegerDomain) _domain, _value);
 				} else if(_problem.getDomainValuations().get(_domain.getId()).equals(XMLValues.INTEGER_INTERVAL)) {

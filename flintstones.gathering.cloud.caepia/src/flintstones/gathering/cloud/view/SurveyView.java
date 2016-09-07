@@ -33,7 +33,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
-import flintstones.gathering.cloud.dao.DAOConfidence;
 import flintstones.gathering.cloud.dao.DAOProblemAssignments;
 import flintstones.gathering.cloud.dao.DAOProblemDomainAssignments;
 import flintstones.gathering.cloud.dao.DAOValuations;
@@ -46,24 +45,26 @@ import mcdacw.valuation.domain.Domain;
 import mcdacw.valuation.valuation.Valuation;
 
 public class SurveyView extends ViewPart {
-
+	
 	public static final String ID = "flintstones.gathering.cloud.view.surveyView";
 
 	private TableViewer _assignmentsViewer;
 	private TableViewer _importanceViewer;
+	private TableViewer _thresholdViewer;
 	private TabFolder _tabFolder;
 	private TableItem _valuationSelected;
 	private TableItem _importanceSelected;
+	private TableItem _thresholdSelected;
 	private Button _sendAssignmets;
 	private Composite _assignmentsComposite;
 	private Composite _importanceComposite;
+	private Composite _thresholdComposite;
 	
 	private ValuationView _valuationView;
 	
 	private Problem _problem;
 	private Valuations _valuations;
 	private ProblemAssignment _problemAssignment;
-	private boolean _confidencesSaved;
 
 	public SurveyView() {
 		
@@ -77,22 +78,7 @@ public class SurveyView extends ViewPart {
 			}
 		}
 		
-		if(_problemAssignment != null) {
-			Map<KeyDomainAssignment, Double> confidences = DAOConfidence.getDAO().getConfidencesExpert(_problem.getId(), _problemAssignment.getId());
-			if(confidences.isEmpty()) {
-				_confidencesSaved = false;
-			} else {
-				_confidencesSaved = true;
-			}
-		}
-		
 		_valuations = new Valuations();
-	}
-	
-	public void confidencesSaved() {
-		_confidencesSaved = true;
-		
-		checkMakeAssignment();
 	}
 	
 	@SuppressWarnings("serial")
@@ -154,7 +140,6 @@ public class SurveyView extends ViewPart {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if(_valuationView != null) {
-					System.out.println("entra");
 					_valuationView.dispose();
 				}
 			}
@@ -162,6 +147,7 @@ public class SurveyView extends ViewPart {
 		
 		createAssignmentsComposite();
 		createImportanceComposite();
+		createThresholdComposite();
 		
 		Composite buttonComposite = new Composite(parent, SWT.NONE);
 		buttonComposite.setLayout(new GridLayout(1, true));
@@ -269,7 +255,7 @@ public class SurveyView extends ViewPart {
 			}
 		});
 	}
-	
+
 	@SuppressWarnings("serial")
 	private void createImportanceComposite() {
 		_importanceComposite = new Composite(_tabFolder, SWT.NONE);
@@ -303,6 +289,7 @@ public class SurveyView extends ViewPart {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				_valuationSelected = null;
+				_thresholdSelected = null;
 				
 				_importanceSelected = (TableItem) e.item;
 				
@@ -340,7 +327,79 @@ public class SurveyView extends ViewPart {
 		tabItem.setText("Importancia");
 		tabItem.setControl(_importanceComposite);
 	}
-
+	
+	@SuppressWarnings("serial")
+	private void createThresholdComposite() {
+		_thresholdComposite = new Composite(_tabFolder, SWT.NONE);
+		_thresholdComposite.setLayout(new GridLayout(1, true));
+		
+		Composite viewerComposite = new Composite(_thresholdComposite, SWT.NONE);
+		viewerComposite.setLayout(new GridLayout(1, true));
+		viewerComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		
+		_thresholdViewer = new TableViewer(viewerComposite, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
+		_thresholdViewer.setContentProvider(new ViewContentProvider());
+		_thresholdViewer.setLabelProvider(new ViewLabelProvider());
+		
+		final Table table = _thresholdViewer.getTable();
+		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		table.setLinesVisible(true);
+		table.setVisible(true);
+		table.setHeaderVisible(true);
+		
+		TableViewerColumn tc_criterion = new TableViewerColumn(_thresholdViewer, SWT.NONE);
+		tc_criterion.getColumn().setText("Criterio");
+		tc_criterion.setLabelProvider(new CriterionLabelProvider());
+		tc_criterion.getColumn().setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/criterion_20.png").createImage());
+		
+		TableViewerColumn tc_valuation = new TableViewerColumn(_thresholdViewer, SWT.NONE);
+		tc_valuation.getColumn().setText("Valoración");
+		tc_valuation.setLabelProvider(new ValuationLabelProvider());
+		tc_valuation.getColumn().setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/valuation.png").createImage());
+		
+		table.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				_valuationSelected = null;
+				_importanceSelected = null;
+				
+				_thresholdSelected = (TableItem) e.item;
+				
+				if(_valuationView == null) {
+					IViewReference viewReferences[] = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences();
+					for (int i = 0; i < viewReferences.length; i++) {
+						if (ValuationView.ID.equals(viewReferences[i].getId())) {
+							_valuationView = (ValuationView) viewReferences[i].getView(false);
+						}
+					}
+				}
+				
+				Domain domain = _problem.getDomains().get("auto_generated_knowledge");
+				_valuationView.setDomain(domain);
+			}
+		});
+		
+		_thresholdComposite.addControlListener(new ControlAdapter() {
+			public void controlResized(ControlEvent e) {
+				Rectangle area = _thresholdComposite.getClientArea();
+				Point oldSize = _thresholdViewer.getTable().getSize();
+				if (oldSize.x > area.width) {
+					_thresholdViewer.getTable().getColumn(0).setWidth(_thresholdComposite.getSize().x / 2 - 1);
+					_thresholdViewer.getTable().getColumn(1).setWidth(_thresholdComposite.getSize().x / 2 - 1);
+					_thresholdViewer.getTable().setSize(area.width, area.height);
+				} else {
+					_thresholdViewer.getTable().setSize(area.width, area.height);
+					_thresholdViewer.getTable().getColumn(0).setWidth(_thresholdComposite.getSize().x / 2 - 1);
+					_thresholdViewer.getTable().getColumn(1).setWidth(_thresholdComposite.getSize().x / 2 - 1);
+				}
+			}
+		});
+		
+		TabItem tabItem = new TabItem(_tabFolder, SWT.NONE, 2);
+		tabItem.setText("Conocimiento");
+		tabItem.setControl(_thresholdComposite);
+	}
+	
 	private void setModel() {
 		
 		if(_problemAssignment != null) {
@@ -389,6 +448,8 @@ public class SurveyView extends ViewPart {
 			
 			_importanceViewer.setInput(input);
 			_importanceViewer.refresh();
+			_thresholdViewer.setInput(input);
+			_thresholdViewer.refresh();
 		}
 	}
 
@@ -415,24 +476,31 @@ public class SurveyView extends ViewPart {
 			DAOValuations.getDAO().insertValuation(_problem, key, valuation);
 			
 			_valuationSelected.setText(2, valuation.changeFormatValuationToString());
-		} else {
+		} else if(_importanceSelected != null) {
 			KeyDomainAssignment key = new KeyDomainAssignment(null, _importanceSelected.getText(0), _problemAssignment.getId());
 			_valuations.getValuations().put(key, valuation);
 			_problemAssignment.setValuations(_valuations);
 			DAOValuations.getDAO().insertValuation(_problem, key, valuation);
 			
 			_importanceSelected.setText(1, valuation.changeFormatValuationToString());
+		} else if(_thresholdSelected != null) {
+			KeyDomainAssignment key = new KeyDomainAssignment(null, _thresholdSelected.getText(0), _problemAssignment.getId());
+			_valuations.getValuations().put(key, valuation);
+			_problemAssignment.setValuations(_valuations);
+			DAOValuations.getDAO().insertValuation(_problem, key, valuation);
+			
+			_thresholdSelected.setText(1, valuation.changeFormatValuationToString());
 		}
-		
+ 		
 		checkMakeAssignment();	
 		
 	}
 	
 	private void checkMakeAssignment() {
 		
-		if((_valuations.getValuations().size() == _assignmentsViewer.getTable().getItemCount() + _importanceViewer.getTable().getItemCount()) 
-				&& _assignmentsViewer.getTable().getItemCount() > 0 && _importanceViewer.getTable().getItemCount() > 0 &&
-				!_problemAssignment.getMake() && _confidencesSaved) {
+		if((_valuations.getValuations().size() == _assignmentsViewer.getTable().getItemCount() + _importanceViewer.getTable().getItemCount() + _thresholdViewer.getTable().getItemCount()) 
+				&& _assignmentsViewer.getTable().getItemCount() > 0 && _importanceViewer.getTable().getItemCount() > 0 
+				&& _thresholdViewer.getTable().getItemCount() > 0 && !_problemAssignment.getMake()) {
 			_sendAssignmets.setEnabled(true);
 		} else {
 			_sendAssignmets.setEnabled(false);
@@ -447,13 +515,20 @@ public class SurveyView extends ViewPart {
 			DAOValuations.getDAO().removeValuation(_problem.getId(), key);
 			
 			_valuationSelected.setText(2, "No asignada");
-		} else {
+		} else if(_importanceSelected != null) {
 			KeyDomainAssignment key = new KeyDomainAssignment(null, _importanceSelected.getText(0), _problemAssignment.getId());
 			_valuations.getValuations().remove(key);
 			_problemAssignment.setValuations(_valuations);
 			DAOValuations.getDAO().removeValuation(_problem.getId(), key);
 			
 			_importanceSelected.setText(1, "No asignada");
+		} else if(_thresholdSelected != null) {
+			KeyDomainAssignment key = new KeyDomainAssignment(null, _thresholdSelected.getText(0), _problemAssignment.getId());
+			_valuations.getValuations().remove(key);
+			_problemAssignment.setValuations(_valuations);
+			DAOValuations.getDAO().removeValuation(_problem.getId(), key);
+			
+			_thresholdSelected.setText(1, "No asignada");
 		}
 	}
 }

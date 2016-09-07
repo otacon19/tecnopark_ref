@@ -107,13 +107,6 @@
             id="flintstones.gathering.cloud.view.valuationview"
             name="Valoración">
       </view>
-      <view
-            allowMultiple="true"
-            class="flintstones.gathering.cloud.view.ConfidenceView"
-            icon="icons/sample3.gif"
-            id="flintstones.gathering.cloud.view.confidenceview"
-            name="Confidence">
-      </view>
    </extension>
    <extension
          point="org.eclipse.ui.commands">

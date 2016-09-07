@@ -66,7 +66,7 @@ public class DAOProblemDomains {
 	}
 
 	public void createProblemDomains(Problem problem) {
-		boolean importanceDomain = false;
+		boolean importanceDomain = false, knowledgeDomain = false;
 		
 		try {
 			Connection c = getConnection();
@@ -76,8 +76,12 @@ public class DAOProblemDomains {
 			Domain domain = null;
 			for (String id : domains.keySet()) {
 				
-				if(id.equals("importance")) {
+				if(id.equals("auto_generated_importance")) {
 					importanceDomain = true;
+				}
+				
+				if(id.equals("auto_generated_knowledge")) {
+					knowledgeDomain = true;
 				}
 				
 				domain = domains.get(id);
@@ -107,6 +111,32 @@ public class DAOProblemDomains {
 				importance.setType("Lingüístico");
 				
 				st.executeUpdate("insert into " + TABLE + " values ('" + importance.getId() + "','" + problemId + "','" + importance.getType() + "','" + importance.toString() + "')");
+			}
+			
+			if(!knowledgeDomain) {
+				
+				List<LabelLinguisticDomain> labels = new LinkedList<LabelLinguisticDomain>();
+				LabelLinguisticDomain nothing = new LabelLinguisticDomain("None", new TrapezoidalFunction(new double[]{0, 0, 0, 0.17}));
+				labels.add(nothing);
+				LabelLinguisticDomain veryBad = new LabelLinguisticDomain("Very_unsure", new TrapezoidalFunction(new double[]{0, 0.17, 0.17, 0.33}));
+				labels.add(veryBad);
+				LabelLinguisticDomain bad = new LabelLinguisticDomain("Unsure", new TrapezoidalFunction(new double[]{0.17, 0.33, 0.33, 0.5}));
+				labels.add(bad);
+				LabelLinguisticDomain medium = new LabelLinguisticDomain("Medium", new TrapezoidalFunction(new double[]{0.33, 0.5, 0.5, 0.67}));
+				labels.add(medium);
+				LabelLinguisticDomain good = new LabelLinguisticDomain("Sure", new TrapezoidalFunction(new double[]{0.5, 0.67, 0.67, 0.83}));
+				labels.add(good);
+				LabelLinguisticDomain veryGood = new LabelLinguisticDomain("Very_sure", new TrapezoidalFunction(new double[]{0.67, 0.83, 0.83, 1}));
+				labels.add(veryGood);
+				LabelLinguisticDomain perfect = new LabelLinguisticDomain("Absolutely_sure", new TrapezoidalFunction(new double[]{0.83, 1, 1, 1}));
+				labels.add(perfect);
+			
+				FuzzySet knowledge = new FuzzySet(labels);
+				knowledge.setId("auto_generated_knowledge");
+				knowledge.setType("Lingüístico");
+				
+				st.executeUpdate("insert into " + TABLE + " values ('" + knowledge.getId() + "','" + problemId + "','" + knowledge.getType() + "','" + knowledge.toString() + "')");
+				
 			}
 			
 			st.close();

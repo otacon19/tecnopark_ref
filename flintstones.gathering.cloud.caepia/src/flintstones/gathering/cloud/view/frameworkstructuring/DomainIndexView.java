@@ -122,7 +122,7 @@ public class DomainIndexView extends ViewPart {
 		if(_problem != null) {
 			Map<String, Domain> domains = _problem.getDomains();
 			for(String id: domains.keySet()) {
-				if(!id.equals("auto_generated_importance")) {
+				if(!id.equals("auto_generated_importance") && !id.equals("auto_generated_knowledge")) {
 					ds.add(domains.get(id));
 				}
 			}
