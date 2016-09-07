@@ -179,12 +179,16 @@ public class ExportXML {
 		_writer.writeAttribute("id", "auto_generated_importance");
 		_writer.writeEndElement();
 		
+		_writer.writeStartElement("valuation-id");
+		_writer.writeAttribute("id", "flintstones.valuation.hesitant");
+		_writer.writeEndElement();
+		
 		_writer.writeStartElement("domain-id");
 		_writer.writeAttribute("id", "auto_generated_knowledge");
 		_writer.writeEndElement();
 
 		_writer.writeStartElement("valuation-id");
-		_writer.writeAttribute("id", "flintstones.valuation.hesitant");
+		_writer.writeAttribute("id", "flintstones.valuation.linguistic");
 		_writer.writeEndElement();
 		
 		
