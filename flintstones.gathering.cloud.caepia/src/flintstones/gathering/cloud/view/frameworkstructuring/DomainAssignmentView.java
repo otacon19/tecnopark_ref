@@ -105,6 +105,8 @@ public class DomainAssignmentView extends ViewPart {
 		_applyButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				boolean severalAlternatives = false, severalCriteria = false;
+				
 				User user = (User) RWT.getUISession().getAttribute("user");
 				Map<Problem, ProblemAssignment> problemsAssignment = DAOProblemAssignments.getDAO().getUserProblemAssignments(user);
 				ProblemAssignment problemAssignment = null;
@@ -114,8 +116,92 @@ public class DomainAssignmentView extends ViewPart {
 					}
 				}
 				
-				KeyDomainAssignment key = new KeyDomainAssignment(_alternativeCombo.getItem(_alternativeCombo.getSelectionIndex()), 
-						_criterionCombo.getItem(_criterionCombo.getSelectionIndex()), problemAssignment.getId());
+				if(_alternativeCombo.getItem(_alternativeCombo.getSelectionIndex()).contains("All")) {
+					severalAlternatives = true;
+				}
+				
+				if(_criterionCombo.getItem(_criterionCombo.getSelectionIndex()).contains("All")) {
+					severalCriteria = true;
+				}
+				
+				if(severalAlternatives && ! severalCriteria) {
+					assignDomainForEachAlternative(problemAssignment);
+				} else if(!severalAlternatives && severalCriteria) {
+					assignDomainForEachCriterion(problemAssignment);
+				} else if(severalAlternatives && severalCriteria) {
+					assignDomainForAll(problemAssignment);
+				} else {
+					assignDomain(problemAssignment);
+				}
+			}
+		});
+
+		computeState(EComboChange.ALL);
+	}
+	
+	public void assignDomainForEachAlternative(ProblemAssignment problemAssignment) {
+		
+		for(String a: _problem.getAlternatives()) {
+			KeyDomainAssignment key = new KeyDomainAssignment(a, _criterionCombo.getItem(_criterionCombo.getSelectionIndex()), problemAssignment.getId());
+		
+			Map<KeyDomainAssignment, String> domainAssignment = _problem.getDomainAssignments();
+			if(domainAssignment == null) {
+				domainAssignment = new HashMap<KeyDomainAssignment, String>();
+			} else {					
+				problemAssignment.getValuations().getValuations().remove(key);
+				DAOValuations.getDAO().removeValuation(_problem.getId(), key);
+			}
+			
+			domainAssignment.put(key, _domainCombo.getItem(_domainCombo.getSelectionIndex()));
+			_problem.setDomainAssignments(domainAssignment);
+	
+			String[] assignment = new String[3];
+			assignment[0] = key.getCriterion();
+			assignment[1] = key.getAlternative();
+			assignment[2] = _domainCombo.getItem(_domainCombo.getSelectionIndex());
+			
+			notifyListeners(assignment);
+	
+			Map<KeyDomainAssignment, String> assignmentDAO = new HashMap<KeyDomainAssignment, String>();
+			assignmentDAO.put(key, _domainCombo.getItem(_domainCombo.getSelectionIndex()));
+			DAOProblemDomainAssignments.getDAO().createProblemDomainAssignment(_problem , assignmentDAO);
+		}
+	}
+	
+	public void assignDomainForEachCriterion(ProblemAssignment problemAssignment) {
+		
+		for(String c: _problem.getCriteria()) {
+			KeyDomainAssignment key = new KeyDomainAssignment(_alternativeCombo.getItem(_alternativeCombo.getSelectionIndex()), c, problemAssignment.getId());
+		
+			Map<KeyDomainAssignment, String> domainAssignment = _problem.getDomainAssignments();
+			if(domainAssignment == null) {
+				domainAssignment = new HashMap<KeyDomainAssignment, String>();
+			} else {					
+				problemAssignment.getValuations().getValuations().remove(key);
+				DAOValuations.getDAO().removeValuation(_problem.getId(), key);
+			}
+			
+			domainAssignment.put(key, _domainCombo.getItem(_domainCombo.getSelectionIndex()));
+			_problem.setDomainAssignments(domainAssignment);
+	
+			String[] assignment = new String[3];
+			assignment[0] = key.getCriterion();
+			assignment[1] = key.getAlternative();
+			assignment[2] = _domainCombo.getItem(_domainCombo.getSelectionIndex());
+			
+			notifyListeners(assignment);
+	
+			Map<KeyDomainAssignment, String> assignmentDAO = new HashMap<KeyDomainAssignment, String>();
+			assignmentDAO.put(key, _domainCombo.getItem(_domainCombo.getSelectionIndex()));
+			DAOProblemDomainAssignments.getDAO().createProblemDomainAssignment(_problem , assignmentDAO);
+		}
+	}
+	
+	public void assignDomainForAll(ProblemAssignment problemAssignment) {
+		
+		for(String a: _problem.getAlternatives()) {
+			for(String c: _problem.getCriteria()) {
+				KeyDomainAssignment key = new KeyDomainAssignment(a, c, problemAssignment.getId());
 			
 				Map<KeyDomainAssignment, String> domainAssignment = _problem.getDomainAssignments();
 				if(domainAssignment == null) {
@@ -127,7 +213,7 @@ public class DomainAssignmentView extends ViewPart {
 				
 				domainAssignment.put(key, _domainCombo.getItem(_domainCombo.getSelectionIndex()));
 				_problem.setDomainAssignments(domainAssignment);
-	
+		
 				String[] assignment = new String[3];
 				assignment[0] = key.getCriterion();
 				assignment[1] = key.getAlternative();
@@ -137,11 +223,37 @@ public class DomainAssignmentView extends ViewPart {
 		
 				Map<KeyDomainAssignment, String> assignmentDAO = new HashMap<KeyDomainAssignment, String>();
 				assignmentDAO.put(key, _domainCombo.getItem(_domainCombo.getSelectionIndex()));
-				DAOProblemDomainAssignments.getDAO().createProblemDomainAssignment(_problem , assignmentDAO);	
+				DAOProblemDomainAssignments.getDAO().createProblemDomainAssignment(_problem , assignmentDAO);
 			}
-		});
+		}
+	}
+	
+	public void assignDomain(ProblemAssignment problemAssignment) {
+		
+		KeyDomainAssignment key = new KeyDomainAssignment(_alternativeCombo.getItem(_alternativeCombo.getSelectionIndex()), 
+				_criterionCombo.getItem(_criterionCombo.getSelectionIndex()), problemAssignment.getId());
+	
+		Map<KeyDomainAssignment, String> domainAssignment = _problem.getDomainAssignments();
+		if(domainAssignment == null) {
+			domainAssignment = new HashMap<KeyDomainAssignment, String>();
+		} else {					
+			problemAssignment.getValuations().getValuations().remove(key);
+			DAOValuations.getDAO().removeValuation(_problem.getId(), key);
+		}
+		
+		domainAssignment.put(key, _domainCombo.getItem(_domainCombo.getSelectionIndex()));
+		_problem.setDomainAssignments(domainAssignment);
 
-		computeState(EComboChange.ALL);
+		String[] assignment = new String[3];
+		assignment[0] = key.getCriterion();
+		assignment[1] = key.getAlternative();
+		assignment[2] = _domainCombo.getItem(_domainCombo.getSelectionIndex());
+		
+		notifyListeners(assignment);
+
+		Map<KeyDomainAssignment, String> assignmentDAO = new HashMap<KeyDomainAssignment, String>();
+		assignmentDAO.put(key, _domainCombo.getItem(_domainCombo.getSelectionIndex()));
+		DAOProblemDomainAssignments.getDAO().createProblemDomainAssignment(_problem , assignmentDAO);	
 	}
 	
 	@Override
@@ -267,7 +379,9 @@ public class DomainAssignmentView extends ViewPart {
 
 		if (enabled) {
 			_alternativeCombo.setItems(_alternativeValues.toArray(new String[0]));
+			_alternativeCombo.add("All");
 			_criterionCombo.setItems(_criterionValues.toArray(new String[0]));
+			_criterionCombo.add("All");
 			_domainCombo.setItems(_domainValues.toArray(new String[0]));
 			_alternativeCombo.select(0);
 			_criterionCombo.select(0);
