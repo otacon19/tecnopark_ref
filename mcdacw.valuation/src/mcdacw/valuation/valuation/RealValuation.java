@@ -30,7 +30,7 @@ public class RealValuation extends Valuation {
 	}
 	
 	public void setValue(Double value) {
-		ParameterValidator.notNull(_domain, "domain");
+		ParameterValidator.notNull(_domain, "domain"); //$NON-NLS-1$
 		
 		if(((NumericRealDomain)_domain).getInRange()) {
 			ParameterValidator.inRange(value, ((NumericRealDomain)_domain).getMin(), ((NumericRealDomain)_domain).getMax());
@@ -72,10 +72,10 @@ public class RealValuation extends Valuation {
 	@Override
 	public FuzzySet unification(Domain fuzzySet) {
 
-		ParameterValidator.notNull(fuzzySet, "fuzzyset");
+		ParameterValidator.notNull(fuzzySet, "fuzzyset"); //$NON-NLS-1$
 		
 		if (!((FuzzySet) fuzzySet).isBLTS()) {
-			throw new IllegalArgumentException("Not BLTS fuzzy set");
+			throw new IllegalArgumentException("Not BLTS fuzzy set"); //$NON-NLS-1$
 		}
 
 		int cardinality;
@@ -134,8 +134,8 @@ public class RealValuation extends Valuation {
 	
 	@Override
 	public int compareTo(Valuation other) {
-		ParameterValidator.notNull(other, "other");
-		ParameterValidator.notIllegalElementType(other, new String[] { Integer.class.toString() }, "other");
+		ParameterValidator.notNull(other, "other"); //$NON-NLS-1$
+		ParameterValidator.notIllegalElementType(other, new String[] { Integer.class.toString() }, "other"); //$NON-NLS-1$
 		
 		if(_domain.equals(other.getDomain())) {
 			return Double.compare(_value, ((RealValuation) other)._value);

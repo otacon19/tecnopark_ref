@@ -39,8 +39,8 @@ public class ReadXML {
 	private Problem _problem;
 
 	private ReadXML() throws Exception {
-		User user = (User) RWT.getUISession().getAttribute("user");
-		_problem = new Problem("", user, new LinkedList<String>(), new LinkedList<String>(), new LinkedList<String>(), new HashMap<String, Domain>());
+		User user = (User) RWT.getUISession().getAttribute("user"); //$NON-NLS-1$
+		_problem = new Problem("", user, new LinkedList<String>(), new LinkedList<String>(), new LinkedList<String>(), new HashMap<String, Domain>()); //$NON-NLS-1$
 	}
 
 	public ReadXML(String file) throws Exception {
@@ -126,7 +126,7 @@ public class ReadXML {
 
 			if (event.isStartElement()) {
 				if ("alternative".equals(getStartElementLocalPart())) { //$NON-NLS-1$
-					id = getStartElementAttribute("id");
+					id = getStartElementAttribute("id"); //$NON-NLS-1$
 					_problem.getAlternatives().add(id); //$NON-NLS-1$
 				}
 			} else if (event.isEndElement()) {
@@ -186,7 +186,7 @@ public class ReadXML {
 		d.setName(id);
 		d.setMinMax(min, max);
 		d.setInRange(inRange);
-		d.setType("Entero");
+		d.setType("Entero"); //$NON-NLS-1$
 		
 		_problem.getDomains().put(d.getId(), d);
 	}
@@ -201,7 +201,7 @@ public class ReadXML {
 		d.setName(id);
 		d.setMinMax(min, max);
 		d.setInRange(inRange);
-		d.setType("Real");
+		d.setType("Real"); //$NON-NLS-1$
 		
 		_problem.getDomains().put(d.getId(), d);
 	}
@@ -237,7 +237,7 @@ public class ReadXML {
 					d.setName(id);
 					d.setLabelSet(labelSet);
 					d.setValues(values);
-					d.setType("Lingüístico");
+					d.setType("Lingüístico"); //$NON-NLS-1$
 					end = true;
 				}
 			}

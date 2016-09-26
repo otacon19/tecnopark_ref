@@ -27,10 +27,11 @@ import flintstones.gathering.cloud.model.KeyDomainAssignment;
 import flintstones.gathering.cloud.model.Problem;
 import flintstones.gathering.cloud.model.ProblemAssignment;
 import flintstones.gathering.cloud.model.User;
+import flintstones.gathering.cloud.nls.Messages;
 
 public class DomainAssignmentView extends ViewPart {
 
-	public static final String ID = "flintstones.gathering.cloud.view.domainassignments";
+	public static final String ID = "flintstones.gathering.cloud.view.domainassignments"; //$NON-NLS-1$
 
 	private Composite _container;
 	private List<String> _domainValues;
@@ -53,7 +54,7 @@ public class DomainAssignmentView extends ViewPart {
 	public DomainAssignmentView() {
 		_domainAssignments = new LinkedList<String[]>();
 		
-		_problem = (Problem) RWT.getUISession().getAttribute("valuation-problem");
+		_problem = (Problem) RWT.getUISession().getAttribute("valuation-problem"); //$NON-NLS-1$
 		
 		_domainValues = new LinkedList<String>();
 		_expertValues = new LinkedList<String>();
@@ -83,31 +84,31 @@ public class DomainAssignmentView extends ViewPart {
 		Label label = new Label(parent, SWT.NONE);
 		label = new Label(parent, SWT.NONE);
 		label.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		label.setText("Criterio");
+		label.setText(Messages.DomainAssignmentView_Criterion);
 		_criterionCombo = new Combo(parent, SWT.NONE);
 		_criterionCombo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		label = new Label(parent, SWT.NONE);
 		label.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		label.setText("Alternativa");
+		label.setText(Messages.DomainAssignmentView_Alternative);
 		_alternativeCombo = new Combo(parent, SWT.NONE);
 		_alternativeCombo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		label = new Label(parent, SWT.NONE);
 		label.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		label.setText("Dominio");
+		label.setText(Messages.DomainAssignmentView_Domain);
 		_domainCombo = new Combo(parent, SWT.NONE);
 		_domainCombo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		_applyButton = new Button(parent, SWT.NONE);
-		_applyButton.setText("Aplicar");
-		_applyButton.setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/exit.png").createImage());
+		_applyButton.setText(Messages.DomainAssignmentView_Apply);
+		_applyButton.setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/exit.png").createImage()); //$NON-NLS-1$ //$NON-NLS-2$
 		_applyButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				boolean severalAlternatives = false, severalCriteria = false;
 				
-				User user = (User) RWT.getUISession().getAttribute("user");
+				User user = (User) RWT.getUISession().getAttribute("user"); //$NON-NLS-1$
 				Map<Problem, ProblemAssignment> problemsAssignment = DAOProblemAssignments.getDAO().getUserProblemAssignments(user);
 				ProblemAssignment problemAssignment = null;
 				for(Problem pr: problemsAssignment.keySet()) {
@@ -116,11 +117,11 @@ public class DomainAssignmentView extends ViewPart {
 					}
 				}
 				
-				if(_alternativeCombo.getItem(_alternativeCombo.getSelectionIndex()).contains("All")) {
+				if(_alternativeCombo.getItem(_alternativeCombo.getSelectionIndex()).contains(Messages.DomainAssignmentView_All)) {
 					severalAlternatives = true;
 				}
 				
-				if(_criterionCombo.getItem(_criterionCombo.getSelectionIndex()).contains("All")) {
+				if(_criterionCombo.getItem(_criterionCombo.getSelectionIndex()).contains(Messages.DomainAssignmentView_All)) {
 					severalCriteria = true;
 				}
 				
@@ -285,7 +286,7 @@ public class DomainAssignmentView extends ViewPart {
 	
 	private void extractDomainValues() {
 		for(String id: _problem.getDomains().keySet()) {
-			if(!id.equals("auto_generated_importance") && !id.equals("auto_generated_knowledge")) {
+			if(!id.equals("auto_generated_importance") && !id.equals("auto_generated_knowledge")) { //$NON-NLS-1$ //$NON-NLS-2$
 				_domainValues.add(id);
 			}
 		}	
@@ -310,9 +311,9 @@ public class DomainAssignmentView extends ViewPart {
 	}
 	
 	private void setDomainAssignments() {
-		String expert = "";
+		String expert = ""; //$NON-NLS-1$
 		
-		User user = (User) RWT.getUISession().getAttribute("user");
+		User user = (User) RWT.getUISession().getAttribute("user"); //$NON-NLS-1$
 		Map<Problem, ProblemAssignment> model = DAOProblemAssignments.getDAO().getUserProblemAssignments(user);
 		for(Problem p: model.keySet()) {
 			if(p.getId().equals(_problem.getId())) {
@@ -379,9 +380,9 @@ public class DomainAssignmentView extends ViewPart {
 
 		if (enabled) {
 			_alternativeCombo.setItems(_alternativeValues.toArray(new String[0]));
-			_alternativeCombo.add("All");
+			_alternativeCombo.add(Messages.DomainAssignmentView_All);
 			_criterionCombo.setItems(_criterionValues.toArray(new String[0]));
-			_criterionCombo.add("All");
+			_criterionCombo.add(Messages.DomainAssignmentView_All);
 			_domainCombo.setItems(_domainValues.toArray(new String[0]));
 			_alternativeCombo.select(0);
 			_criterionCombo.select(0);

@@ -40,7 +40,7 @@ public class NumericIntegerDomain extends Numeric {
 	}
 
 	public void setMinMax(int min, int max) {
-		ParameterValidator.notDisorder(new double[] { min, max }, "min-max", false);
+		ParameterValidator.notDisorder(new double[] { min, max }, "min-max", false); //$NON-NLS-1$
 		_min = min;
 		_max = max;
 	}
@@ -55,7 +55,7 @@ public class NumericIntegerDomain extends Numeric {
 		String prefix = "(I) "; //$NON-NLS-1$
 		
 		if(!_inRange) {
-			return prefix + "Numeric integer domain without range";
+			return prefix + "Numeric integer domain without range"; //$NON-NLS-1$
 		} else {
 			return prefix + toString();
 		}

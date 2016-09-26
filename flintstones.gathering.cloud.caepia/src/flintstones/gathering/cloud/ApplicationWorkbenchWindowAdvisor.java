@@ -32,12 +32,12 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		configureDatabase();
 		
 		IWorkbenchWindow window = getWindowConfigurer().getWindow();
-		LoginAction action = new LoginAction("Login", window);
+		LoginAction action = new LoginAction("Login", window); //$NON-NLS-1$
 		action.run();
 		User user = action.getUser();
 
 		if (user != null) {
-			RWT.getUISession().setAttribute("user", user);
+			RWT.getUISession().setAttribute("user", user); //$NON-NLS-1$
 			IWorkbenchWindowConfigurer configurer = getWindowConfigurer();
 			configurer.setInitialSize(new Point(600, 400));
 			configurer.setShowCoolBar(true);

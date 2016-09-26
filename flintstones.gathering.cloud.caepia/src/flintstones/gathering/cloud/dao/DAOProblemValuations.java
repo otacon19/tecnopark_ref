@@ -13,10 +13,10 @@ import sinbad2.database.DatabaseManager;
 
 public class DAOProblemValuations {
 	
-	public static final String TABLE = "problemvaluations";
-	public static final String PROBLEM_ID = "problem_id";
-	public static final String DOMAIN_ID = "domain_id";
-	public static final String VALUATION_ID = "valuation_id";
+	public static final String TABLE = "problemvaluations"; //$NON-NLS-1$
+	public static final String PROBLEM_ID = "problem_id"; //$NON-NLS-1$
+	public static final String DOMAIN_ID = "domain_id"; //$NON-NLS-1$
+	public static final String VALUATION_ID = "valuation_id"; //$NON-NLS-1$
 	
 	private static DAOProblemValuations _dao = null;
 	
@@ -34,8 +34,8 @@ public class DAOProblemValuations {
 	public static String getCreationTableSql() {
 		String result = null;
 
-		result = "create table " + TABLE + "(" + PROBLEM_ID + " VARCHAR(100) NOT NULL, " + DOMAIN_ID
-				+ " VARCHAR(255) NOT NULL, " + VALUATION_ID + " VARCHAR(255) NOT NULL, PRIMARY KEY(" + PROBLEM_ID + "," + DOMAIN_ID  + "));";
+		result = "create table " + TABLE + "(" + PROBLEM_ID + " VARCHAR(100) NOT NULL, " + DOMAIN_ID //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				+ " VARCHAR(255) NOT NULL, " + VALUATION_ID + " VARCHAR(255) NOT NULL, PRIMARY KEY(" + PROBLEM_ID + "," + DOMAIN_ID  + "));"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
 		return result;
 	}
@@ -58,7 +58,7 @@ public class DAOProblemValuations {
 			Statement st = c.createStatement();
 			Map<String, String> domainValuations = problem.getDomainValuations();
 			for(String domainId: domainValuations.keySet()) {
-				st.executeUpdate("insert into " + TABLE + " values ('" + problem.getId() + "','" + domainId + "','" + domainValuations.get(domainId) + "')");
+				st.executeUpdate("insert into " + TABLE + " values ('" + problem.getId() + "','" + domainId + "','" + domainValuations.get(domainId) + "')"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 			}
 			st.close();
 		} catch (Exception e) {
@@ -70,7 +70,7 @@ public class DAOProblemValuations {
 		try {
 			Connection c = getConnection();
 			PreparedStatement pst = null;
-			pst = c.prepareStatement("delete from " + TABLE + " where " + PROBLEM_ID + " = ?");
+			pst = c.prepareStatement("delete from " + TABLE + " where " + PROBLEM_ID + " = ?"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			pst.setString(1, id);
 			pst.executeUpdate();
 			pst.close();
@@ -86,7 +86,7 @@ public class DAOProblemValuations {
 			Connection c = getConnection();
 			Statement st = c.createStatement();
 
-			String select = "select * from " + TABLE + " where " + PROBLEM_ID + "='" + problem + "';";
+			String select = "select * from " + TABLE + " where " + PROBLEM_ID + "='" + problem + "';"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			ResultSet rs = st.executeQuery(select);
 			while (rs.next()) {
 				String domainID = rs.getString(DOMAIN_ID);

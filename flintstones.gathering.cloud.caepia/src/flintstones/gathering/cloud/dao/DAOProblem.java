@@ -20,9 +20,9 @@ import sinbad2.database.DatabaseManager;
 
 public class DAOProblem {
 
-	public static final String TABLE = "problem";
-	public static final String ID = "id";
-	public static final String ADMIN = "admin";
+	public static final String TABLE = "problem"; //$NON-NLS-1$
+	public static final String ID = "id"; //$NON-NLS-1$
+	public static final String ADMIN = "admin"; //$NON-NLS-1$
 
 	private static DAOProblem _dao = null;
 
@@ -41,8 +41,8 @@ public class DAOProblem {
 	public static String getCreationTableSql() {
 		String result = null;
 
-		result = "create table " + TABLE + "(" + ID
-				+ " VARCHAR(50) NOT NULL, " + ADMIN + " VARCHAR(255) NOT NULL, PRIMARY KEY(" + ID + "));";
+		result = "create table " + TABLE + "(" + ID //$NON-NLS-1$ //$NON-NLS-2$
+				+ " VARCHAR(50) NOT NULL, " + ADMIN + " VARCHAR(255) NOT NULL, PRIMARY KEY(" + ID + "));"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 		return result;
 	}
@@ -63,7 +63,7 @@ public class DAOProblem {
 		try {
 			Connection c = getConnection();
 			Statement st = c.createStatement();
-			st.executeUpdate("insert into " + TABLE + " values ('" + problem.getId() + "','" + problem.getAdmin().getMail() + "')");
+			st.executeUpdate("insert into " + TABLE + " values ('" + problem.getId() + "','" + problem.getAdmin().getMail() + "')"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			st.close();
 			DAOProblemCriteria.getDAO().createProblemCriteria(problem);
 			DAOProblemAlternatives.getDAO().createProblemAlternatives(problem);
@@ -80,7 +80,7 @@ public class DAOProblem {
 
 		try {
 			Connection c = getConnection();
-			PreparedStatement pst = c.prepareStatement("delete from " + TABLE + " where " + ID + " = ?");
+			PreparedStatement pst = c.prepareStatement("delete from " + TABLE + " where " + ID + " = ?"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			pst.setString(1, id);
 			pst.executeUpdate();
 			pst.close();
@@ -146,8 +146,8 @@ public class DAOProblem {
 			Connection c = getConnection();
 			Statement st = c.createStatement();
 
-			String select = "select * from " + TABLE + " where " + ID + "='"
-					+ id + "';";
+			String select = "select * from " + TABLE + " where " + ID + "='" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					+ id + "';"; //$NON-NLS-1$
 			List<Problem> problems = getProblems(st.executeQuery(select));
 			if (!problems.isEmpty()) {
 				result = problems.get(0);
@@ -166,8 +166,8 @@ public class DAOProblem {
 			Connection c = getConnection();
 			Statement st = c.createStatement();
 
-			String select = "select * from " + TABLE + " where " + ADMIN + "='"
-					+ admin.getMail() + "';";
+			String select = "select * from " + TABLE + " where " + ADMIN + "='" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					+ admin.getMail() + "';"; //$NON-NLS-1$
 			result = getProblems(st.executeQuery(select));
 			st.close();
 		} catch (Exception e) {
@@ -184,7 +184,7 @@ public class DAOProblem {
 			Connection c = getConnection();
 			Statement st = c.createStatement();
 
-			String select = "select * from " + TABLE + ";";
+			String select = "select * from " + TABLE + ";"; //$NON-NLS-1$ //$NON-NLS-2$
 			result = getProblems(st.executeQuery(select));
 		} catch (Exception e) {
 		}

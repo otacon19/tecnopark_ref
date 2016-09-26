@@ -14,9 +14,9 @@ import sinbad2.database.DatabaseManager;
 
 public class DAOProblemExperts {
 
-	public static final String TABLE = "experts";
-	public static final String PROBLEM = "problem";
-	public static final String EXPERT = "expert";
+	public static final String TABLE = "experts"; //$NON-NLS-1$
+	public static final String PROBLEM = "problem"; //$NON-NLS-1$
+	public static final String EXPERT = "expert"; //$NON-NLS-1$
 
 	private static DAOProblemExperts _dao = null;
 
@@ -35,10 +35,10 @@ public class DAOProblemExperts {
 	public static String getCreationTableSql() {
 		String result = null;
 
-		result = "create table " + TABLE + "(" + PROBLEM
-				+ " VARCHAR(50) NOT NULL, " + EXPERT
-				+ " VARCHAR(255) NOT NULL, PRIMARY KEY(" + PROBLEM + ","
-				+ EXPERT + "));";
+		result = "create table " + TABLE + "(" + PROBLEM //$NON-NLS-1$ //$NON-NLS-2$
+				+ " VARCHAR(50) NOT NULL, " + EXPERT //$NON-NLS-1$
+				+ " VARCHAR(255) NOT NULL, PRIMARY KEY(" + PROBLEM + "," //$NON-NLS-1$ //$NON-NLS-2$
+				+ EXPERT + "));"; //$NON-NLS-1$
 
 		return result;
 	}
@@ -61,7 +61,7 @@ public class DAOProblemExperts {
 			String id = problem.getId();
 			List<String> experts = problem.getExperts();
 			for (String expert : experts) {
-				st.executeUpdate("insert into " + TABLE + " values ('" + id + "','" + expert + "')");
+				st.executeUpdate("insert into " + TABLE + " values ('" + id + "','" + expert + "')"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			}
 			st.close();
 		} catch (Exception e) {
@@ -72,8 +72,8 @@ public class DAOProblemExperts {
 	public void removeProblemExperts(String problem) {
 		try {
 			Connection c = getConnection();
-			PreparedStatement pst = c.prepareStatement("delete from " + TABLE
-					+ " where " + PROBLEM + " = ?");
+			PreparedStatement pst = c.prepareStatement("delete from " + TABLE //$NON-NLS-1$
+					+ " where " + PROBLEM + " = ?"); //$NON-NLS-1$ //$NON-NLS-2$
 			pst.setString(1, problem);
 			pst.executeUpdate();
 			pst.close();
@@ -92,8 +92,8 @@ public class DAOProblemExperts {
 			Connection c = getConnection();
 			Statement st = c.createStatement();
 
-			String select = "select * from " + TABLE + " where " + PROBLEM
-					+ "='" + problem + "';";
+			String select = "select * from " + TABLE + " where " + PROBLEM //$NON-NLS-1$ //$NON-NLS-2$
+					+ "='" + problem + "';"; //$NON-NLS-1$ //$NON-NLS-2$
 			ResultSet rs = st.executeQuery(select);
 			while (rs.next()) {
 				result.add(rs.getString(EXPERT));

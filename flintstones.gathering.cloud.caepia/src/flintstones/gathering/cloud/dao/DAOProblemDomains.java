@@ -23,11 +23,11 @@ import mcdacw.valuation.domain.numeric.NumericRealDomain;
 
 public class DAOProblemDomains {
 
-	public static final String TABLE = "domains";
-	public static final String ID = "id";
-	public static final String PROBLEM = "problem";
-	public static final String TYPE = "type";
-	public static final String DOMAIN = "domain";
+	public static final String TABLE = "domains"; //$NON-NLS-1$
+	public static final String ID = "id"; //$NON-NLS-1$
+	public static final String PROBLEM = "problem"; //$NON-NLS-1$
+	public static final String TYPE = "type"; //$NON-NLS-1$
+	public static final String DOMAIN = "domain"; //$NON-NLS-1$
 
 	private static DAOProblemDomains _dao = null;
 
@@ -46,10 +46,10 @@ public class DAOProblemDomains {
 	public static String getCreationTableSql() {
 		String result = null;
 
-		result = "create table " + TABLE + "(" + ID
-				+ " VARCHAR(50) NOT NULL, " + PROBLEM
-				+ " VARCHAR(50) NOT NULL, " + TYPE + " VARCHAR(255) NOT NULL, " + DOMAIN + " TEXT NOT NULL, PRIMARY KEY(" + ID + ","
-				+ PROBLEM + "));";
+		result = "create table " + TABLE + "(" + ID //$NON-NLS-1$ //$NON-NLS-2$
+				+ " VARCHAR(50) NOT NULL, " + PROBLEM //$NON-NLS-1$
+				+ " VARCHAR(50) NOT NULL, " + TYPE + " VARCHAR(255) NOT NULL, " + DOMAIN + " TEXT NOT NULL, PRIMARY KEY(" + ID + "," //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+				+ PROBLEM + "));"; //$NON-NLS-1$
 
 		return result;
 	}
@@ -76,66 +76,66 @@ public class DAOProblemDomains {
 			Domain domain = null;
 			for (String id : domains.keySet()) {
 				
-				if(id.equals("auto_generated_importance")) {
+				if(id.equals("auto_generated_importance")) { //$NON-NLS-1$
 					importanceDomain = true;
 				}
 				
-				if(id.equals("auto_generated_knowledge")) {
+				if(id.equals("auto_generated_knowledge")) { //$NON-NLS-1$
 					knowledgeDomain = true;
 				}
 				
 				domain = domains.get(id);
-				st.executeUpdate("insert into " + TABLE + " values ('" + id + "','" + problemId + "','" + domain.getType() + "','" + domain.toString() + "')");
+				st.executeUpdate("insert into " + TABLE + " values ('" + id + "','" + problemId + "','" + domain.getType() + "','" + domain.toString() + "')"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 			}
 			
 			if(!importanceDomain) {
 				
 				List<LabelLinguisticDomain> labels = new LinkedList<LabelLinguisticDomain>();
-				LabelLinguisticDomain nothing = new LabelLinguisticDomain("Absolutely_low_importance", new TrapezoidalFunction(new double[]{0, 0, 0, 0.17}));
+				LabelLinguisticDomain nothing = new LabelLinguisticDomain("Absolutely_low_importance", new TrapezoidalFunction(new double[]{0, 0, 0, 0.17})); //$NON-NLS-1$
 				labels.add(nothing);
-				LabelLinguisticDomain veryBad = new LabelLinguisticDomain("Very_low_importance", new TrapezoidalFunction(new double[]{0, 0.17, 0.17, 0.33}));
+				LabelLinguisticDomain veryBad = new LabelLinguisticDomain("Very_low_importance", new TrapezoidalFunction(new double[]{0, 0.17, 0.17, 0.33})); //$NON-NLS-1$
 				labels.add(veryBad);
-				LabelLinguisticDomain bad = new LabelLinguisticDomain("Low_importance", new TrapezoidalFunction(new double[]{0.17, 0.33, 0.33, 0.5}));
+				LabelLinguisticDomain bad = new LabelLinguisticDomain("Low_importance", new TrapezoidalFunction(new double[]{0.17, 0.33, 0.33, 0.5})); //$NON-NLS-1$
 				labels.add(bad);
-				LabelLinguisticDomain medium = new LabelLinguisticDomain("Medium_importance", new TrapezoidalFunction(new double[]{0.33, 0.5, 0.5, 0.67}));
+				LabelLinguisticDomain medium = new LabelLinguisticDomain("Medium_importance", new TrapezoidalFunction(new double[]{0.33, 0.5, 0.5, 0.67})); //$NON-NLS-1$
 				labels.add(medium);
-				LabelLinguisticDomain good = new LabelLinguisticDomain("High_importance", new TrapezoidalFunction(new double[]{0.5, 0.67, 0.67, 0.83}));
+				LabelLinguisticDomain good = new LabelLinguisticDomain("High_importance", new TrapezoidalFunction(new double[]{0.5, 0.67, 0.67, 0.83})); //$NON-NLS-1$
 				labels.add(good);
-				LabelLinguisticDomain veryGood = new LabelLinguisticDomain("Very_high_importance", new TrapezoidalFunction(new double[]{0.67, 0.83, 0.83, 1}));
+				LabelLinguisticDomain veryGood = new LabelLinguisticDomain("Very_high_importance", new TrapezoidalFunction(new double[]{0.67, 0.83, 0.83, 1})); //$NON-NLS-1$
 				labels.add(veryGood);
-				LabelLinguisticDomain perfect = new LabelLinguisticDomain("Absolutely_high_importance", new TrapezoidalFunction(new double[]{0.83, 1, 1, 1}));
+				LabelLinguisticDomain perfect = new LabelLinguisticDomain("Absolutely_high_importance", new TrapezoidalFunction(new double[]{0.83, 1, 1, 1})); //$NON-NLS-1$
 				labels.add(perfect);
 			
 				FuzzySet importance = new FuzzySet(labels);
-				importance.setId("auto_generated_importance");
-				importance.setType("Lingüístico");
+				importance.setId("auto_generated_importance"); //$NON-NLS-1$
+				importance.setType("Lingüístico"); //$NON-NLS-1$
 				
-				st.executeUpdate("insert into " + TABLE + " values ('" + importance.getId() + "','" + problemId + "','" + importance.getType() + "','" + importance.toString() + "')");
+				st.executeUpdate("insert into " + TABLE + " values ('" + importance.getId() + "','" + problemId + "','" + importance.getType() + "','" + importance.toString() + "')"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 			}
 			
 			if(!knowledgeDomain) {
 				
 				List<LabelLinguisticDomain> labels = new LinkedList<LabelLinguisticDomain>();
-				LabelLinguisticDomain nothing = new LabelLinguisticDomain("None", new TrapezoidalFunction(new double[]{0, 0, 0, 0.17}));
+				LabelLinguisticDomain nothing = new LabelLinguisticDomain("None", new TrapezoidalFunction(new double[]{0, 0, 0, 0.17})); //$NON-NLS-1$
 				labels.add(nothing);
-				LabelLinguisticDomain veryBad = new LabelLinguisticDomain("Very_unsure", new TrapezoidalFunction(new double[]{0, 0.17, 0.17, 0.33}));
+				LabelLinguisticDomain veryBad = new LabelLinguisticDomain("Very_unsure", new TrapezoidalFunction(new double[]{0, 0.17, 0.17, 0.33})); //$NON-NLS-1$
 				labels.add(veryBad);
-				LabelLinguisticDomain bad = new LabelLinguisticDomain("Unsure", new TrapezoidalFunction(new double[]{0.17, 0.33, 0.33, 0.5}));
+				LabelLinguisticDomain bad = new LabelLinguisticDomain("Unsure", new TrapezoidalFunction(new double[]{0.17, 0.33, 0.33, 0.5})); //$NON-NLS-1$
 				labels.add(bad);
-				LabelLinguisticDomain medium = new LabelLinguisticDomain("Medium", new TrapezoidalFunction(new double[]{0.33, 0.5, 0.5, 0.67}));
+				LabelLinguisticDomain medium = new LabelLinguisticDomain("Medium", new TrapezoidalFunction(new double[]{0.33, 0.5, 0.5, 0.67})); //$NON-NLS-1$
 				labels.add(medium);
-				LabelLinguisticDomain good = new LabelLinguisticDomain("Sure", new TrapezoidalFunction(new double[]{0.5, 0.67, 0.67, 0.83}));
+				LabelLinguisticDomain good = new LabelLinguisticDomain("Sure", new TrapezoidalFunction(new double[]{0.5, 0.67, 0.67, 0.83})); //$NON-NLS-1$
 				labels.add(good);
-				LabelLinguisticDomain veryGood = new LabelLinguisticDomain("Very_sure", new TrapezoidalFunction(new double[]{0.67, 0.83, 0.83, 1}));
+				LabelLinguisticDomain veryGood = new LabelLinguisticDomain("Very_sure", new TrapezoidalFunction(new double[]{0.67, 0.83, 0.83, 1})); //$NON-NLS-1$
 				labels.add(veryGood);
-				LabelLinguisticDomain perfect = new LabelLinguisticDomain("Absolutely_sure", new TrapezoidalFunction(new double[]{0.83, 1, 1, 1}));
+				LabelLinguisticDomain perfect = new LabelLinguisticDomain("Absolutely_sure", new TrapezoidalFunction(new double[]{0.83, 1, 1, 1})); //$NON-NLS-1$
 				labels.add(perfect);
 			
 				FuzzySet knowledge = new FuzzySet(labels);
-				knowledge.setId("auto_generated_knowledge");
-				knowledge.setType("Lingüístico");
+				knowledge.setId("auto_generated_knowledge"); //$NON-NLS-1$
+				knowledge.setType("Lingüístico"); //$NON-NLS-1$
 				
-				st.executeUpdate("insert into " + TABLE + " values ('" + knowledge.getId() + "','" + problemId + "','" + knowledge.getType() + "','" + knowledge.toString() + "')");
+				st.executeUpdate("insert into " + TABLE + " values ('" + knowledge.getId() + "','" + problemId + "','" + knowledge.getType() + "','" + knowledge.toString() + "')"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 				
 			}
 			
@@ -148,8 +148,8 @@ public class DAOProblemDomains {
 	public void removeProblemDomains(String problem) {
 		try {
 			Connection c = getConnection();
-			PreparedStatement pst = c.prepareStatement("delete from " + TABLE
-					+ " where " + PROBLEM + " = ?");
+			PreparedStatement pst = c.prepareStatement("delete from " + TABLE //$NON-NLS-1$
+					+ " where " + PROBLEM + " = ?"); //$NON-NLS-1$ //$NON-NLS-2$
 			pst.setString(1, problem);
 			pst.executeUpdate();
 			pst.close();
@@ -168,7 +168,7 @@ public class DAOProblemDomains {
 			Connection c = getConnection();
 			Statement st = c.createStatement();
 
-			String select = "select * from " + TABLE + " where " + PROBLEM + "='" + problem + "';";
+			String select = "select * from " + TABLE + " where " + PROBLEM + "='" + problem + "';"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			ResultSet rs = st.executeQuery(select);
 			Domain domain = null;
 			String id;
@@ -180,10 +180,10 @@ public class DAOProblemDomains {
 				type = rs.getString(TYPE);
 				value = rs.getString(DOMAIN);
 	
-				if(type.equals("Entero")) {
+				if(type.equals("Entero")) { //$NON-NLS-1$
 	
 					try {
-						String[] tokens = value.split(",");
+						String[] tokens = value.split(","); //$NON-NLS-1$
 						int min = Integer.parseInt(tokens[0].substring(1));
 						int max = Integer.parseInt(tokens[1].substring(1, tokens[1].length() - 1));
 						domain = new NumericIntegerDomain();
@@ -196,10 +196,10 @@ public class DAOProblemDomains {
 						e.printStackTrace();
 					}
 					
-				} else if(type.equals("Real")) {
+				} else if(type.equals("Real")) { //$NON-NLS-1$
 					
 					try {
-						String[] tokens = value.split(",");
+						String[] tokens = value.split(","); //$NON-NLS-1$
 						double min = Double.parseDouble(tokens[0].substring(1));
 						double max = Double.parseDouble(tokens[1].substring(1, tokens[1].length() - 1));
 						domain = new NumericRealDomain();
@@ -212,14 +212,14 @@ public class DAOProblemDomains {
 						e.printStackTrace();
 					}
 					
-				} else if(type.equals("Lingüístico")) {
+				} else if(type.equals("Lingüístico")) { //$NON-NLS-1$
 					
 					try {
-						value = value.replace("{", "");
-						value = value.replace("}", "");
-						value = value.replace("[", "");
-						value = value.replace(" ", "");
-						String[] tokens = value.split("]");
+						value = value.replace("{", ""); //$NON-NLS-1$ //$NON-NLS-2$
+						value = value.replace("}", ""); //$NON-NLS-1$ //$NON-NLS-2$
+						value = value.replace("[", ""); //$NON-NLS-1$ //$NON-NLS-2$
+						value = value.replace(" ", ""); //$NON-NLS-1$ //$NON-NLS-2$
+						String[] tokens = value.split("]"); //$NON-NLS-1$
 	
 						List<Double> values = new LinkedList<Double>();
 						LabelSetLinguisticDomain labelSet = new LabelSetLinguisticDomain();
@@ -227,15 +227,15 @@ public class DAOProblemDomains {
 							LabelLinguisticDomain label = new LabelLinguisticDomain();
 							String labelInfo = tokens[i];
 							
-							String[] info = labelInfo.split(";");
-							if(info[0].equals(",")) {
+							String[] info = labelInfo.split(";"); //$NON-NLS-1$
+							if(info[0].equals(",")) { //$NON-NLS-1$
 								info = Arrays.copyOfRange(info, 1, info.length);
 							}
 							
-							label.setName(info[0].replace(",", ""));
+							label.setName(info[0].replace(",", "")); //$NON-NLS-1$ //$NON-NLS-2$
 							String semanticFunction = info[1];
-							String limits = semanticFunction.substring(semanticFunction.indexOf("(") + 1, semanticFunction.indexOf(")"));
-							String[] limitsNumbers = limits.split(",");
+							String limits = semanticFunction.substring(semanticFunction.indexOf("(") + 1, semanticFunction.indexOf(")")); //$NON-NLS-1$ //$NON-NLS-2$
+							String[] limitsNumbers = limits.split(","); //$NON-NLS-1$
 							
 							double[] limitsV = new double[limitsNumbers.length];
 							for(int j = 0; j < limitsNumbers.length; ++j) {

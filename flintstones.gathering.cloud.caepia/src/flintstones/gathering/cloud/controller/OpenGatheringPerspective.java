@@ -9,6 +9,7 @@ import org.eclipse.ui.WorkbenchException;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 import flintstones.gathering.cloud.ICommandIds;
+import flintstones.gathering.cloud.nls.Messages;
 import flintstones.gathering.cloud.view.SurveyView;
 
 /**
@@ -18,20 +19,20 @@ import flintstones.gathering.cloud.view.SurveyView;
 public class OpenGatheringPerspective extends Action {
 
 	public OpenGatheringPerspective() {
-		setToolTipText("Mostrar gathering");
+		setToolTipText(Messages.OpenGatheringPerspective_Show_gathering);
 		setId(ICommandIds.CMD_OPEN_GATHERING_PERSPECTIVE);
 		setActionDefinitionId(ICommandIds.CMD_OPEN_GATHERING_PERSPECTIVE);
-		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/gathering.png"));
-		RWT.getUISession().setAttribute("open-gathering-action", this);
+		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/gathering.png")); //$NON-NLS-1$ //$NON-NLS-2$
+		RWT.getUISession().setAttribute("open-gathering-action", this); //$NON-NLS-1$
 	}
 
 	public void run() {
 		IWorkbench workbench = PlatformUI.getWorkbench();
 		try {
-			workbench.showPerspective("flintstones.gathering.cloud.gathering.perspective", workbench.getActiveWorkbenchWindow());
+			workbench.showPerspective("flintstones.gathering.cloud.gathering.perspective", workbench.getActiveWorkbenchWindow()); //$NON-NLS-1$
 			this.setEnabled(false);
-			((OpenProblemsPerspective) RWT.getUISession().getAttribute("open-problems-action")).setEnabled(true);
-			((OpenFrameworkStructuringPerspective) RWT.getUISession().getAttribute("open-frameworkstructuring-action")).setEnabled(true);
+			((OpenProblemsPerspective) RWT.getUISession().getAttribute("open-problems-action")).setEnabled(true); //$NON-NLS-1$
+			((OpenFrameworkStructuringPerspective) RWT.getUISession().getAttribute("open-frameworkstructuring-action")).setEnabled(true); //$NON-NLS-1$
 			
 			SurveyView surveyView = null;
 			IViewReference viewReferences[] = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences();

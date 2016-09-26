@@ -14,9 +14,9 @@ import sinbad2.database.DatabaseManager;
 
 public class DAOProblemAlternatives {
 
-	public static final String TABLE = "alternatives";
-	public static final String PROBLEM = "problem";
-	public static final String ALTERNATIVE = "alternative";
+	public static final String TABLE = "alternatives"; //$NON-NLS-1$
+	public static final String PROBLEM = "problem"; //$NON-NLS-1$
+	public static final String ALTERNATIVE = "alternative"; //$NON-NLS-1$
 
 	private static DAOProblemAlternatives _dao = null;
 
@@ -35,10 +35,10 @@ public class DAOProblemAlternatives {
 	public static String getCreationTableSql() {
 		String result = null;
 
-		result = "create table " + TABLE + "(" + PROBLEM
-				+ " VARCHAR(50) NOT NULL, " + ALTERNATIVE
-				+ " TEXT NOT NULL, PRIMARY KEY(" + PROBLEM + ","
-				+ ALTERNATIVE + "(255)));";
+		result = "create table " + TABLE + "(" + PROBLEM //$NON-NLS-1$ //$NON-NLS-2$
+				+ " VARCHAR(50) NOT NULL, " + ALTERNATIVE //$NON-NLS-1$
+				+ " TEXT NOT NULL, PRIMARY KEY(" + PROBLEM + "," //$NON-NLS-1$ //$NON-NLS-2$
+				+ ALTERNATIVE + "(255)));"; //$NON-NLS-1$
 
 		return result;
 	}
@@ -61,8 +61,8 @@ public class DAOProblemAlternatives {
 			String id = problem.getId();
 			List<String> alternatives = problem.getAlternatives();
 			for (String alternative : alternatives) {
-				alternative = alternative.replace( "'" , "''" );
-				st.executeUpdate("insert into " + TABLE + " values ('" + id + "','" + alternative + "')");
+				alternative = alternative.replace( "'" , "''" ); //$NON-NLS-1$ //$NON-NLS-2$
+				st.executeUpdate("insert into " + TABLE + " values ('" + id + "','" + alternative + "')"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			}
 			st.close();
 		} catch (Exception e) {
@@ -73,8 +73,8 @@ public class DAOProblemAlternatives {
 	public void removeProblemAlternatives(String problem) {
 		try {
 			Connection c = getConnection();
-			PreparedStatement pst = c.prepareStatement("delete from " + TABLE
-					+ " where " + PROBLEM + " = ?");
+			PreparedStatement pst = c.prepareStatement("delete from " + TABLE //$NON-NLS-1$
+					+ " where " + PROBLEM + " = ?"); //$NON-NLS-1$ //$NON-NLS-2$
 			pst.setString(1, problem);
 			pst.executeUpdate();
 			pst.close();
@@ -93,8 +93,8 @@ public class DAOProblemAlternatives {
 			Connection c = getConnection();
 			Statement st = c.createStatement();
 
-			String select = "select * from " + TABLE + " where " + PROBLEM
-					+ "='" + problem + "';";
+			String select = "select * from " + TABLE + " where " + PROBLEM //$NON-NLS-1$ //$NON-NLS-2$
+					+ "='" + problem + "';"; //$NON-NLS-1$ //$NON-NLS-2$
 			ResultSet rs = st.executeQuery(select);
 			while (rs.next()) {
 				result.add(rs.getString(ALTERNATIVE));

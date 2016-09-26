@@ -1,5 +1,7 @@
 package flintstones.gathering.cloud.view;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -21,19 +23,33 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 import flintstones.gathering.cloud.model.Problem;
 import flintstones.gathering.cloud.model.ProblemAssignment;
+import flintstones.gathering.cloud.nls.Messages;
 
 public class ProblemView extends ViewPart {
 
-	public static final String ID = "flintstones.gathering.cloud.view.problemView";
+	public static final String ID = "flintstones.gathering.cloud.view.problemView"; //$NON-NLS-1$
 
 	private Problem _problem;
+	
+	private static class ElementComparator implements Comparator<TableElement> {
+
+		@Override
+		 public int compare(TableElement te1, TableElement te2) {
+	        return extractInt(te1.getExpert()) - extractInt(te2.getExpert());
+	    }
+
+	    int extractInt(String s) {
+	        String num = s.replaceAll("\\D", ""); //$NON-NLS-1$ //$NON-NLS-2$
+	        return num.isEmpty() ? 0 : Integer.parseInt(num);
+	    }
+	}
 
 	@Override
 	public void init(IViewSite site) throws PartInitException {
 		super.init(site);
 		RWT.getUISession().setAttribute(ID, this);
-		_problem = (Problem) RWT.getUISession().getAttribute("problem");
-		setPartName((_problem != null) ? "Problema: " + _problem.getId() : "Problema no seleccionado");
+		_problem = (Problem) RWT.getUISession().getAttribute("problem"); //$NON-NLS-1$
+		setPartName((_problem != null) ? Messages.ProblemView_Problem + _problem.getId() : Messages.ProblemView_Not_selected_problem);
 	}
 
 	private TableViewer viewer;
@@ -73,6 +89,8 @@ public class ProblemView extends ViewPart {
 			for (String expert : pa.keySet()) {
 				result.add(new TableElement(expert, pa.get(expert)));
 			}
+			
+			Collections.sort(result, new ElementComparator());
 
 			return result.toArray(new TableElement[0]);
 		}
@@ -98,9 +116,9 @@ public class ProblemView extends ViewPart {
 		public String getText(Object obj) {
 			ProblemAssignment assignment = ((TableElement) obj).getAssignment();
 			if (assignment.getMake()) {
-				return "yes";
+				return Messages.ProblemView_yes;
 			} else {
-				return "no";
+				return Messages.ProblemView_no;
 			}
 		}
 	}
@@ -117,20 +135,20 @@ public class ProblemView extends ViewPart {
 
 		TableViewerColumn tvc = new TableViewerColumn(viewer, SWT.NONE);
 		TableColumn tc = tvc.getColumn();
-		tc.setText("Identificador del experto");
-		tc.setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/expert_20.png").createImage());
+		tc.setText(Messages.ProblemView_Expert_id);
+		tc.setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/expert_20.png").createImage()); //$NON-NLS-1$ //$NON-NLS-2$
 		tvc.setLabelProvider(new ExpertLabelProvider());
 
 		tvc = new TableViewerColumn(viewer, SWT.NONE);
 		tc = tvc.getColumn();
-		tc.setText("Mail del experto");
-		tc.setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/mail_20.png").createImage());
+		tc.setText(Messages.ProblemView_Expert_mail_account);
+		tc.setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/mail_20.png").createImage()); //$NON-NLS-1$ //$NON-NLS-2$
 		tvc.setLabelProvider(new UserLabelProvider());
 
 		tvc = new TableViewerColumn(viewer, SWT.NONE);
 		tc = tvc.getColumn();
-		tc.setText("¿El experto ha enviado sus valoraciones?");
-		tc.setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/vote_20.png").createImage());
+		tc.setText(Messages.ProblemView_Have_the_expert_sent_his_assessments);
+		tc.setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/vote_20.png").createImage()); //$NON-NLS-1$ //$NON-NLS-2$
 		tvc.setLabelProvider(new MakeLabelProvider());
 		
 		refresh();
@@ -149,7 +167,7 @@ public class ProblemView extends ViewPart {
 	}
 
 	public void refresh() {
-		_problem = (Problem) RWT.getUISession().getAttribute("problem");
+		_problem = (Problem) RWT.getUISession().getAttribute("problem"); //$NON-NLS-1$
 		if (_problem != null) {
 			viewer.getTable().setVisible(true);
 			viewer.setInput(_problem);
@@ -157,6 +175,6 @@ public class ProblemView extends ViewPart {
 		} else {
 			viewer.getTable().setVisible(false);
 		}
-		setPartName((_problem != null) ? "Problema: " + _problem.getId() : "Problema no seleccionado");
+		setPartName((_problem != null) ? Messages.ProblemView_Problem_two_points + _problem.getId() : Messages.ProblemView_Not_selected_problem);
 	}
 }

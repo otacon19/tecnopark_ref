@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Flintstones Gathering Cloud
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: flintstones.gathering.cloud;singleton:=true
 Bundle-Version: 1
-Bundle-Vendor: Sinbad²
+Bundle-Vendor: %Bundle-Vendor
 Bundle-ClassPath: lib/mysql-connector-java-5.1.33-bin.jar,
  lib/javax.mail_1.4.0.v201005080615.jar,
  .

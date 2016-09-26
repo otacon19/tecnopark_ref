@@ -11,7 +11,7 @@ import flintstones.gathering.cloud.view.frameworkstructuring.ElementAssignmentVi
 
 public class FrameworkStructuringPerspective implements IPerspectiveFactory{
 
-public static final String ID = "flintstones.gathering.cloud.frameworkstructuring.perspective";
+public static final String ID = "flintstones.gathering.cloud.frameworkstructuring.perspective"; //$NON-NLS-1$
 	
 	public void createInitialLayout(IPageLayout layout) {
 		String editorArea = layout.getEditorArea();

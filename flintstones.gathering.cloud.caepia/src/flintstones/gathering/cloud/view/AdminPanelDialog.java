@@ -38,16 +38,17 @@ import flintstones.gathering.cloud.APP;
 import flintstones.gathering.cloud.dao.DAOUser;
 import flintstones.gathering.cloud.dao.Deploy;
 import flintstones.gathering.cloud.model.User;
+import flintstones.gathering.cloud.nls.Messages;
 
 @SuppressWarnings("serial")
 public class AdminPanelDialog extends TitleAreaDialog {
 
 	private static final Image CHECKED = AbstractUIPlugin
-			.imageDescriptorFromPlugin("flintstones.gathering.cloud",
-					"icons/checked.gif").createImage();
+			.imageDescriptorFromPlugin("flintstones.gathering.cloud", //$NON-NLS-1$
+					"icons/checked.gif").createImage(); //$NON-NLS-1$
 	private static final Image UNCHECKED = AbstractUIPlugin
-			.imageDescriptorFromPlugin("flintstones.gathering.cloud",
-					"icons/unchecked.gif").createImage();
+			.imageDescriptorFromPlugin("flintstones.gathering.cloud", //$NON-NLS-1$
+					"icons/unchecked.gif").createImage(); //$NON-NLS-1$
 
 	private List<User> model;
 
@@ -61,13 +62,13 @@ public class AdminPanelDialog extends TitleAreaDialog {
 	@Override
 	public void create() {
 		super.create();
-		setTitle("Panel de administración");
-		setMessage("Panel de administración", IMessageProvider.INFORMATION);
+		setTitle(Messages.AdminPanelDialog_Admin_panel);
+		setMessage(Messages.AdminPanelDialog_Admin_panel, IMessageProvider.INFORMATION);
 	}
 
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.CANCEL_ID, "Cerrar",
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.AdminPanelDialog_Close,
 				true);
 	}
 
@@ -131,7 +132,7 @@ public class AdminPanelDialog extends TitleAreaDialog {
 
 	class AdminLabelProvider extends ColumnLabelProvider {
 		public String getText(Object obj) {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 
 		@Override
@@ -146,7 +147,7 @@ public class AdminPanelDialog extends TitleAreaDialog {
 
 	class ManageProblemsLabelProvider extends ColumnLabelProvider {
 		public String getText(Object obj) {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 
 		@Override
@@ -249,35 +250,35 @@ public class AdminPanelDialog extends TitleAreaDialog {
 		
 		TableViewerColumn tvc = new TableViewerColumn(viewer, SWT.NONE);
 		TableColumn tc = tvc.getColumn();
-		tc.setText("Usuario");
+		tc.setText(Messages.AdminPanelDialog_User);
 		tc.setImage(AbstractUIPlugin.imageDescriptorFromPlugin(
-				"flintstones.gathering.cloud", "/icons/mail_20.png")
+				"flintstones.gathering.cloud", "/icons/mail_20.png") //$NON-NLS-1$ //$NON-NLS-2$
 				.createImage());
 		tvc.setLabelProvider(new MailLabelProvider());
 
 		tvc = new TableViewerColumn(viewer, SWT.NONE);
 		tc = tvc.getColumn();
-		tc.setText("Administrador");
+		tc.setText(Messages.AdminPanelDialog_Admin);
 		tc.setImage(AbstractUIPlugin.imageDescriptorFromPlugin(
-				"flintstones.gathering.cloud", "/icons/admin_20.png")
+				"flintstones.gathering.cloud", "/icons/admin_20.png") //$NON-NLS-1$ //$NON-NLS-2$
 				.createImage());
 		tvc.setLabelProvider(new AdminLabelProvider());
 		tvc.setEditingSupport(new AdminEditingSupport(viewer));
 
 		tvc = new TableViewerColumn(viewer, SWT.NONE);
 		tc = tvc.getColumn();
-		tc.setText("Gestionar problemas");
+		tc.setText(Messages.AdminPanelDialog_Manage_problems);
 		tc.setImage(PlatformUI.getWorkbench().getSharedImages()
 				.getImage(ISharedImages.IMG_OBJ_ELEMENT));
 		tvc.setLabelProvider(new ManageProblemsLabelProvider());
 		tvc.setEditingSupport(new ManageProblemsEditingSupport(viewer));
 
 		Label deployLabel = new Label(container, SWT.NONE);
-		deployLabel.setText("Desplegar aplicación");
+		deployLabel.setText(Messages.AdminPanelDialog_Deploy_application);
 
 		Button deployButton = new Button(container, SWT.NONE);
-		deployButton.setToolTipText("Realizar despliegue de aplicación");
-		deployButton.setText("Desplegar");
+		deployButton.setToolTipText(Messages.AdminPanelDialog_Do_deploy_application);
+		deployButton.setText(Messages.AdminPanelDialog_Deploy);
 		deployButton.addSelectionListener(new SelectionAdapter() {
 
 			@Override
@@ -285,8 +286,8 @@ public class AdminPanelDialog extends TitleAreaDialog {
 				if (MessageDialog
 						.openConfirm(
 								Display.getCurrent().getActiveShell(),
-								"Realizar despliegue de aplicación",
-								"Esta acción no puede ser deshecha. Toda la información será eliminada. ¿Estás seguro?")) {
+								Messages.AdminPanelDialog_Do_deploy_application,
+								Messages.AdminPanelDialog_This_action_can_not_be_undone)) {
 					Deploy.make();
 					PlatformUI.getWorkbench().close();
 				}

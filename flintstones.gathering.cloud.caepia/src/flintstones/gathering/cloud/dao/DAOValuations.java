@@ -27,14 +27,14 @@ import sinbad2.database.DatabaseManager;
 
 public class DAOValuations {
 
-	public static final String TABLE = "valuations";
-	public static final String PROBLEM = "problem";
-	public static final String CRITERION = "criterion";
-	public static final String ALTERNATIVE = "alternative";
-	public static final String EXPERT = "expert";
-	public static final String DOMAIN = "domain";
-	public static final String TYPE = "type";
-	public static final String VALUE = "value";
+	public static final String TABLE = "valuations"; //$NON-NLS-1$
+	public static final String PROBLEM = "problem"; //$NON-NLS-1$
+	public static final String CRITERION = "criterion"; //$NON-NLS-1$
+	public static final String ALTERNATIVE = "alternative"; //$NON-NLS-1$
+	public static final String EXPERT = "expert"; //$NON-NLS-1$
+	public static final String DOMAIN = "domain"; //$NON-NLS-1$
+	public static final String TYPE = "type"; //$NON-NLS-1$
+	public static final String VALUE = "value"; //$NON-NLS-1$
 
 	private static DAOValuations _dao = null;
 
@@ -54,15 +54,15 @@ public class DAOValuations {
 		String result = null;
 
 		try {
-			result = "create table " + TABLE + "(" + PROBLEM
-					+ " VARCHAR(50) NOT NULL, " + CRITERION
-					+ " VARCHAR(255) NOT NULL, " + ALTERNATIVE
-					+ " VARCHAR(255) NOT NULL, " + EXPERT
-					+ " VARCHAR (50) NOT NULL, " + DOMAIN
-					+ " VARCHAR(255) NOT NULL, " + TYPE
-					+ " VARCHAR(255) NOT NULL, " + VALUE
-					+ " VARCHAR(255) NOT NULL, PRIMARY KEY(" + PROBLEM + ","
-					+ CRITERION + "," + ALTERNATIVE + "," + EXPERT + "," + DOMAIN + "));";
+			result = "create table " + TABLE + "(" + PROBLEM //$NON-NLS-1$ //$NON-NLS-2$
+					+ " VARCHAR(50) NOT NULL, " + CRITERION //$NON-NLS-1$
+					+ " VARCHAR(255) NOT NULL, " + ALTERNATIVE //$NON-NLS-1$
+					+ " VARCHAR(255) NOT NULL, " + EXPERT //$NON-NLS-1$
+					+ " VARCHAR (50) NOT NULL, " + DOMAIN //$NON-NLS-1$
+					+ " VARCHAR(255) NOT NULL, " + TYPE //$NON-NLS-1$
+					+ " VARCHAR(255) NOT NULL, " + VALUE //$NON-NLS-1$
+					+ " VARCHAR(255) NOT NULL, PRIMARY KEY(" + PROBLEM + "," //$NON-NLS-1$ //$NON-NLS-2$
+					+ CRITERION + "," + ALTERNATIVE + "," + EXPERT + "," + DOMAIN + "));"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -89,7 +89,7 @@ public class DAOValuations {
 			String problemId = problem.getId();
 			ProblemAssignment assignment;
 			Valuation valuation = null;
-			String value = "";
+			String value = ""; //$NON-NLS-1$
 			KeyDomainAssignment key;
 			for (String criterion : problem.getCriteria()) {
 				for (String alternative : problem.getAlternatives()) {
@@ -100,11 +100,11 @@ public class DAOValuations {
 							valuation = assignment.getValuations().getValuation(key);
 							if (valuation != null) {
 								value = valuation.changeFormatValuationToString();
-								st.executeUpdate("insert into " + TABLE + " values ('"
-										+ problemId + "','"
-										+ criterion.replace("'", "''") + "','"
-										+ alternative.replace("'", "''") + "','" + expert + "','" + valuation.getDomain().getId() + "'," + valuation.getClass().toString() + "','" + value
-										+ "')");
+								st.executeUpdate("insert into " + TABLE + " values ('" //$NON-NLS-1$ //$NON-NLS-2$
+										+ problemId + "','" //$NON-NLS-1$
+										+ criterion.replace("'", "''") + "','" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+										+ alternative.replace("'", "''") + "','" + expert + "','" + valuation.getDomain().getId() + "'," + valuation.getClass().toString() + "','" + value //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+										+ "')"); //$NON-NLS-1$
 							}
 						}
 					}
@@ -120,7 +120,7 @@ public class DAOValuations {
 
 		try {
 			Connection c = getConnection();
-			PreparedStatement pst = c.prepareStatement("delete from " + TABLE + " where " + PROBLEM + " = ?");
+			PreparedStatement pst = c.prepareStatement("delete from " + TABLE + " where " + PROBLEM + " = ?"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			pst.setString(1, problem);
 			pst.executeUpdate();
 			pst.close();
@@ -136,8 +136,8 @@ public class DAOValuations {
 
 		try {
 			Connection c = getConnection();
-			PreparedStatement pst = c.prepareStatement("delete from " + TABLE + " where " + PROBLEM + " = ?" + " and " + ALTERNATIVE + " = ?" + " and " + CRITERION
-					+ " = ?" + " and " + EXPERT + " = ?");
+			PreparedStatement pst = c.prepareStatement("delete from " + TABLE + " where " + PROBLEM + " = ?" + " and " + ALTERNATIVE + " = ?" + " and " + CRITERION //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+					+ " = ?" + " and " + EXPERT + " = ?"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			pst.setString(1, problem);
 			pst.setString(2, key.getAlternative());
 			pst.setString(3, key.getCriterion());
@@ -155,7 +155,7 @@ public class DAOValuations {
 			Connection c = getConnection();
 			Statement st = c.createStatement();
 
-			String select = "select * from " + TABLE + " where " + PROBLEM + " = '" + problem + "' and " + EXPERT + " = '" + assignment.getId() + "';";
+			String select = "select * from " + TABLE + " where " + PROBLEM + " = '" + problem + "' and " + EXPERT + " = '" + assignment.getId() + "';"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 			ResultSet rs = st.executeQuery(select);
 
 			String criterion;
@@ -180,8 +180,8 @@ public class DAOValuations {
 				} else if(type.equals(IntegerIntervalValuation.class.toString())) {
 					
 					String range = rs.getString(VALUE);
-					range = range.replace("[", "").replace("]", "").replace(" ", "");
-					String[] minMax = range.split(",");
+					range = range.replace("[", "").replace("]", "").replace(" ", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+					String[] minMax = range.split(","); //$NON-NLS-1$
 					valuation = new IntegerIntervalValuation((NumericIntegerDomain) domains.get(domainId), 
 							Long.parseLong(minMax[0]), Long.parseLong(minMax[1]));
 					
@@ -192,8 +192,8 @@ public class DAOValuations {
 				} else if(type.equals(RealIntervalValuation.class.toString())) {
 					
 					String range = rs.getString(VALUE);
-					range = range.replace("[", "").replace("]", "").replace(" ", "");
-					String[] minMax = range.split(",");
+					range = range.replace("[", "").replace("]", "").replace(" ", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+					String[] minMax = range.split(","); //$NON-NLS-1$
 					valuation = new RealIntervalValuation((NumericRealDomain) domains.get(domainId), 
 							Double.parseDouble(minMax[0]), Double.parseDouble(minMax[1]));
 					
@@ -208,33 +208,33 @@ public class DAOValuations {
 					String hesitant = rs.getString(VALUE);
 	
 					FuzzySet fuzzySet =(FuzzySet) domains.get(domainId);
-					if(hesitant.contains("Between")) {
+					if(hesitant.contains("Between")) { //$NON-NLS-1$
 			
-						hesitant = hesitant.replace("Between ", "");
-						String lowerTerm = hesitant.substring(0, hesitant.indexOf(" "));
-						String upperTerm = hesitant.substring(hesitant.lastIndexOf(" ") + 1, hesitant.length());
+						hesitant = hesitant.replace("Between ", ""); //$NON-NLS-1$ //$NON-NLS-2$
+						String lowerTerm = hesitant.substring(0, hesitant.indexOf(" ")); //$NON-NLS-1$
+						String upperTerm = hesitant.substring(hesitant.lastIndexOf(" ") + 1, hesitant.length()); //$NON-NLS-1$
 
 						valuation = new HesitantValuation(fuzzySet);
 						((HesitantValuation) valuation).setBinaryRelation(lowerTerm, upperTerm);
 					
-					} else if(hesitant.contains("At least") || hesitant.contains("At most") || hesitant.contains("Lower than") ||
-							hesitant.contains("Greater than")){
+					} else if(hesitant.contains("At least") || hesitant.contains("At most") || hesitant.contains("Lower than") || //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+							hesitant.contains("Greater than")){ //$NON-NLS-1$
 						
 						valuation = new HesitantValuation((FuzzySet) domains.get(domainId));
 						valuation.setDomain(fuzzySet);
 				
 						EUnaryRelationType unary;
-						if(hesitant.contains("At least")) {
+						if(hesitant.contains("At least")) { //$NON-NLS-1$
 							unary = EUnaryRelationType.AtLeast;
-						} else if(hesitant.contains("At most")) {
+						} else if(hesitant.contains("At most")) { //$NON-NLS-1$
 							unary = EUnaryRelationType.AtMost;
-						} else if(hesitant.contains("Lower than")) {
+						} else if(hesitant.contains("Lower than")) { //$NON-NLS-1$
 							unary = EUnaryRelationType.LowerThan;
 						} else {
 							unary = EUnaryRelationType.GreaterThan;
 						}
 
-						String term = hesitant.substring(hesitant.lastIndexOf(" ") + 1, hesitant.length());
+						String term = hesitant.substring(hesitant.lastIndexOf(" ") + 1, hesitant.length()); //$NON-NLS-1$
 						((HesitantValuation) valuation).setUnaryRelation(unary, fuzzySet.getLabelSet().getLabel(term));
 					
 					} else {
@@ -266,17 +266,17 @@ public class DAOValuations {
 			String value;
 
 			for (KeyDomainAssignment key : valuations.getValuations().keySet()) {
-				String criterion = key.getCriterion().replace("'", "''");
-				String alternative = key.getAlternative().replace("'", "''");
-				String expert = key.getExpert().replace("'", "''");
+				String criterion = key.getCriterion().replace("'", "''"); //$NON-NLS-1$ //$NON-NLS-2$
+				String alternative = key.getAlternative().replace("'", "''"); //$NON-NLS-1$ //$NON-NLS-2$
+				String expert = key.getExpert().replace("'", "''"); //$NON-NLS-1$ //$NON-NLS-2$
 				value = valuations.getValuation(key).changeFormatValuationToString();
 
-				String update = "update " + TABLE + " set " + VALUE + " = '"
-						+ value + "' where " + PROBLEM + " = '"
-						+ problem.getId() + "' and " + CRITERION + " = '"
-						+ criterion + "' and " + ALTERNATIVE + " = '"
-						+ alternative + "' and " + EXPERT + " = '"
-						+ expert + "';";
+				String update = "update " + TABLE + " set " + VALUE + " = '" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						+ value + "' where " + PROBLEM + " = '" //$NON-NLS-1$ //$NON-NLS-2$
+						+ problem.getId() + "' and " + CRITERION + " = '" //$NON-NLS-1$ //$NON-NLS-2$
+						+ criterion + "' and " + ALTERNATIVE + " = '" //$NON-NLS-1$ //$NON-NLS-2$
+						+ alternative + "' and " + EXPERT + " = '" //$NON-NLS-1$ //$NON-NLS-2$
+						+ expert + "';"; //$NON-NLS-1$
 
 				st.executeUpdate(update);
 			}
@@ -301,15 +301,15 @@ public class DAOValuations {
 			String expert = key.getExpert();
 			value = valuation.changeFormatValuationToString();
 			
-			String statement = "replace into " + TABLE + " values("
-					+ "'" + problem.getId() + "'" + ", "
-					+ "'" + criterion + "'" + ", "
-					+ "'" + alternative + "'" + ", " 
-					+ "'" + expert + "'" + ", "
-					+ "'" + valuation.getDomain().getId() + "'" + ", "
-					+ "'" + valuation.getClass().toString() + "'" + ", " 
-					+ "'" + value
-					+ "');";
+			String statement = "replace into " + TABLE + " values(" //$NON-NLS-1$ //$NON-NLS-2$
+					+ "'" + problem.getId() + "'" + ", " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					+ "'" + criterion + "'" + ", " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					+ "'" + alternative + "'" + ", "  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					+ "'" + expert + "'" + ", " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					+ "'" + valuation.getDomain().getId() + "'" + ", " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					+ "'" + valuation.getClass().toString() + "'" + ", "  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					+ "'" + value //$NON-NLS-1$
+					+ "');"; //$NON-NLS-1$
 			
 			st.executeUpdate(statement);
 

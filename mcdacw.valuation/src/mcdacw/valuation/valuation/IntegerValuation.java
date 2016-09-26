@@ -28,7 +28,7 @@ public class IntegerValuation extends Valuation {
 	}
 	
 	public void setValue(Double value) {
-		ParameterValidator.notNull(_domain, "domain");
+		ParameterValidator.notNull(_domain, "domain"); //$NON-NLS-1$
 		
 		if(((NumericIntegerDomain) _domain).getInRange()) {
 			ParameterValidator.inRange(value, ((NumericIntegerDomain) _domain).getMin(), 
@@ -96,9 +96,9 @@ public class IntegerValuation extends Valuation {
 	
 	@Override
 	public int compareTo(Valuation other) {
-		ParameterValidator.notNull(other, "other");
+		ParameterValidator.notNull(other, "other"); //$NON-NLS-1$
 		ParameterValidator.notIllegalElementType(other, 
-				new String[] { Integer.class.toString() }, "other");
+				new String[] { Integer.class.toString() }, "other"); //$NON-NLS-1$
 		
 		if(_domain.equals(other.getDomain())) {
 			return Double.valueOf(_value).compareTo(Double.valueOf(((IntegerValuation) other)._value));

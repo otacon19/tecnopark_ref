@@ -10,7 +10,7 @@ import org.eclipse.ui.IViewLayout;
  */
 public class GatheringPerspective implements IPerspectiveFactory {
 
-	public static final String ID = "flintstones.gathering.cloud.gathering.perspective";
+	public static final String ID = "flintstones.gathering.cloud.gathering.perspective"; //$NON-NLS-1$
 	
 	public void createInitialLayout(IPageLayout layout) {
 		String editorArea = layout.getEditorArea();

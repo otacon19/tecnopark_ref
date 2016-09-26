@@ -2,6 +2,7 @@ package flintstones.gathering.cloud.mail;
 
 import flintstones.gathering.cloud.APP;
 import flintstones.gathering.cloud.model.User;
+import flintstones.gathering.cloud.nls.Messages;
 import sinbad2.mail.MailAccount;
 import sinbad2.mail.MailAccountManager;
 import sinbad2.mail.MailException;
@@ -14,9 +15,9 @@ public class UserMailGenerator {
 		MailMessage result = null;
 		
 		if (user != null) {
-			String subject = "Bievenido a " + APP.APP_NAME;
-			String text = "Ha sido registrado en " + APP.APP_NAME + ".\nLa información sobre su cuenta y la URL para acceder al sistema son las siguientes:\nURL: " + APP.URL + "\nUsuario: "
-					+ user.getMail() + "\nContraseña: " + user.getPass();
+			String subject = Messages.UserMailGenerator_Welcome_to + APP.APP_NAME;
+			String text = Messages.UserMailGenerator_You_has_been_registered + APP.APP_NAME + Messages.UserMailGenerator_The_account_information_and_your_URL_to_access_to_the_system_are_the_next + APP.URL + Messages.UserMailGenerator_User
+					+ user.getMail() + Messages.UserMailGenerator_Password + user.getPass();
 			result = new MailMessage(user.getMail(), subject, text);
 		}
 		

@@ -28,9 +28,9 @@ public class LinearPieceFunction implements IFragmentFunction {
 	
 	@Override
 	public IFragmentFunction sumFunctions(IFragmentFunction other) {
-		ParameterValidator.notNull(other, "other");
+		ParameterValidator.notNull(other, "other"); //$NON-NLS-1$
 		ParameterValidator.notIllegalElementType(other, new String[] { this.
-				getClass().toString() }, "other");
+				getClass().toString() }, "other"); //$NON-NLS-1$
 		
 		return new LinearPieceFunction(_slope + ((LinearPieceFunction) other)._slope, 
 				_cutOffY + ((LinearPieceFunction) other)._cutOffY);

@@ -150,44 +150,44 @@ public class Unbalanced extends FuzzySet {
 	}
 	
 	public void createUnbalancedDomain(String[] labels, int sr, int sl, int sldensity, int srdensity, int initialDomain) {
-		ParameterValidator.notNull(labels, "labels");
-		ParameterValidator.notEmpty(labels, "labels");
+		ParameterValidator.notNull(labels, "labels"); //$NON-NLS-1$
+		ParameterValidator.notEmpty(labels, "labels"); //$NON-NLS-1$
 		
 		if(ParameterValidator.isNegative(sr)) {
-			throw new IllegalArgumentException("Unbalanced invalid sr");
+			throw new IllegalArgumentException("Unbalanced invalid sr"); //$NON-NLS-1$
 		}
 		
 		if(ParameterValidator.isNegative(sl)) {
-			throw new IllegalArgumentException("Unbalanced invalid sl");
+			throw new IllegalArgumentException("Unbalanced invalid sl"); //$NON-NLS-1$
 		}
 		
 		if(!ParameterValidator.isSameElement(sl + sr + 1, labels.length)) {
-			throw new IllegalArgumentException("Unbalanced invalid cardinality");
+			throw new IllegalArgumentException("Unbalanced invalid cardinality"); //$NON-NLS-1$
 		}
 		
 		if((labels.length % 2) == 0) {
-			throw new IllegalArgumentException("Unbalanced pair cardinality");
+			throw new IllegalArgumentException("Unbalanced pair cardinality"); //$NON-NLS-1$
 		}
 		
 		if(!ParameterValidator.inRange(sldensity, 0, 1)) {
-			throw new IllegalArgumentException("Unbalanced invalid sl density");
+			throw new IllegalArgumentException("Unbalanced invalid sl density"); //$NON-NLS-1$
 		}
 		
 		if(!ParameterValidator.inRange(srdensity, 0, 1)) {
-			throw new IllegalArgumentException("Unbalanced invalid sr density");
+			throw new IllegalArgumentException("Unbalanced invalid sr density"); //$NON-NLS-1$
 		}
 		
 		if((initialDomain % 2) == 0) {
-			throw new IllegalArgumentException("Unbalanced pair initial domain");
+			throw new IllegalArgumentException("Unbalanced pair initial domain"); //$NON-NLS-1$
 		}
 		
 		if(initialDomain < 3) {
-			throw new IllegalArgumentException("Unbalanced invalid initial domain");
+			throw new IllegalArgumentException("Unbalanced invalid initial domain"); //$NON-NLS-1$
 		}
 		
 		int aux = (initialDomain - 1) / 2;
 		if((aux > sl) || (aux > sr)) {
-			throw new IllegalArgumentException("Unbalanced invalid initial domain");
+			throw new IllegalArgumentException("Unbalanced invalid initial domain"); //$NON-NLS-1$
 		}
 		
 		LabelLinguisticDomain leftCenterLabel, rightCenterLabel, centerLabel;

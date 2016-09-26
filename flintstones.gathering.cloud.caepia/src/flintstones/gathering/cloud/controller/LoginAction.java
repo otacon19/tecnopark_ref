@@ -23,7 +23,7 @@ public class LoginAction extends Action {
 		this.window = window;
 		setId(ICommandIds.CMD_LOGIN_ACTION);
 		setActionDefinitionId(ICommandIds.CMD_LOGIN_ACTION);
-		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/sample3.gif"));
+		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/sample3.gif")); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public void run() {

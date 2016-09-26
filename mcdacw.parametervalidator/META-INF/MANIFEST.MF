@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: MCDACW Parameter Validator
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: mcdacw.parametervalidator
 Bundle-Version: 1.0
-Bundle-Vendor: mcdacw
+Bundle-Vendor: %Bundle-Vendor
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: mcdacw.paremetervalidator

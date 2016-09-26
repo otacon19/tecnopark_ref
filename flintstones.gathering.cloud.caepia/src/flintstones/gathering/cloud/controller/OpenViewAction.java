@@ -9,6 +9,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 import flintstones.gathering.cloud.ICommandIds;
+import flintstones.gathering.cloud.nls.Messages;
 import flintstones.gathering.cloud.view.ProblemView;
 import flintstones.gathering.cloud.view.SurveyView;
 
@@ -27,7 +28,7 @@ public class OpenViewAction extends Action {
 		setText(label);
 		setId(ICommandIds.CMD_OPEN);
 		setActionDefinitionId(ICommandIds.CMD_OPEN);
-		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/sample2.gif"));
+		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/sample2.gif")); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public void run() {
@@ -46,7 +47,7 @@ public class OpenViewAction extends Action {
 					RWT.getUISession().setAttribute(viewId, view);
 				}
 			} catch (PartInitException e) {
-				MessageDialog.openError(window.getShell(), "Error", "Error abriendo la vista:" + e.getMessage());
+				MessageDialog.openError(window.getShell(), Messages.OpenViewAction_Error, Messages.OpenViewAction_Open_view_error + e.getMessage());
 			}
 		}
 	}

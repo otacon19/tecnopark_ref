@@ -46,11 +46,11 @@ public class TwoTuple extends LinguisticValuation {
 		int pos = ((FuzzySet) _domain).getLabelSet().getPos(_label);
 		
 		if((pos == 0) && (alpha < 0)) {
-			throw new IllegalArgumentException("Invalid alpha value");
+			throw new IllegalArgumentException("Invalid alpha value"); //$NON-NLS-1$
 		}
 		
 		if((pos == ((FuzzySet) _domain).getLabelSet().getCardinality() - 1) && (alpha > 0)) {
-			throw new IllegalArgumentException("Invalid alpha value");
+			throw new IllegalArgumentException("Invalid alpha value"); //$NON-NLS-1$
 		}
 		
 		_alpha = alpha;
@@ -98,10 +98,10 @@ public class TwoTuple extends LinguisticValuation {
 
 		TwoTuple result = null;
 		
-		ParameterValidator.notNull(fuzzySet, "fuzzySet");
+		ParameterValidator.notNull(fuzzySet, "fuzzySet"); //$NON-NLS-1$
 		
 		if (!fuzzySet.isBLTS()) {
-			throw new IllegalArgumentException("Not BLTS fuzzy set");
+			throw new IllegalArgumentException("Not BLTS fuzzy set"); //$NON-NLS-1$
 		}
 		
 		int thisCardinality = ((FuzzySet) _domain).getLabelSet().getCardinality();
@@ -120,7 +120,7 @@ public class TwoTuple extends LinguisticValuation {
 	
 	@Override
 	public String toString() {
-		return ("[" + _label + ", " + _alpha + "]" + "in " + _domain); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		return ("[" + _label + ", " + _alpha + "]" + "in " + _domain); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 	}
 	
 	@Override
@@ -149,8 +149,8 @@ public class TwoTuple extends LinguisticValuation {
 	
 	@Override
 	public int compareTo(Valuation other) {
-		ParameterValidator.notNull(other, "other");
-		ParameterValidator.notIllegalElementType(other, new String[] { TwoTuple.class.toString()}, "other");
+		ParameterValidator.notNull(other, "other"); //$NON-NLS-1$
+		ParameterValidator.notIllegalElementType(other, new String[] { TwoTuple.class.toString()}, "other"); //$NON-NLS-1$
 		
 		if(_domain.equals(other.getDomain())) {
 			LabelLinguisticDomain otherLabel = ((TwoTuple) other)._label;
@@ -163,7 +163,7 @@ public class TwoTuple extends LinguisticValuation {
 				return aux;
 			}	
 		} else {
-			throw new IllegalArgumentException("Different domains");
+			throw new IllegalArgumentException("Different domains"); //$NON-NLS-1$
 		}
 	}
 	

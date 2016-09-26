@@ -36,16 +36,16 @@ public class Deploy {
 	}
 	
 	private void removeTables(Statement s) throws SQLException {
-		s.executeUpdate("drop table if exists " + DAOUser.TABLE + ";");
-		s.executeUpdate("drop table if exists " + DAOProblem.TABLE + ";");
-		s.executeUpdate("drop table if exists " + DAOProblemCriteria.TABLE + ";");
-		s.executeUpdate("drop table if exists " + DAOProblemAlternatives.TABLE + ";");
-		s.executeUpdate("drop table if exists " + DAOProblemExperts.TABLE + ";");
-		s.executeUpdate("drop table if exists " + DAOProblemAssignments.TABLE + ";");
-		s.executeUpdate("drop table if exists " + DAOProblemDomains.TABLE + ";");
-		s.executeUpdate("drop table if exists " + DAOProblemDomainAssignments.TABLE + ";");
-		s.executeUpdate("drop table if exists " + DAOValuations.TABLE + ";");
-		s.executeUpdate("drop table if exists " + DAOProblemValuations.TABLE + ";");
+		s.executeUpdate("drop table if exists " + DAOUser.TABLE + ";"); //$NON-NLS-1$ //$NON-NLS-2$
+		s.executeUpdate("drop table if exists " + DAOProblem.TABLE + ";"); //$NON-NLS-1$ //$NON-NLS-2$
+		s.executeUpdate("drop table if exists " + DAOProblemCriteria.TABLE + ";"); //$NON-NLS-1$ //$NON-NLS-2$
+		s.executeUpdate("drop table if exists " + DAOProblemAlternatives.TABLE + ";"); //$NON-NLS-1$ //$NON-NLS-2$
+		s.executeUpdate("drop table if exists " + DAOProblemExperts.TABLE + ";"); //$NON-NLS-1$ //$NON-NLS-2$
+		s.executeUpdate("drop table if exists " + DAOProblemAssignments.TABLE + ";"); //$NON-NLS-1$ //$NON-NLS-2$
+		s.executeUpdate("drop table if exists " + DAOProblemDomains.TABLE + ";"); //$NON-NLS-1$ //$NON-NLS-2$
+		s.executeUpdate("drop table if exists " + DAOProblemDomainAssignments.TABLE + ";"); //$NON-NLS-1$ //$NON-NLS-2$
+		s.executeUpdate("drop table if exists " + DAOValuations.TABLE + ";"); //$NON-NLS-1$ //$NON-NLS-2$
+		s.executeUpdate("drop table if exists " + DAOProblemValuations.TABLE + ";"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 	
 	private void createTables(Statement s) throws SQLException {

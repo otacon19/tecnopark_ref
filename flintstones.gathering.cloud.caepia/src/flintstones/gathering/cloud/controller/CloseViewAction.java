@@ -24,7 +24,7 @@ public class CloseViewAction extends Action {
 		setId(ICommandIds.CMD_CLOSE);
 		setActionDefinitionId(ICommandIds.CMD_CLOSE);
 		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
-				"flintstones.gathering.cloud", "/icons/sample2.gif"));
+				"flintstones.gathering.cloud", "/icons/sample2.gif")); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public void run() {

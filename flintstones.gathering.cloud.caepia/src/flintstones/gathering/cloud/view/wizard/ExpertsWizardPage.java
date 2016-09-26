@@ -23,6 +23,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.layout.FillLayout;
 
 import flintstones.gathering.cloud.model.Problem;
+import flintstones.gathering.cloud.nls.Messages;
 
 @SuppressWarnings("serial")
 public class ExpertsWizardPage extends WizardPage {
@@ -31,8 +32,8 @@ public class ExpertsWizardPage extends WizardPage {
 	private TableElement[] model;
 	private boolean pageComplete;
 
-	private static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-			+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+	private static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" //$NON-NLS-1$
+			+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"; //$NON-NLS-1$
 
 	class TableElement {
 		String id;
@@ -53,8 +54,8 @@ public class ExpertsWizardPage extends WizardPage {
 	 * Create the wizard.
 	 */
 	public ExpertsWizardPage() {
-		super("wizardPage");
-		setTitle("Expertos del problema");
+		super("wizardPage"); //$NON-NLS-1$
+		setTitle(Messages.ExpertsWizardPage_Experts_problem);
 		setDescription(null);
 		pageComplete = false;
 	}
@@ -94,7 +95,7 @@ public class ExpertsWizardPage extends WizardPage {
 	class AssignmentLabelProvider extends ColumnLabelProvider {
 		public String getText(Object obj) {
 			String mail = ((TableElement) obj).mail;
-			return (mail != null) ? mail : "Insertar mail del experto";
+			return (mail != null) ? mail : Messages.ExpertsWizardPage_Insert_expert_email;
 		}
 	}
 
@@ -122,15 +123,15 @@ public class ExpertsWizardPage extends WizardPage {
 		@Override
 		protected Object getValue(Object element) {
 			String result = ((TableElement) element).mail;
-			return (result != null) ? result : "";
+			return (result != null) ? result : ""; //$NON-NLS-1$
 		}
 
 		@Override
 		protected void setValue(Object element, Object value) {
 			String mail = String.valueOf(value);
 			if (!mail.matches(EMAIL_PATTERN)) {
-				MessageDialog.openError(getShell(), "Mail inválido",
-						"Mail inválido");
+				MessageDialog.openError(getShell(), Messages.ExpertsWizardPage_Invalid_email,
+						Messages.ExpertsWizardPage_Invalid_email);
 			} else {
 				((TableElement) element).mail = mail;
 				viewer.update(element, null);
@@ -155,12 +156,12 @@ public class ExpertsWizardPage extends WizardPage {
 
 		TableViewerColumn tvc = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tc = tvc.getColumn();
-		tc.setText("Identificador del experto");
+		tc.setText(Messages.ExpertsWizardPage_Expert_id);
 		tvc.setLabelProvider(new ExpertsLabelProvider());
 
 		tvc = new TableViewerColumn(tableViewer, SWT.NONE);
 		tc = tvc.getColumn();
-		tc.setText("Mail del experto");
+		tc.setText(Messages.ExpertsWizardPage_Expert_email);
 		tvc.setLabelProvider(new AssignmentLabelProvider());
 		tvc.setEditingSupport(new AssignmentEditingSupport(tableViewer));
 
@@ -185,11 +186,11 @@ public class ExpertsWizardPage extends WizardPage {
 		while ((pos < model.length) && (pageComplete)) {
 			e = model[pos++];
 			if (e.mail == null) {
-				setErrorMessage("Empty mails");
+				setErrorMessage("Empty mails"); //$NON-NLS-1$
 				pageComplete = false;
 			} else {
 				if (mails.contains(e.mail)) {
-					setErrorMessage("Duplicate mails");
+					setErrorMessage("Duplicate mails"); //$NON-NLS-1$
 					pageComplete = false;
 				} else {
 					mails.add(e.mail);

@@ -21,8 +21,8 @@ public class FragmentFunction {
 	}
 	
 	public void addPiece(NumericRealDomain domain, IFragmentFunction piece) {
-		ParameterValidator.notNull(domain, "domain");
-		ParameterValidator.notNull(piece, "piece");
+		ParameterValidator.notNull(domain, "domain"); //$NON-NLS-1$
+		ParameterValidator.notNull(piece, "piece"); //$NON-NLS-1$
 		
 		double otherMin = domain.getMin();
 		double otherMax = domain.getMax();

@@ -50,8 +50,8 @@ public class RealIntervalValuation extends Valuation {
 	}
 	
 	public void setMinMax(Double min, Double max) {
-		ParameterValidator.notNull(_domain, "domain");
-		ParameterValidator.notDisorder(new double[] { min, max }, "min-max", false);
+		ParameterValidator.notNull(_domain, "domain"); //$NON-NLS-1$
+		ParameterValidator.notDisorder(new double[] { min, max }, "min-max", false); //$NON-NLS-1$
 		
 		_min = min;
 		_max = max;
@@ -87,10 +87,10 @@ public class RealIntervalValuation extends Valuation {
 	@Override
 	public FuzzySet unification(Domain fuzzySet) {
 
-		ParameterValidator.notNull(fuzzySet, "fuzzyset");
+		ParameterValidator.notNull(fuzzySet, "fuzzyset"); //$NON-NLS-1$
 
 		if (!((FuzzySet) fuzzySet).isBLTS()) {
-			throw new IllegalArgumentException("Not BLTS fuzzy set");
+			throw new IllegalArgumentException("Not BLTS fuzzy set"); //$NON-NLS-1$
 		}
 		
 		int cardinality;
@@ -150,15 +150,15 @@ public class RealIntervalValuation extends Valuation {
 	
 	@Override
 	public int compareTo(Valuation other) {
-		ParameterValidator.notNull(other, "other");
-		ParameterValidator.notIllegalElementType(other, new String[] {Integer.class.toString()}, "other");
+		ParameterValidator.notNull(other, "other"); //$NON-NLS-1$
+		ParameterValidator.notIllegalElementType(other, new String[] {Integer.class.toString()}, "other"); //$NON-NLS-1$
 		
 		if(_domain.equals(other.getDomain())) {
 			double middle = (_max + _min) / 2l;
 			double otherMidle = (((RealIntervalValuation) other)._max + ((RealIntervalValuation) other)._min) / 2d;
 			return Double.compare(middle, otherMidle);	
 		} else {
-			throw new IllegalArgumentException("Different domains");
+			throw new IllegalArgumentException("Different domains"); //$NON-NLS-1$
 		}
 	}
 	

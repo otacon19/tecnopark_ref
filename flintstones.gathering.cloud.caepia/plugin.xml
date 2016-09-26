@@ -27,19 +27,19 @@
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective
-            name="Perspectiva de problemas"
+            name="%perspective.name"
             class="flintstones.gathering.cloud.view.ProblemsPerspective"
             id="flintstones.gathering.cloud.problems.perspective">
       </perspective>
       <perspective
             class="flintstones.gathering.cloud.view.FrameworkStructuringPerspective"
             id="flintstones.gathering.cloud.frameworkstructuring.perspective"
-            name="Perspectiva asignación dominios">
+            name="%perspective.name.0">
       </perspective>
       <perspective
             class="flintstones.gathering.cloud.view.GatheringPerspective"
             id="flintstones.gathering.cloud.gathering.perspective"
-            name="Perspectiva de gathering">
+            name="%perspective.name.1">
       </perspective>
    </extension>
    <extension
@@ -49,140 +49,140 @@
             class="flintstones.gathering.cloud.view.ProblemsView"
             icon="icons/sample3.gif"
             id="flintstones.gathering.cloud.view.problemsView"
-            name="Problemas">
+            name="%view.name">
       </view>
       <view
             allowMultiple="true"
             class="flintstones.gathering.cloud.view.ProblemView"
             icon="icons/sample3.gif"
             id="flintstones.gathering.cloud.view.problemView"
-            name="Problema">
+            name="%view.name.0">
       </view>
       <view
             allowMultiple="true"
             class="flintstones.gathering.cloud.view.SurveysView"
             icon="icons/sample3.gif"
             id="flintstones.gathering.cloud.view.surveysView"
-            name="Problemas asignados">
+            name="%view.name.1">
       </view>
       <view
             allowMultiple="true"
             class="flintstones.gathering.cloud.view.SurveyView"
             icon="icons/sample3.gif"
             id="flintstones.gathering.cloud.view.surveyView"
-            name="Recopilación de información">
+            name="%view.name.2">
       </view>
       <view
             allowMultiple="true"
             class="flintstones.gathering.cloud.view.frameworkstructuring.DomainAssignmentView"
             icon="icons/sample3.gif"
             id="flintstones.gathering.cloud.view.domainassignments"
-            name="Asignación dominios">
+            name="%view.name.3">
       </view>
       <view
             allowMultiple="true"
             class="flintstones.gathering.cloud.view.frameworkstructuring.ElementAssignmentView"
             icon="icons/sample3.gif"
             id="flintstones.gathering.cloud.view.elementassignments"
-            name="Asignación de elementos">
+            name="%view.name.4">
       </view>
       <view
             allowMultiple="true"
             class="flintstones.gathering.cloud.view.frameworkstructuring.DomainIndexView"
             icon="icons/sample3.gif"
             id="flintstones.gathering.cloud.view.domainindex"
-            name="Índices de dominios">
+            name="%view.name.5">
       </view>
       <view
             allowMultiple="true"
             class="flintstones.gathering.cloud.view.frameworkstructuring.DomainView"
             icon="icons/sample3.gif"
             id="flintstones.gathering.cloud.view.domainview"
-            name="Dominios">
+            name="%view.name.6">
       </view>
       <view
             allowMultiple="true"
             class="flintstones.gathering.cloud.view.ValuationView"
             icon="icons/sample3.gif"
             id="flintstones.gathering.cloud.view.valuationview"
-            name="Valoración">
+            name="%view.name.7">
       </view>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
       <category
-            name="Gathering"
+            name="%category.name"
             id="flintstones.gathering.cloud.category">
       </category>
       <category
             id="flintstones.gathering.cloud.caepia.category.fe"
-            name="FrameworkStructuring">
+            name="%category.name.0">
       </category>
       <command
-            name="Open view"
-            description="Open view"
+            name="%command.name"
+            description="%command.description"
             categoryId="flintstones.gathering.cloud.category"
             id="flintstones.gathering.cloud.open">
       </command>
       <command
             categoryId="flintstones.gathering.cloud.category"
-            description="Import a problem"
+            description="%command.description.0"
             id="flintstones.gathering.cloud.importProblem"
-            name="Import problem">
+            name="%command.name.0">
       </command>
       <command
             categoryId="flintstones.gathering.cloud.category"
-            description="Close view"
+            description="%command.description.1"
             id="flintstones.gathering.cloud.close"
-            name="Close view">
+            name="%command.name.1">
       </command>
       <command
             categoryId="flintstones.gathering.cloud.caepia.category.fe"
-            description="Show framework structuring perspepctive"
+            description="%command.description.2"
             id="flintstones.gathering.cloud.openFrameworkStructuringPerspective"
-            name="Show framework structuring perspective">
+            name="%command.name.2">
       </command>
       <command
             categoryId="flintstones.gathering.cloud.category"
-            description="Show gathering perspective"
+            description="%command.description.3"
             id="flintstones.gathering.cloud.openGatheringPerspective"
-            name="Show gathering">
+            name="%command.name.3">
       </command>
       <command
             categoryId="flintstones.gathering.cloud.category"
-            description="Show problems perspective"
+            description="%command.description.4"
             id="flintstones.gathering.cloud.openProblemsPerspective"
-            name="Show problems">
+            name="%command.name.4">
       </command>
       <command
             categoryId="flintstones.gathering.cloud.category"
-            description="Refresh info"
+            description="%command.description.5"
             id="flintstones.gathering.cloud.refreshAction"
-            name="Refresh info">
+            name="%command.name.5">
       </command>
       <command
             categoryId="flintstones.gathering.cloud.category"
-            description="Import a problem"
+            description="%command.description.6"
             id="flintstones.gathering.cloud.importProblemMenu"
-            name="Import problem in menu">
+            name="%command.name.6">
       </command>
       <command
             categoryId="flintstones.gathering.cloud.category"
-            description="User account"
+            description="%command.description.7"
             id="flintstones.gathering.cloud.userAccount"
-            name="User account">
+            name="%command.name.7">
       </command>
       <command
             categoryId="flintstones.gathering.cloud.category"
-            description="Export a problem"
+            description="%command.description.8"
             id="flintstones.gathering.cloud.exportProblem"
-            name="Export problem">
+            name="%command.name.8">
       </command>
       <command
             categoryId="flintstones.gathering.cloud.category"
-            description="Export a problem"
+            description="%command.description.9"
             id="flintstones.gathering.cloud.exportProblemMenu"
-            name="Export problem in menu">
+            name="%command.name.9">
       </command>
    </extension>
    <extension
@@ -191,7 +191,7 @@
             favicon="icons/favicon.ico"
             id="flintstones.gathering.cloud.branding"
             themeId="org.eclipse.rap.design.example.business.theme"
-            title="FLINTSTONES gathering cloud">
+            title="%branding.title">
          <presentationFactory
                defaultLayoutId="org.eclipse.rap.design.example.business.layout"
                name="Business PresentationFactory"
@@ -207,7 +207,7 @@
          point="org.eclipse.core.runtime.products">
       <product
             application="flintstones.gathering.cloud.app"
-            name="flintstones.gathering.cloud">
+            name="%product.name">
          <property
                name="appName"
                value="flintstones.gathering.cloud">
@@ -219,7 +219,7 @@
          point="org.eclipse.core.runtime.products">
       <product
             application="flintstones.gathering.cloud.app"
-            name="flintstones.gathering.cloud">
+            name="%product.name.0">
       </product>
    </extension>
    <extension

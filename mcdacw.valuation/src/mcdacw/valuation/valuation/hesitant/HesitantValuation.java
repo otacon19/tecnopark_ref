@@ -10,6 +10,7 @@ import mcdacw.paremetervalidator.ParameterValidator;
 import mcdacw.valuation.domain.Domain;
 import mcdacw.valuation.domain.fuzzyset.FuzzySet;
 import mcdacw.valuation.domain.fuzzyset.label.LabelLinguisticDomain;
+import mcdacw.valuation.nls.Messages;
 import mcdacw.valuation.valuation.Valuation;
 
 public class HesitantValuation extends Valuation {
@@ -38,16 +39,16 @@ public class HesitantValuation extends Valuation {
 
 	@Override
 	public void setDomain(Domain domain) {
-		ParameterValidator.notNull(domain, "domain");
-		ParameterValidator.notIllegalElementType(domain, new String[] { FuzzySet.class.toString() }, "domain");
-		ParameterValidator.notEmpty(((FuzzySet) domain).getLabelSet().getLabels().toArray(), "domain");
+		ParameterValidator.notNull(domain, "domain"); //$NON-NLS-1$
+		ParameterValidator.notIllegalElementType(domain, new String[] { FuzzySet.class.toString() }, "domain"); //$NON-NLS-1$
+		ParameterValidator.notEmpty(((FuzzySet) domain).getLabelSet().getLabels().toArray(), "domain"); //$NON-NLS-1$
 
 		_domain = (FuzzySet) domain;
 	}
 
 	public void setLabel(int pos) {
 		LabelLinguisticDomain newLabel = ((FuzzySet) _domain).getLabelSet().getLabel(pos);
-		ParameterValidator.notNull(newLabel, "newLabel");
+		ParameterValidator.notNull(newLabel, "newLabel"); //$NON-NLS-1$
 
 		_label = newLabel;
 		disableRelations();
@@ -55,20 +56,20 @@ public class HesitantValuation extends Valuation {
 
 	public void setLabel(String name) {
 		LabelLinguisticDomain newLabel = ((FuzzySet) _domain).getLabelSet().getLabel(name);
-		ParameterValidator.notNull(newLabel, "newLabel");
+		ParameterValidator.notNull(newLabel, "newLabel"); //$NON-NLS-1$
 
 		_label = newLabel;
 		disableRelations();
 	}
 
 	public void setLabel(LabelLinguisticDomain label) {
-		ParameterValidator.notNull(label, "label");
+		ParameterValidator.notNull(label, "label"); //$NON-NLS-1$
 
 		if (((FuzzySet) _domain).getLabelSet().containsLabel(label)) {
 			_label = label;
 			disableRelations();
 		} else {
-			throw new IllegalArgumentException("Hesitant valuation label not contains in domain");
+			throw new IllegalArgumentException("Hesitant valuation label not contains in domain"); //$NON-NLS-1$
 		}
 	}
 
@@ -77,11 +78,11 @@ public class HesitantValuation extends Valuation {
 	}
 
 	public void setUnaryRelation(EUnaryRelationType unaryRelation, LabelLinguisticDomain term) {
-		ParameterValidator.notNull(unaryRelation, "unaryRelation");
-		ParameterValidator.notNull(term, "term");
+		ParameterValidator.notNull(unaryRelation, "unaryRelation"); //$NON-NLS-1$
+		ParameterValidator.notNull(term, "term"); //$NON-NLS-1$
 
 		if (!((FuzzySet) _domain).getLabelSet().containsLabel(term)) {
-			throw new IllegalArgumentException("Hesitant valuation label not contains in domain");
+			throw new IllegalArgumentException("Hesitant valuation label not contains in domain"); //$NON-NLS-1$
 		}
 
 		_unaryRelation = unaryRelation;
@@ -100,19 +101,19 @@ public class HesitantValuation extends Valuation {
 	}
 
 	public void setBinaryRelation(LabelLinguisticDomain lowerTerm, LabelLinguisticDomain upperTerm) {
-		ParameterValidator.notNull(lowerTerm, "lowerTerm");
-		ParameterValidator.notNull(upperTerm, "upperTerm");
+		ParameterValidator.notNull(lowerTerm, "lowerTerm"); //$NON-NLS-1$
+		ParameterValidator.notNull(upperTerm, "upperTerm"); //$NON-NLS-1$
 
 		if (!((FuzzySet) _domain).getLabelSet().containsLabel(lowerTerm)) {
-			throw new IllegalArgumentException("Hesitant valuation lower term not contains in domain");
+			throw new IllegalArgumentException("Hesitant valuation lower term not contains in domain"); //$NON-NLS-1$
 		}
 
 		if (!((FuzzySet) _domain).getLabelSet().containsLabel(upperTerm)) {
-			throw new IllegalArgumentException("Hesitant valuation upper term not contains in domain");
+			throw new IllegalArgumentException("Hesitant valuation upper term not contains in domain"); //$NON-NLS-1$
 		}
 
 		if (upperTerm.compareTo(lowerTerm) <= 0) {
-			throw new IllegalArgumentException("Hesitant valuation upper term is bigger than lower term");
+			throw new IllegalArgumentException("Hesitant valuation upper term is bigger than lower term"); //$NON-NLS-1$
 		}
 
 		_lowerTerm = lowerTerm;
@@ -124,12 +125,12 @@ public class HesitantValuation extends Valuation {
 
 	public void setBinaryRelation(int lowerTermPos, int upperTermPos) {
 		LabelLinguisticDomain lowerTerm = ((FuzzySet) _domain).getLabelSet().getLabel(lowerTermPos);
-		ParameterValidator.notNull(lowerTerm, "lowerTerm");
+		ParameterValidator.notNull(lowerTerm, "lowerTerm"); //$NON-NLS-1$
 		LabelLinguisticDomain upperTerm = ((FuzzySet) _domain).getLabelSet().getLabel(upperTermPos);
-		ParameterValidator.notNull(upperTerm, "upperTerm");
+		ParameterValidator.notNull(upperTerm, "upperTerm"); //$NON-NLS-1$
 
 		if (upperTermPos <= lowerTermPos) {
-			throw new IllegalArgumentException("Hesitant valuation upper term is bigger than lower term");
+			throw new IllegalArgumentException("Hesitant valuation upper term is bigger than lower term"); //$NON-NLS-1$
 		}
 
 		_lowerTerm = lowerTerm;
@@ -141,12 +142,12 @@ public class HesitantValuation extends Valuation {
 
 	public void setBinaryRelation(String lowerTermName, String upperTermName) {
 		LabelLinguisticDomain lowertTerm = ((FuzzySet) _domain).getLabelSet().getLabel(lowerTermName);
-		ParameterValidator.notNull(lowertTerm, "lowerTerm");
+		ParameterValidator.notNull(lowertTerm, "lowerTerm"); //$NON-NLS-1$
 		LabelLinguisticDomain upperTerm = ((FuzzySet) _domain).getLabelSet().getLabel(upperTermName);
-		ParameterValidator.notNull(upperTerm, "upperTerm");
+		ParameterValidator.notNull(upperTerm, "upperTerm"); //$NON-NLS-1$
 
 		if (((FuzzySet) _domain).getLabelSet().getPos(lowerTermName) > ((FuzzySet) _domain).getLabelSet().getPos(upperTermName)) {
-			throw new IllegalArgumentException("Hesitant valuation upper term is bigger than lower term");
+			throw new IllegalArgumentException("Hesitant valuation upper term is bigger than lower term"); //$NON-NLS-1$
 		}
 
 		_lowerTerm = lowertTerm;
@@ -238,11 +239,11 @@ public class HesitantValuation extends Valuation {
 	@Override
 	public String toString() {
 		if (isPrimary()) {
-			return (_label + "in" + _domain.toString());
+			return (_label + Messages.getString("HesitantValuation.in") + _domain.toString()); //$NON-NLS-1$
 		} else if (isUnary()) {
-			return (_unaryRelation.toString() + " " + _term + "in" + _domain.toString()); //$NON-NLS-1$
+			return (_unaryRelation.toString() + " " + _term + Messages.getString("HesitantValuation.in") + _domain.toString()); //$NON-NLS-1$ //$NON-NLS-2$
 		} else if (isBinary()) {
-			return ("Between" + _lowerTerm + "and" + _upperTerm + "in" + _domain.toString());
+			return (Messages.getString("HesitantValuation.Between") + _lowerTerm + Messages.getString("HesitantValuation.and") + _upperTerm + Messages.getString("HesitantValuation.in") + _domain.toString()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		} else {
 			return ""; //$NON-NLS-1$
 		}
@@ -267,8 +268,8 @@ public class HesitantValuation extends Valuation {
 
 	@Override
 	public int compareTo(Valuation other) {
-		ParameterValidator.notNull(other, "other");
-		ParameterValidator.notIllegalElementType(other, new String[] { HesitantValuation.class.toString() }, "other");
+		ParameterValidator.notNull(other, "other"); //$NON-NLS-1$
+		ParameterValidator.notIllegalElementType(other, new String[] { HesitantValuation.class.toString() }, "other"); //$NON-NLS-1$
 
 		if (_domain.equals(other.getDomain())) {
 			int[] tEnvelopeIndex = getEnvelopeIndex();
@@ -299,7 +300,7 @@ public class HesitantValuation extends Valuation {
 				return -1;
 			}
 		} else {
-			throw new IllegalArgumentException("Hesitant valuation in different domains");
+			throw new IllegalArgumentException("Hesitant valuation in different domains"); //$NON-NLS-1$
 		}
 	}
 
@@ -315,7 +316,7 @@ public class HesitantValuation extends Valuation {
 				aux = aux.substring(0, 1).toUpperCase() + aux.substring(1);
 				return aux + " " + getTerm().getName(); //$NON-NLS-1$
 			} else {
-				return "Between" + " " + getLowerTerm().getName() + " " + "and" + " " + getUpperTerm().getName();  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-5$
+				return "Between" + " " + getLowerTerm().getName() + " " + Messages.getString("HesitantValuation.and") + " " + getUpperTerm().getName();  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 			}
 		}
 

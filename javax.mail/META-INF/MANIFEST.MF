@@ -1,12 +1,12 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Javax mail
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: javax.mail
 Bundle-Version: 1.4.0
 Bundle-ClassPath: javax.activation_1.1.0.v201211130549.jar,
  javax.mail.glassfish_1.4.1.v201108011116.jar,
  javax.mail_1.4.0.v201005080615.jar
-Bundle-Vendor: Java.net
+Bundle-Vendor: %Bundle-Vendor
 Export-Package: com.sun.mail.handlers,
  com.sun.mail.iap,
  com.sun.mail.imap,

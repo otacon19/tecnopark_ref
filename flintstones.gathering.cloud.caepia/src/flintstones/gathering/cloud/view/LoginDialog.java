@@ -18,6 +18,7 @@ import org.eclipse.swt.widgets.Text;
 import flintstones.gathering.cloud.APP;
 import flintstones.gathering.cloud.dao.DAOUser;
 import flintstones.gathering.cloud.model.User;
+import flintstones.gathering.cloud.nls.Messages;
 
 @SuppressWarnings("serial")
 public class LoginDialog extends TitleAreaDialog {
@@ -36,14 +37,14 @@ public class LoginDialog extends TitleAreaDialog {
 	@Override
 	public void create() {
 		super.create();
-		setTitle("Login");
-		setMessage("Insertar datos de usuario", IMessageProvider.INFORMATION);
+		setTitle("Login"); //$NON-NLS-1$
+		setMessage(Messages.LoginDialog_Insert_user_data, IMessageProvider.INFORMATION);
 	}
 
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, REGISTER_ID, "Registrar", false);
-		createButton(parent, IDialogConstants.OK_ID, "Login", true);
+		createButton(parent, REGISTER_ID, Messages.LoginDialog_Register, false);
+		createButton(parent, IDialogConstants.OK_ID, "Login", true); //$NON-NLS-1$
 
 		getButton(REGISTER_ID).addSelectionListener(new SelectionAdapter() {
 
@@ -62,7 +63,7 @@ public class LoginDialog extends TitleAreaDialog {
 		});
 
 		if (APP.DEVELOP) {
-			createButton(parent, IDialogConstants.ABORT_ID, "Modo de desarrollo", false);
+			createButton(parent, IDialogConstants.ABORT_ID, Messages.LoginDialog_Develop_mode, false);
 			getButton(IDialogConstants.ABORT_ID).addSelectionListener(
 					new SelectionAdapter() {
 						@Override
@@ -86,19 +87,19 @@ public class LoginDialog extends TitleAreaDialog {
 		Label mailLabel = new Label(container, SWT.NONE);
 		mailLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
 				false, 1, 1));
-		mailLabel.setText("mail");
+		mailLabel.setText(Messages.LoginDialog_email);
 
 		_mailText = new Text(container, SWT.BORDER);
 		_mailText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		_mailText.setText("alabella@ujaen.es");
+		_mailText.setText("alabella@ujaen.es"); //$NON-NLS-1$
 		
 		Label passLabel = new Label(container, SWT.NONE);
 		passLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,false, 1, 1));
-		passLabel.setText("contraseña");
+		passLabel.setText(Messages.LoginDialog_password);
 
 		_passText = new Text(container, SWT.BORDER | SWT.PASSWORD);
 		_passText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		_passText.setText("alabella");
+		_passText.setText("alabella"); //$NON-NLS-1$
 
 		Composite composite = new Composite(container, SWT.NONE);
 		GridLayout gl_composite = new GridLayout(1, false);
@@ -115,7 +116,7 @@ public class LoginDialog extends TitleAreaDialog {
 		DAOUser dao = DAOUser.getDAO();
 		_user = dao.getUser(_mailText.getText(), _passText.getText());
 		if (_user == null) {
-			MessageDialog.openError(getShell(), "Usuario inválido", "Usuario inválido");
+			MessageDialog.openError(getShell(), Messages.LoginDialog_Invalid_user, Messages.LoginDialog_Invalid_user);
 		} else {
 			super.okPressed();
 		}

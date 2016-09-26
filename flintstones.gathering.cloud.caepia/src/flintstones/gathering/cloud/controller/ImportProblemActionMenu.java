@@ -12,6 +12,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 import flintstones.gathering.cloud.ICommandIds;
 import flintstones.gathering.cloud.model.Problem;
+import flintstones.gathering.cloud.nls.Messages;
 import flintstones.gathering.cloud.view.ProblemsView;
 import flintstones.gathering.cloud.view.wizard.ImportWizard;
 import flintstones.gathering.cloud.xml.ReadXML;
@@ -25,27 +26,27 @@ public class ImportProblemActionMenu extends Action {
 	private final IWorkbenchWindow window;
 
 	public ImportProblemActionMenu(IWorkbenchWindow window) {
-		super("Importar problema");
+		super(Messages.ImportProblemActionMenu_Import_problem);
 		this.window = window;
-		setToolTipText("Importar problema");
-		setText("Importar problema");
+		setToolTipText(Messages.ImportProblemActionMenu_Import_problem);
+		setText(Messages.ImportProblemActionMenu_Import_problem);
 		setId(ICommandIds.CMD_IMPORT_PROBLEM_MENU);
 		setActionDefinitionId(ICommandIds.CMD_IMPORT_PROBLEM_MENU);
 		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
-				"flintstones.gathering.cloud", "/icons/import.png"));
+				"flintstones.gathering.cloud", "/icons/import.png")); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public void run() {
 		FileDialog fileDialog = new FileDialog(window.getShell(), SWT.TITLE);
-		fileDialog.setText("Importar problema");
+		fileDialog.setText(Messages.ImportProblemActionMenu_Import_problem);
 		fileDialog.open();
 		String[] fileNames = fileDialog.getFileNames();
 
 		if (fileNames.length == 1) {
 			String file = fileNames[0];
-			if (!file.endsWith("flintstones")) {
-				MessageDialog.openError(window.getShell(), "Archivo inválido",
-						"Archivo inválido");
+			if (!file.endsWith("flintstones")) { //$NON-NLS-1$
+				MessageDialog.openError(window.getShell(), Messages.ImportProblemActionMenu_Invalid_file,
+						Messages.ImportProblemActionMenu_Invalid_file);
 			} else {
 				try {
 					ReadXML readXML = new ReadXML(file);
@@ -57,8 +58,8 @@ public class ImportProblemActionMenu extends Action {
 						pv.refreshModel();
 					}
 				} catch (Exception e) {
-					MessageDialog.openError(window.getShell(), "Archivo inválido",
-							"Archivo inválido");
+					MessageDialog.openError(window.getShell(), Messages.ImportProblemActionMenu_Invalid_file,
+							Messages.ImportProblemActionMenu_Invalid_file);
 				}
 			}
 		}

@@ -10,6 +10,7 @@ import flintstones.gathering.cloud.mail.ProblemMailGenerator;
 import flintstones.gathering.cloud.model.Problem;
 import flintstones.gathering.cloud.model.ProblemAssignment;
 import flintstones.gathering.cloud.model.User;
+import flintstones.gathering.cloud.nls.Messages;
 
 public class ImportWizard extends Wizard {
 
@@ -20,7 +21,7 @@ public class ImportWizard extends Wizard {
 	private Problem _problem;
 	
 	public ImportWizard(Problem problem) {
-		setWindowTitle("Asistente para importar problema");
+		setWindowTitle(Messages.ImportWizard_Import_problem_assistant);
 		
 		_problem = problem;
 	}

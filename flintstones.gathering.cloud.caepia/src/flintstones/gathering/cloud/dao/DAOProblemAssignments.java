@@ -17,11 +17,11 @@ import sinbad2.database.DatabaseManager;
 
 public class DAOProblemAssignments {
 
-	public static final String TABLE = "assignments";
-	public static final String PROBLEM = "problem";
-	public static final String ID = "id";
-	public static final String USER = "user";
-	public static final String MAKE = "make";
+	public static final String TABLE = "assignments"; //$NON-NLS-1$
+	public static final String PROBLEM = "problem"; //$NON-NLS-1$
+	public static final String ID = "id"; //$NON-NLS-1$
+	public static final String USER = "user"; //$NON-NLS-1$
+	public static final String MAKE = "make"; //$NON-NLS-1$
 
 	private static DAOProblemAssignments _dao = null;
 
@@ -40,10 +40,10 @@ public class DAOProblemAssignments {
 	public static String getCreationTableSql() {
 		String result = null;
 
-		result = "create table " + TABLE + "(" + PROBLEM
-				+ " VARCHAR(50) NOT NULL, " + ID + " VARCHAR(50) NOT NULL, "
-				+ USER + " VARCHAR(255), " + MAKE + " VARCHAR(5), PRIMARY KEY("
-				+ PROBLEM + "," + ID + "));";
+		result = "create table " + TABLE + "(" + PROBLEM //$NON-NLS-1$ //$NON-NLS-2$
+				+ " VARCHAR(50) NOT NULL, " + ID + " VARCHAR(50) NOT NULL, " //$NON-NLS-1$ //$NON-NLS-2$
+				+ USER + " VARCHAR(255), " + MAKE + " VARCHAR(5), PRIMARY KEY(" //$NON-NLS-1$ //$NON-NLS-2$
+				+ PROBLEM + "," + ID + "));"; //$NON-NLS-1$ //$NON-NLS-2$
 
 		return result;
 	}
@@ -76,8 +76,8 @@ public class DAOProblemAssignments {
 					user = assignment.getUser();
 					userId = user.getMail();
 					make = assignment.getMake();
-					st.executeUpdate("insert into " + TABLE + " values ('" + id + "','" + problemUserId + "','" + userId + "','"
-							+ Boolean.toString(make) + "')");
+					st.executeUpdate("insert into " + TABLE + " values ('" + id + "','" + problemUserId + "','" + userId + "','" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+							+ Boolean.toString(make) + "')"); //$NON-NLS-1$
 				}
 				DAOValuations.getDAO().createProblemValuations(problem);
 			}
@@ -91,8 +91,8 @@ public class DAOProblemAssignments {
 
 		try {
 			Connection c = getConnection();
-			PreparedStatement pst = c.prepareStatement("delete from " + TABLE
-					+ " where " + PROBLEM + " = ?");
+			PreparedStatement pst = c.prepareStatement("delete from " + TABLE //$NON-NLS-1$
+					+ " where " + PROBLEM + " = ?"); //$NON-NLS-1$ //$NON-NLS-2$
 			pst.setString(1, problem);
 			pst.executeUpdate();
 			pst.close();
@@ -112,8 +112,8 @@ public class DAOProblemAssignments {
 			Connection c = getConnection();
 			Statement st = c.createStatement();
 
-			String select = "select * from " + TABLE + " where " + PROBLEM
-					+ "='" + problem + "';";
+			String select = "select * from " + TABLE + " where " + PROBLEM //$NON-NLS-1$ //$NON-NLS-2$
+					+ "='" + problem + "';"; //$NON-NLS-1$ //$NON-NLS-2$
 			ResultSet rs = st.executeQuery(select);
 			DAOUser daoUser = DAOUser.getDAO();
 			DAOValuations daoValuations = DAOValuations.getDAO();
@@ -145,8 +145,8 @@ public class DAOProblemAssignments {
 			Connection c = getConnection();
 			Statement st = c.createStatement();
 
-			String select = "select * from " + TABLE + " where " + USER + "='"
-					+ user.getMail() + "';";
+			String select = "select * from " + TABLE + " where " + USER + "='" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					+ user.getMail() + "';"; //$NON-NLS-1$
 			ResultSet rs = st.executeQuery(select);
 
 			DAOProblem daoProblem = DAOProblem.getDAO();
@@ -170,10 +170,10 @@ public class DAOProblemAssignments {
 			Statement st = c.createStatement();
 
 			User user = assignment.getUser();
-			String uId = (user != null) ? user.getMail() : "";
-			String update = "update " + TABLE + " set " + USER + " = '" + uId
-					+ "' where " + PROBLEM + " = '" + problem.getId()
-					+ "' and " + ID + " = '" + assignment.getId() + "';";
+			String uId = (user != null) ? user.getMail() : ""; //$NON-NLS-1$
+			String update = "update " + TABLE + " set " + USER + " = '" + uId //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					+ "' where " + PROBLEM + " = '" + problem.getId() //$NON-NLS-1$ //$NON-NLS-2$
+					+ "' and " + ID + " = '" + assignment.getId() + "';"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			st.executeUpdate(update);
 			st.close();
 			DAOValuations.getDAO().setValuations(problem, assignment);
@@ -190,11 +190,11 @@ public class DAOProblemAssignments {
 			Statement st = c.createStatement();
 
 			boolean make = assignment.getMake();
-			String update = "update " + TABLE + " set " + MAKE + " = '"
-					+ Boolean.toString(make) + "' where " + PROBLEM + " = '"
-					+ problem.getId() + "' and " + ID + " = '"
-					+ assignment.getId() + "' and " + USER + " = '"
-					+ assignment.getUser().getMail() + "';";
+			String update = "update " + TABLE + " set " + MAKE + " = '" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					+ Boolean.toString(make) + "' where " + PROBLEM + " = '" //$NON-NLS-1$ //$NON-NLS-2$
+					+ problem.getId() + "' and " + ID + " = '" //$NON-NLS-1$ //$NON-NLS-2$
+					+ assignment.getId() + "' and " + USER + " = '" //$NON-NLS-1$ //$NON-NLS-2$
+					+ assignment.getUser().getMail() + "';"; //$NON-NLS-1$
 			st.executeUpdate(update);
 			st.close();
 			
@@ -222,7 +222,7 @@ public class DAOProblemAssignments {
 			Connection c = getConnection();
 			Statement st = c.createStatement();
 
-			String select = "select * from " + TABLE + " where " + PROBLEM + "='" + problem + "';";
+			String select = "select * from " + TABLE + " where " + PROBLEM + "='" + problem + "';"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			ResultSet rs = st.executeQuery(select);
 						
 			while (rs.next()) {

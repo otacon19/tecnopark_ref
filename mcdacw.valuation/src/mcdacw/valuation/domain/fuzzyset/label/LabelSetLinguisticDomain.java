@@ -26,7 +26,7 @@ public class LabelSetLinguisticDomain implements Cloneable {
 	}
 	
 	public void setLabels(List<LabelLinguisticDomain> labels) {
-		ParameterValidator.notNull(labels, "labels");
+		ParameterValidator.notNull(labels, "labels"); //$NON-NLS-1$
 		
 		for(LabelLinguisticDomain label: labels) {
 			addLabel(label);
@@ -44,19 +44,19 @@ public class LabelSetLinguisticDomain implements Cloneable {
 	}
 	
 	public void addLabel(int pos, LabelLinguisticDomain label) {
-		ParameterValidator.notNull(label, "label");
-		ParameterValidator.notInvalidSize(pos, 0, getCardinality(), "cardinality");
+		ParameterValidator.notNull(label, "label"); //$NON-NLS-1$
+		ParameterValidator.notInvalidSize(pos, 0, getCardinality(), "cardinality"); //$NON-NLS-1$
 		
 		if(containsLabel(label.getName())) {
-			throw new IllegalArgumentException("Duplicate label name");
+			throw new IllegalArgumentException("Duplicate label name"); //$NON-NLS-1$
 		}
 		
 		_labels.add(pos, label);
 	}
 	
 	public void removeLabel(int pos) {
-		ParameterValidator.notEmpty(_labels.toArray(), "labels");
-		ParameterValidator.notInvalidSize(pos, 0, getCardinality() - 1, "cardinality");
+		ParameterValidator.notEmpty(_labels.toArray(), "labels"); //$NON-NLS-1$
+		ParameterValidator.notInvalidSize(pos, 0, getCardinality() - 1, "cardinality"); //$NON-NLS-1$
 		
 		_labels.remove(pos);
 	}
@@ -87,8 +87,8 @@ public class LabelSetLinguisticDomain implements Cloneable {
 	}
 	
 	public LabelLinguisticDomain getLabel(int pos) {
-		ParameterValidator.notEmpty(_labels.toArray(), "labels");
-		ParameterValidator.notInvalidSize(pos, 0, getCardinality() - 1, "cardinality");
+		ParameterValidator.notEmpty(_labels.toArray(), "labels"); //$NON-NLS-1$
+		ParameterValidator.notInvalidSize(pos, 0, getCardinality() - 1, "cardinality"); //$NON-NLS-1$
 		
 		return _labels.get(pos);
 	}

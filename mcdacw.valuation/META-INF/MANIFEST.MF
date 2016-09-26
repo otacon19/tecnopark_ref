@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: MCDACW Valuation
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: flintstones.valuation
 Bundle-Version: 1.0
-Bundle-Vendor: mcdacw
+Bundle-Vendor: %Bundle-Vendor
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: mcdacw.parametervalidator;bundle-version="1.0.0";visibility:=reexport,
  org.jfree.chart.jfreechart;bundle-version="1.0.0"

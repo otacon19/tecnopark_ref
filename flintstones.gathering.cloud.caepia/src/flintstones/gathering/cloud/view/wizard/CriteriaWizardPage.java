@@ -13,6 +13,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.layout.FillLayout;
 
 import flintstones.gathering.cloud.model.Problem;
+import flintstones.gathering.cloud.nls.Messages;
 
 @SuppressWarnings("serial")
 public class CriteriaWizardPage extends WizardPage {
@@ -23,8 +24,8 @@ public class CriteriaWizardPage extends WizardPage {
 	 * Create the wizard.
 	 */
 	public CriteriaWizardPage() {
-		super("wizardPage");
-		setTitle("Criterios del problema");
+		super("wizardPage"); //$NON-NLS-1$
+		setTitle(Messages.CriteriaWizardPage_Criteria_problem);
 		setDescription(null);
 	}
 	
@@ -66,7 +67,7 @@ public class CriteriaWizardPage extends WizardPage {
 		
 		TableViewerColumn tvc = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tc = tvc.getColumn();
-		tc.setText("Criterios");
+		tc.setText(Messages.CriteriaWizardPage_Criteria);
 		tvc.setLabelProvider(new CriteriaLabelProvider());
 		
 		tableViewer.setInput(((ImportWizard) getWizard()).getProblem());

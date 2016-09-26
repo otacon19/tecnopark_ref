@@ -57,11 +57,11 @@ public class FuzzySet extends Linguistic {
 	}
 	
 	public void setValues(List<Double> values) {
-		ParameterValidator.notNull(values, "values");
+		ParameterValidator.notNull(values, "values"); //$NON-NLS-1$
 		int cardinality = _labelSet.getCardinality();
-		ParameterValidator.notInvalidSize(values.size(), cardinality, cardinality, "cardinality");
+		ParameterValidator.notInvalidSize(values.size(), cardinality, cardinality, "cardinality"); //$NON-NLS-1$
 		for(Double value: values) {
-			ParameterValidator.notNull(value, "value");
+			ParameterValidator.notNull(value, "value"); //$NON-NLS-1$
 			ParameterValidator.notInvalidSize(value, 0.0, 1.0, "value"); //$NON-NLS-1$
 		}
 		
@@ -69,18 +69,18 @@ public class FuzzySet extends Linguistic {
 	}
 	
 	public void setValue(int pos, Double value) {
-		ParameterValidator.notEmpty(_labelSet.getLabels().toArray(), "labels");
-		ParameterValidator.notInvalidSize(pos, 0, _labelSet.getCardinality() - 1, "cardinality");
+		ParameterValidator.notEmpty(_labelSet.getLabels().toArray(), "labels"); //$NON-NLS-1$
+		ParameterValidator.notInvalidSize(pos, 0, _labelSet.getCardinality() - 1, "cardinality"); //$NON-NLS-1$
 		
-		ParameterValidator.notNull(value, "value");
+		ParameterValidator.notNull(value, "value"); //$NON-NLS-1$
 		ParameterValidator.notInvalidSize(value, 0.0, 1.0, "value"); //$NON-NLS-1$
 		
 		_values.set(pos, value);
 	}
 	
 	public void setValue(String name, Double value) {
-		ParameterValidator.notNull(name, "name");
-		ParameterValidator.notNull(value, "value");
+		ParameterValidator.notNull(name, "name"); //$NON-NLS-1$
+		ParameterValidator.notNull(value, "value"); //$NON-NLS-1$
 		ParameterValidator.notInvalidSize(value, 0.0, 1.0, "value"); //$NON-NLS-1$
 		
 		int pos = _labelSet.getPos(name);
@@ -88,13 +88,13 @@ public class FuzzySet extends Linguistic {
 		if(pos != -1) {
 			setValue(pos, value);
 		} else {
-			throw new IllegalArgumentException("Inexistent element in fuzzyset");
+			throw new IllegalArgumentException("Inexistent element in fuzzyset"); //$NON-NLS-1$
 		}
 	}
 	
 	public void setValue(LabelLinguisticDomain label, Double value) {
-		ParameterValidator.notNull(label, "label");
-		ParameterValidator.notNegative(value, "value");
+		ParameterValidator.notNull(label, "label"); //$NON-NLS-1$
+		ParameterValidator.notNegative(value, "value"); //$NON-NLS-1$
 		ParameterValidator.notInvalidSize(value, 0.0, 1.0, "value"); //$NON-NLS-1$
 		
 		int pos = _labelSet.getPos(label);
@@ -102,13 +102,13 @@ public class FuzzySet extends Linguistic {
 		if(pos != -1) {
 			setValue(pos, value);
 		} else {
-			throw new IllegalArgumentException("Inexistent element in fuzzyset");
+			throw new IllegalArgumentException("Inexistent element in fuzzyset"); //$NON-NLS-1$
 		}
 	}
 	
 	public Double getValue(int pos) {
-		ParameterValidator.notEmpty(_labelSet.getLabels().toArray(), "labels");
-		ParameterValidator.notInvalidSize(pos, 0, _labelSet.getCardinality() - 1, "cardinality");
+		ParameterValidator.notEmpty(_labelSet.getLabels().toArray(), "labels"); //$NON-NLS-1$
+		ParameterValidator.notInvalidSize(pos, 0, _labelSet.getCardinality() - 1, "cardinality"); //$NON-NLS-1$
 		
 		return _values.get(pos);
 	}
@@ -185,7 +185,7 @@ public class FuzzySet extends Linguistic {
 	public void addLabel(int pos, LabelLinguisticDomain label, Double value) {
 		_labelSet.addLabel(pos, label);
 		
-		ParameterValidator.notNull(value, "value");
+		ParameterValidator.notNull(value, "value"); //$NON-NLS-1$
 		ParameterValidator.notInvalidSize(value, 0.0, 1.0, "value"); //$NON-NLS-1$
 		
 
@@ -193,8 +193,8 @@ public class FuzzySet extends Linguistic {
 	}
 	
 	public void removeLabel(int pos) {
-		ParameterValidator.notEmpty(_labelSet.getLabels().toArray(), "labels");
-		ParameterValidator.notInvalidSize(pos, 0, _labelSet.getCardinality() - 1, "cardinality");
+		ParameterValidator.notEmpty(_labelSet.getLabels().toArray(), "labels"); //$NON-NLS-1$
+		ParameterValidator.notInvalidSize(pos, 0, _labelSet.getCardinality() - 1, "cardinality"); //$NON-NLS-1$
 		
 		_labelSet.getLabels().remove(pos);
 		_values.remove(pos);

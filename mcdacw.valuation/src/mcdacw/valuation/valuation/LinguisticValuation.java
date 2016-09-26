@@ -27,25 +27,25 @@ public class LinguisticValuation extends Valuation {
 	
 	public void setLabel(int pos) {
 		LabelLinguisticDomain label = ((FuzzySet) _domain).getLabelSet().getLabel(pos);
-		ParameterValidator.notNull(label, "label");
+		ParameterValidator.notNull(label, "label"); //$NON-NLS-1$
 		
 		_label = label;
 	}
 	
 	public void setLabel(String name) {
 		LabelLinguisticDomain label = ((FuzzySet) _domain).getLabelSet().getLabel(name);
-		ParameterValidator.notNull(label, "label");
+		ParameterValidator.notNull(label, "label"); //$NON-NLS-1$
 		
 		_label = (LabelLinguisticDomain) label;
 	}
 	
 	public void setLabel(LabelLinguisticDomain label) {
-		ParameterValidator.notNull(label, "label");
+		ParameterValidator.notNull(label, "label"); //$NON-NLS-1$
 		
 		if(((FuzzySet) _domain).getLabelSet().containsLabel(label)) {
 			_label = (LabelLinguisticDomain) label;
 		} else {
-			throw new IllegalArgumentException("Not contains in domain");
+			throw new IllegalArgumentException("Not contains in domain"); //$NON-NLS-1$
 		}
 	}
 	
@@ -73,10 +73,10 @@ public class LinguisticValuation extends Valuation {
 	
 	@Override
 	public FuzzySet unification(Domain fuzzySet) {
-		ParameterValidator.notNull(fuzzySet, "fuzzyset");
+		ParameterValidator.notNull(fuzzySet, "fuzzyset"); //$NON-NLS-1$
 
 		if(!((FuzzySet) fuzzySet).isBLTS()) {
-			throw new IllegalArgumentException("Not BLTS fuzzy set");
+			throw new IllegalArgumentException("Not BLTS fuzzy set"); //$NON-NLS-1$
 		}
 
 		int cardinality;
@@ -123,13 +123,13 @@ public class LinguisticValuation extends Valuation {
 	
 	@Override
 	public int compareTo(Valuation other) {
-		ParameterValidator.notNull(other, "other");
-		ParameterValidator.notIllegalElementType(other, new String[] { LinguisticValuation.class.toString() }, "other");
+		ParameterValidator.notNull(other, "other"); //$NON-NLS-1$
+		ParameterValidator.notIllegalElementType(other, new String[] { LinguisticValuation.class.toString() }, "other"); //$NON-NLS-1$
 		
 		if(_domain.equals(other.getDomain())) {
 			return _label.compareTo(((LinguisticValuation) other)._label);
 		} else {
-			throw new IllegalArgumentException("Different domains");
+			throw new IllegalArgumentException("Different domains"); //$NON-NLS-1$
 		}
 	}
 	

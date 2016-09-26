@@ -39,7 +39,7 @@ public class DownloadService implements ServiceHandler {
 			RWT.getServiceManager().registerServiceHandler(getId(), this);
 			return true;
 		} catch (Exception e) {
-			System.out.println("failed to register download service handler");
+			System.out.println("failed to register download service handler"); //$NON-NLS-1$
 			return false;
 		}
 	}
@@ -49,7 +49,7 @@ public class DownloadService implements ServiceHandler {
 			RWT.getServiceManager().unregisterServiceHandler(getId());
 			return true;
 		} catch (Exception e) {
-			System.out.println("failed to unregister download service handler");
+			System.out.println("failed to unregister download service handler"); //$NON-NLS-1$
 			return false;
 		}
 	}
@@ -57,12 +57,12 @@ public class DownloadService implements ServiceHandler {
 	@Override
 	public void service(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		try {
-			response.setContentType("application/octet-stream");
+			response.setContentType("application/octet-stream"); //$NON-NLS-1$
 			response.setContentLength(data.length);
-			response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
+			response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			response.getOutputStream().write(data);
 		} catch (Exception e) {
-			System.out.println("failed to dispatch download");
+			System.out.println("failed to dispatch download"); //$NON-NLS-1$
 		} finally {
 			unregister();
 		}

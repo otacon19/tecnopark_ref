@@ -13,6 +13,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.layout.FillLayout;
 
 import flintstones.gathering.cloud.model.Problem;
+import flintstones.gathering.cloud.nls.Messages;
 
 @SuppressWarnings("serial")
 public class AlternativesWizardPage extends WizardPage {
@@ -23,8 +24,8 @@ public class AlternativesWizardPage extends WizardPage {
 	 * Create the wizard.
 	 */
 	public AlternativesWizardPage() {
-		super("wizardPage");
-		setTitle("Alternativas del problema");
+		super("wizardPage"); //$NON-NLS-1$
+		setTitle(Messages.AlternativesWizardPage_Alternatives_problem);
 		setDescription(null);
 	}
 	
@@ -66,7 +67,7 @@ public class AlternativesWizardPage extends WizardPage {
 		
 		TableViewerColumn tvc = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tc = tvc.getColumn();
-		tc.setText("Alternativas");
+		tc.setText(Messages.AlternativesWizardPage_Alternatives);
 		tvc.setLabelProvider(new AlternativeLabelProvider());
 		
 		tableViewer.setInput(((ImportWizard) getWizard()).getProblem());

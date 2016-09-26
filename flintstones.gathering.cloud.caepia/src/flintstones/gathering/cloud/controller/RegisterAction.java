@@ -23,7 +23,7 @@ public class RegisterAction extends Action {
 		this.window = window;
 		setId(ICommandIds.CMD_REGISTER_ACTION);
 		setActionDefinitionId(ICommandIds.CMD_REGISTER_ACTION);
-		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/sample3.gif"));
+		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/sample3.gif")); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public void run() {

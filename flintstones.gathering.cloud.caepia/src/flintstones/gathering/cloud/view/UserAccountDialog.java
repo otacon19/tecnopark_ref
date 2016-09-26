@@ -22,6 +22,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 import flintstones.gathering.cloud.dao.DAOUser;
 import flintstones.gathering.cloud.model.User;
+import flintstones.gathering.cloud.nls.Messages;
 
 @SuppressWarnings("serial")
 public class UserAccountDialog extends TitleAreaDialog {
@@ -36,37 +37,37 @@ public class UserAccountDialog extends TitleAreaDialog {
 	private Label _validNewPassLabel;
 	private Label _validConfirmNewPassLabel;
 
-	private String _pass = "";
-	private String _confirmPass = "";
+	private String _pass = ""; //$NON-NLS-1$
+	private String _confirmPass = ""; //$NON-NLS-1$
 	
 	private boolean _validNewPass;
 	private boolean _validConfirmPass;
 	
 	private static final Color GREEN = SWTResourceManager.getColor(SWT.COLOR_DARK_GREEN);
 	private static final Color RED = SWTResourceManager.getColor(SWT.COLOR_DARK_RED);
-	private static final Font FONT = SWTResourceManager.getFont("Cantarell", 10, SWT.NORMAL);
+	private static final Font FONT = SWTResourceManager.getFont("Cantarell", 10, SWT.NORMAL); //$NON-NLS-1$
 	
-	private static final String PASS_PATTERN = "^[a-zA-Z0-9]*$";
+	private static final String PASS_PATTERN = "^[a-zA-Z0-9]*$"; //$NON-NLS-1$
 	public UserAccountDialog(Shell parentShell) {
 		super(parentShell);
 		shell = parentShell;
 		setShellStyle(SWT.PRIMARY_MODAL);
-		_user = (User) RWT.getUISession().getAttribute("user");
+		_user = (User) RWT.getUISession().getAttribute("user"); //$NON-NLS-1$
 	}
 
 	@Override
 	public void create() {
 		super.create();
 		
-		setTitle("Cuenta de usuario");
-		setMessage("Modificar cuenta de usuario", IMessageProvider.INFORMATION);
+		setTitle(Messages.UserAccountDialog_User_account);
+		setMessage(Messages.UserAccountDialog_Modify_user_account, IMessageProvider.INFORMATION);
 	}
 
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		
 		if (_user.getAdmin()) {
-			createButton(parent, IDialogConstants.ABORT_ID, "Panel de administración",
+			createButton(parent, IDialogConstants.ABORT_ID, Messages.UserAccountDialog_Admin_panel,
 					false);
 			getButton(IDialogConstants.ABORT_ID).addSelectionListener(new SelectionAdapter() {
 				
@@ -77,7 +78,7 @@ public class UserAccountDialog extends TitleAreaDialog {
 				}
 			});
 		}
-		createButton(parent, IDialogConstants.OK_ID, "Modificar",
+		createButton(parent, IDialogConstants.OK_ID, Messages.UserAccountDialog_Modify,
 				true);
 		createButton(parent, IDialogConstants.CANCEL_ID,
 				IDialogConstants.get().CANCEL_LABEL, false);
@@ -98,7 +99,7 @@ public class UserAccountDialog extends TitleAreaDialog {
 		Label mailLabel = new Label(container, SWT.NONE);
 		mailLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
 				false, 1, 1));
-		mailLabel.setText("mail");
+		mailLabel.setText(Messages.UserAccountDialog_email);
 
 		_mailText = new Text(container, SWT.BORDER | SWT.READ_ONLY);
 		_mailText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,
@@ -108,7 +109,7 @@ public class UserAccountDialog extends TitleAreaDialog {
 		Label newPassLabel = new Label(container, SWT.NONE);
 		newPassLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
 				false, 1, 1));
-		newPassLabel.setText("contraseña");
+		newPassLabel.setText(Messages.UserAccountDialog_password);
 
 		_newPassText = new Text(container, SWT.BORDER | SWT.PASSWORD);
 		_newPassText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,
@@ -121,7 +122,7 @@ public class UserAccountDialog extends TitleAreaDialog {
 		Label confirmNewPassLabel = new Label(container, SWT.NONE);
 		confirmNewPassLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER,
 				false, false, 1, 1));
-		confirmNewPassLabel.setText("confirmar");
+		confirmNewPassLabel.setText(Messages.UserAccountDialog_confirm);
 
 		_confirmNewPassText = new Text(container, SWT.BORDER | SWT.PASSWORD);
 		_confirmNewPassText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
@@ -153,7 +154,7 @@ public class UserAccountDialog extends TitleAreaDialog {
 	protected void okPressed() {
 		DAOUser.getDAO().changePass(_user, _pass);
 		_user.setPass(_pass);
-		RWT.getUISession().setAttribute("user", _user);
+		RWT.getUISession().setAttribute("user", _user); //$NON-NLS-1$
 		super.okPressed();
 	}
 
@@ -198,16 +199,16 @@ public class UserAccountDialog extends TitleAreaDialog {
 		if (!_pass.isEmpty()) {
 			if (_pass.length() == 8) {
 				if (_pass.matches(PASS_PATTERN)) {
-					text = "OK";
+					text = "OK"; //$NON-NLS-1$
 					result = true;
 				} else {
-					text = "La contraseña debe estar formada por 8 carácteres alfanuméricos";
+					text = Messages.UserAccountDialog_Password_must_consist_of_8_alphanumeric_caracters;
 				}
 			} else {
-				text = "La contraseña debe estar formada por 8 carácteres alfanuméricos";
+				text = Messages.UserAccountDialog_Password_must_consist_of_8_alphanumeric_caracters;
 			}
 		} else {
-			text = "Insertar contraseña";
+			text = Messages.UserAccountDialog_Insert_password;
 		}
 		
 		setDecorator(_validNewPassLabel, text, result);
@@ -221,13 +222,13 @@ public class UserAccountDialog extends TitleAreaDialog {
 		
 		if (!_confirmPass.isEmpty()) {
 			if (_pass.equals(_confirmPass)) {
-				text = "OK";
+				text = Messages.UserAccountDialog_OK;
 				result = true;
 			} else {
-				text = "Contraseña inválida";
+				text = Messages.UserAccountDialog_Invalid_password;
 			}
 		} else {
-			text = "Insertar contraseña";
+			text = Messages.UserAccountDialog_Insert_password;
 		}
 		
 		setDecorator(_validConfirmNewPassLabel, text, result);

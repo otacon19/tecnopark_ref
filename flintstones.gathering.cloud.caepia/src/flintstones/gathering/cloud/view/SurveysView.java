@@ -38,10 +38,11 @@ import flintstones.gathering.cloud.dao.DAOProblemAssignments;
 import flintstones.gathering.cloud.model.Problem;
 import flintstones.gathering.cloud.model.ProblemAssignment;
 import flintstones.gathering.cloud.model.User;
+import flintstones.gathering.cloud.nls.Messages;
 
 public class SurveysView extends ViewPart {
 
-	public static final String ID = "flintstones.gathering.cloud.view.surveysView";
+	public static final String ID = "flintstones.gathering.cloud.view.surveysView"; //$NON-NLS-1$
 
 	private Map<Problem, ProblemAssignment> model;
 	private TableViewer viewer;
@@ -120,7 +121,7 @@ public class SurveysView extends ViewPart {
 	}
 
 	private Object createModel() {
-		User user = (User) RWT.getUISession().getAttribute("user");
+		User user = (User) RWT.getUISession().getAttribute("user"); //$NON-NLS-1$
 		Map<Problem, ProblemAssignment> auxModel = DAOProblemAssignments.getDAO().getUserProblemAssignments(user);
 		model = new HashMap<Problem, ProblemAssignment>();
 		for (Problem problem : auxModel.keySet()) {
@@ -142,14 +143,14 @@ public class SurveysView extends ViewPart {
 
 		TableViewerColumn tvc = new TableViewerColumn(viewer, SWT.NONE);
 		TableColumn tc = tvc.getColumn();
-		tc.setText("Problema");
+		tc.setText(Messages.SurveysView_Problem);
 		tc.setImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_ELEMENT));
 		tvc.setLabelProvider(new ProblemLabelProvider());
 
 		tvc = new TableViewerColumn(viewer, SWT.NONE);
 		tc = tvc.getColumn();
-		tc.setText("Experto");
-		tc.setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/expert_20.png").createImage());
+		tc.setText(Messages.SurveysView_Expert);
+		tc.setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/expert_20.png").createImage()); //$NON-NLS-1$ //$NON-NLS-2$
 		tvc.setLabelProvider(new ExpertLabelProvider());
 
 		parent.addControlListener(new ControlAdapter() {
@@ -227,14 +228,14 @@ public class SurveysView extends ViewPart {
 			problem = te.problem;
 			assignment = te.assignment;
 		}
-		RWT.getUISession().setAttribute("valuation-problem", problem);
-		RWT.getUISession().setAttribute("valuation-problem-assignment", assignment);
+		RWT.getUISession().setAttribute("valuation-problem", problem); //$NON-NLS-1$
+		RWT.getUISession().setAttribute("valuation-problem-assignment", assignment); //$NON-NLS-1$
 
 		if (te != null) {
-			OpenViewAction ova = new OpenViewAction(getSite().getWorkbenchWindow(), "survey", SurveyView.ID);
+			OpenViewAction ova = new OpenViewAction(getSite().getWorkbenchWindow(), "survey", SurveyView.ID); //$NON-NLS-1$
 			ova.run();
 		} else {
-			CloseViewAction cva = new CloseViewAction(getSite().getWorkbenchWindow(), "survey", SurveyView.ID);
+			CloseViewAction cva = new CloseViewAction(getSite().getWorkbenchWindow(), "survey", SurveyView.ID); //$NON-NLS-1$
 			cva.run();
 		}
 	}

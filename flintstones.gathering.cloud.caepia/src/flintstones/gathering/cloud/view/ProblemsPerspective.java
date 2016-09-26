@@ -22,7 +22,7 @@ import flintstones.gathering.cloud.model.User;
  */
 public class ProblemsPerspective implements IPerspectiveFactory {
 
-	public static final String ID = "flintstones.gathering.cloud.problems.perspective";
+	public static final String ID = "flintstones.gathering.cloud.problems.perspective"; //$NON-NLS-1$
 	
 	public void createInitialLayout(IPageLayout layout) {
 		String editorArea = layout.getEditorArea();
@@ -47,21 +47,21 @@ public class ProblemsPerspective implements IPerspectiveFactory {
 			@Override
 			public void perspectiveActivated(IWorkbenchPage page, IPerspectiveDescriptor perspective) {
 				if (perspective.getId().equals(ID)) {
-					User user = (User) RWT.getUISession().getAttribute("user");
+					User user = (User) RWT.getUISession().getAttribute("user"); //$NON-NLS-1$
 					if (!user.getManageProblems()) {
-						if(((OpenFrameworkStructuringPerspective) RWT.getUISession().getAttribute("open-frameworkstructuring-action") == null)) {
+						if(((OpenFrameworkStructuringPerspective) RWT.getUISession().getAttribute("open-frameworkstructuring-action") == null)) { //$NON-NLS-1$
 							new OpenFrameworkStructuringPerspective().run();
 						} else {
-							((OpenFrameworkStructuringPerspective) RWT.getUISession().getAttribute("open-frameworkstructuring-action")).run();
+							((OpenFrameworkStructuringPerspective) RWT.getUISession().getAttribute("open-frameworkstructuring-action")).run(); //$NON-NLS-1$
 						}
 					}
 					
-					if(DAOProblemAssignments.getDAO().isAvailableToExport((Problem) RWT.getUISession().getAttribute("problem"))) {
-						((ExportProblemAction) RWT.getUISession().getAttribute("export-action")).setEnabled(true);
-						((ExportProblemActionMenu) RWT.getUISession().getAttribute("export-action-menu")).setEnabled(true);
+					if(DAOProblemAssignments.getDAO().isAvailableToExport((Problem) RWT.getUISession().getAttribute("problem"))) { //$NON-NLS-1$
+						((ExportProblemAction) RWT.getUISession().getAttribute("export-action")).setEnabled(true); //$NON-NLS-1$
+						((ExportProblemActionMenu) RWT.getUISession().getAttribute("export-action-menu")).setEnabled(true); //$NON-NLS-1$
 					} else {
-						((ExportProblemAction) RWT.getUISession().getAttribute("export-action")).setEnabled(false);
-						((ExportProblemActionMenu) RWT.getUISession().getAttribute("export-action-menu")).setEnabled(false);
+						((ExportProblemAction) RWT.getUISession().getAttribute("export-action")).setEnabled(false); //$NON-NLS-1$
+						((ExportProblemActionMenu) RWT.getUISession().getAttribute("export-action-menu")).setEnabled(false); //$NON-NLS-1$
 					}
 				}
 			}

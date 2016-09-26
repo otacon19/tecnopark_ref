@@ -13,6 +13,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 import flintstones.gathering.cloud.ICommandIds;
 import flintstones.gathering.cloud.download.DownloadService;
+import flintstones.gathering.cloud.nls.Messages;
 import flintstones.gathering.cloud.xml.ExportXML;
 
 /**
@@ -25,18 +26,18 @@ public class ExportProblemAction extends Action {
 	private final IWorkbenchWindow window;
 
 	public ExportProblemAction(IWorkbenchWindow window) {
-		super("Exportar problema seleccionado");
+		super(Messages.ExportProblemAction_Export_selected_problem);
 		this.window = window;
-		setToolTipText("Exportar problema seleccionado");
-		setText("");
+		setToolTipText(Messages.ExportProblemAction_Export_selected_problem);
+		setText(""); //$NON-NLS-1$
 		setId(ICommandIds.CMD_EXPORT_PROBLEM);
 		setActionDefinitionId(ICommandIds.CMD_EXPORT_PROBLEM);
-		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/export.png"));
-		RWT.getUISession().setAttribute("export-action", this);
+		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/export.png")); //$NON-NLS-1$ //$NON-NLS-2$
+		RWT.getUISession().setAttribute("export-action", this); //$NON-NLS-1$
 	}
 
 	public void run() {
-		File file = new File("flintstones_problem.flintstones");
+		File file = new File("flintstones_problem.flintstones"); //$NON-NLS-1$
 		ExportXML exportXML = new ExportXML(file.getName());
 		try {
 			exportXML.createExportFile();

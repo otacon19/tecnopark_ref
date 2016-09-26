@@ -28,6 +28,7 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 import flintstones.gathering.cloud.model.Problem;
+import flintstones.gathering.cloud.nls.Messages;
 import mcdacw.valuation.domain.Domain;
 
 public class DomainIndexView extends ViewPart {
@@ -106,23 +107,23 @@ public class DomainIndexView extends ViewPart {
 		});
 		
 		_id = new TableViewerColumn(_viewer, SWT.NONE);
-		_id.getColumn().setText("Id");
+		_id.getColumn().setText("Id"); //$NON-NLS-1$
 		_id.setLabelProvider(new IdLabelProvider());
-		_id.getColumn().setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/domain_id.png").createImage());
+		_id.getColumn().setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/domain_id.png").createImage()); //$NON-NLS-1$ //$NON-NLS-2$
 		
 		_type = new TableViewerColumn(_viewer, SWT.NONE);
-		_type.getColumn().setText("Tipo");
+		_type.getColumn().setText(Messages.DomainIndexView_Type);
 		_type.setLabelProvider(new TypeLabelProvider());
-		_type.getColumn().setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/element.png").createImage());
+		_type.getColumn().setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/element.png").createImage()); //$NON-NLS-1$ //$NON-NLS-2$
 		
-		_problem = (Problem) RWT.getUISession().getAttribute("valuation-problem");
+		_problem = (Problem) RWT.getUISession().getAttribute("valuation-problem"); //$NON-NLS-1$
 		
 		List<Domain> ds = new LinkedList<Domain>();
 		
 		if(_problem != null) {
 			Map<String, Domain> domains = _problem.getDomains();
 			for(String id: domains.keySet()) {
-				if(!id.equals("auto_generated_importance") && !id.equals("auto_generated_knowledge")) {
+				if(!id.equals("auto_generated_importance") && !id.equals("auto_generated_knowledge")) { //$NON-NLS-1$ //$NON-NLS-2$
 					ds.add(domains.get(id));
 				}
 			}

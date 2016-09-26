@@ -19,6 +19,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 import flintstones.gathering.cloud.dao.DAOUser;
 import flintstones.gathering.cloud.model.User;
+import flintstones.gathering.cloud.nls.Messages;
 
 @SuppressWarnings("serial")
 public class RegisterDialog extends TitleAreaDialog {
@@ -33,9 +34,9 @@ public class RegisterDialog extends TitleAreaDialog {
 	private Label _validPassLabel;
 	private Label _validConfirmPassLabel;
 
-	private String _mail = "";
-	private String _pass = "";
-	private String _confirmPass = "";
+	private String _mail = ""; //$NON-NLS-1$
+	private String _pass = ""; //$NON-NLS-1$
+	private String _confirmPass = ""; //$NON-NLS-1$
 	
 	private boolean _validMail;
 	private boolean _validPass;
@@ -43,12 +44,12 @@ public class RegisterDialog extends TitleAreaDialog {
 	
 	private static final Color GREEN = SWTResourceManager.getColor(SWT.COLOR_DARK_GREEN);
 	private static final Color RED = SWTResourceManager.getColor(SWT.COLOR_DARK_RED);
-	private static final Font FONT = SWTResourceManager.getFont("Cantarell", 10, SWT.NORMAL);
+	private static final Font FONT = SWTResourceManager.getFont("Cantarell", 10, SWT.NORMAL); //$NON-NLS-1$
 
-	private static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-			+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+	private static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" //$NON-NLS-1$
+			+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"; //$NON-NLS-1$
 	
-	private static final String PASS_PATTERN = "^[a-zA-Z0-9]*$";
+	private static final String PASS_PATTERN = "^[a-zA-Z0-9]*$"; //$NON-NLS-1$
 	public RegisterDialog(Shell parentShell) {
 		super(parentShell);
 		setShellStyle(SWT.PRIMARY_MODAL);
@@ -57,8 +58,8 @@ public class RegisterDialog extends TitleAreaDialog {
 	@Override
 	public void create() {
 		super.create();
-		setTitle("Registro");
-		setMessage("Insertar datos de usuario", IMessageProvider.INFORMATION);
+		setTitle(Messages.RegisterDialog_Register);
+		setMessage(Messages.RegisterDialog_Insert_user_data, IMessageProvider.INFORMATION);
 	}
 
 	@Override
@@ -79,7 +80,7 @@ public class RegisterDialog extends TitleAreaDialog {
 		Label mailLabel = new Label(container, SWT.NONE);
 		mailLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
 				false, 1, 1));
-		mailLabel.setText("mail");
+		mailLabel.setText(Messages.RegisterDialog_mail);
 
 		_mailText = new Text(container, SWT.BORDER);
 		_mailText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,
@@ -92,7 +93,7 @@ public class RegisterDialog extends TitleAreaDialog {
 		Label passLabel = new Label(container, SWT.NONE);
 		passLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
 				false, 1, 1));
-		passLabel.setText("contraseña");
+		passLabel.setText(Messages.RegisterDialog_password);
 
 		_passText = new Text(container, SWT.BORDER | SWT.PASSWORD);
 		_passText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,
@@ -105,7 +106,7 @@ public class RegisterDialog extends TitleAreaDialog {
 		Label confirmPassLabel = new Label(container, SWT.NONE);
 		confirmPassLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER,
 				false, false, 1, 1));
-		confirmPassLabel.setText("confirmar");
+		confirmPassLabel.setText(Messages.RegisterDialog_Confirm);
 
 		_confirmPassText = new Text(container, SWT.BORDER | SWT.PASSWORD);
 		_confirmPassText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
@@ -190,16 +191,16 @@ public class RegisterDialog extends TitleAreaDialog {
 		if (!_mail.isEmpty()) {
 			if (_mail.matches(EMAIL_PATTERN)) {
 				if (DAOUser.getDAO().getUser(_mail) == null) {
-					text = "OK";
+					text = Messages.RegisterDialog_OK;
 					result = true;
 				} else {
-					text = "mail ya registrado";
+					text = Messages.RegisterDialog_email_already_registered;
 				}
 			} else {
-				text = "mail inválido";
+				text = Messages.RegisterDialog_invalid_email;
 			}
 		} else {
-			text = "Insertar mail";
+			text = Messages.RegisterDialog_insert_email;
 		}
 		
 		setDecorator(_validMailLabel, text, result);
@@ -214,16 +215,16 @@ public class RegisterDialog extends TitleAreaDialog {
 		if (!_pass.isEmpty()) {
 			if (_pass.length() == 8) {
 				if (_pass.matches(PASS_PATTERN)) {
-					text = "OK";
+					text = Messages.RegisterDialog_OK;
 					result = true;
 				} else {
-					text = "La contraseña debe estar formada por 8 carácteres alfanuméricos";
+					text = Messages.RegisterDialog_Password_must_consist_of_8_alphanumeric_characters;
 				}
 			} else {
-				text = "La contraseña debe estar formada por 8 carácteres alfanuméricos";
+				text = Messages.RegisterDialog_Password_must_consist_of_8_alphanumeric_characters;
 			}
 		} else {
-			text = "Insertar contraseña";
+			text = Messages.RegisterDialog_Insert_password;
 		}
 		
 		setDecorator(_validPassLabel, text, result);
@@ -237,13 +238,13 @@ public class RegisterDialog extends TitleAreaDialog {
 		
 		if (!_confirmPass.isEmpty()) {
 			if (_pass.equals(_confirmPass)) {
-				text = "OK";
+				text = Messages.RegisterDialog_OK;
 				result = true;
 			} else {
-				text = "Contraseña inválida";
+				text = Messages.RegisterDialog_Invalid_password;
 			}
 		} else {
-			text = "Contraseña inválida";
+			text = Messages.RegisterDialog_Invalid_password;
 		}
 		
 		setDecorator(_validConfirmPassLabel, text, result);

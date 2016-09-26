@@ -21,14 +21,14 @@ public class UnifiedValuation extends Valuation {
 	
 	@Override
 	public int compareTo(Valuation other) {
-		ParameterValidator.notNull(other, "other");
-		ParameterValidator.notIllegalElementType(other, new String[] { UnifiedValuation.class.toString() }, "other");
+		ParameterValidator.notNull(other, "other"); //$NON-NLS-1$
+		ParameterValidator.notIllegalElementType(other, new String[] { UnifiedValuation.class.toString() }, "other"); //$NON-NLS-1$
 
 		FuzzySet thisDomain = (FuzzySet) _domain;
 		FuzzySet otherDomain = (FuzzySet) other.getDomain();
 		for (int i = 0; i < thisDomain.getLabelSet().getCardinality(); i++) {
 			if (!thisDomain.getLabelSet().getLabel(i).equals(otherDomain.getLabelSet().getLabel(i))) {
-				throw new IllegalArgumentException("Different domains");
+				throw new IllegalArgumentException("Different domains"); //$NON-NLS-1$
 			}
 		}
 
@@ -39,7 +39,7 @@ public class UnifiedValuation extends Valuation {
 	}
 	
 	public TwoTuple disunification(FuzzySet fuzzySet) {
-		ParameterValidator.notNull(fuzzySet, "fuzzySet");
+		ParameterValidator.notNull(fuzzySet, "fuzzySet"); //$NON-NLS-1$
 
 		TwoTuple result = new TwoTuple((FuzzySet) fuzzySet.clone());
 

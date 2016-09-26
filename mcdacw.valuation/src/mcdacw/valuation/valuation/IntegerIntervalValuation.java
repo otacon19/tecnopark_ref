@@ -48,8 +48,8 @@ public class IntegerIntervalValuation extends Valuation {
 	}
 	
 	public void setMinMax(Double min, Double max) {
-		ParameterValidator.notNull(_domain, "min-max");
-		ParameterValidator.notDisorder(new double[] {min,  max}, "min-max", false);
+		ParameterValidator.notNull(_domain, "min-max"); //$NON-NLS-1$
+		ParameterValidator.notDisorder(new double[] {min,  max}, "min-max", false); //$NON-NLS-1$
 		
 		_min = min;
 		_max = max;
@@ -111,15 +111,15 @@ public class IntegerIntervalValuation extends Valuation {
 	
 	@Override
 	public int compareTo(Valuation other) {
-		ParameterValidator.notNull(other, "other");
-		ParameterValidator.notIllegalElementType(other, new String[] {Integer.class.toString()}, "other");
+		ParameterValidator.notNull(other, "other"); //$NON-NLS-1$
+		ParameterValidator.notIllegalElementType(other, new String[] {Integer.class.toString()}, "other"); //$NON-NLS-1$
 		
 		if(_domain.equals(other.getDomain())) {
 			double middle = (_max + _min) / 2l;
 			double otherMidle = (((IntegerIntervalValuation) other)._max + ((IntegerIntervalValuation) other)._min) / 2l;
 			return Double.valueOf(middle).compareTo(Double.valueOf(otherMidle));
 		} else {
-			throw new IllegalArgumentException("Different domains");
+			throw new IllegalArgumentException("Different domains"); //$NON-NLS-1$
 		}
 	}
 	

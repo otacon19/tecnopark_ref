@@ -14,12 +14,12 @@ import sinbad2.database.DatabaseManager;
 
 public class DAOProblemDomainAssignments {
 
-	public static final String TABLE = "domainassignment";
-	public static final String PROBLEM = "problem";
-	public static final String ALTERNATIVE = "alternative";
-	public static final String CRITERION = "criterion";
-	public static final String EXPERT = "expert";
-	public static final String DOMAIN = "domain";
+	public static final String TABLE = "domainassignment"; //$NON-NLS-1$
+	public static final String PROBLEM = "problem"; //$NON-NLS-1$
+	public static final String ALTERNATIVE = "alternative"; //$NON-NLS-1$
+	public static final String CRITERION = "criterion"; //$NON-NLS-1$
+	public static final String EXPERT = "expert"; //$NON-NLS-1$
+	public static final String DOMAIN = "domain"; //$NON-NLS-1$
 
 	private static DAOProblemDomainAssignments _dao = null;
 
@@ -38,10 +38,10 @@ public class DAOProblemDomainAssignments {
 	public static String getCreationTableSql() {
 		String result = null;
 
-		result = "create table " + TABLE + "(" + PROBLEM
-				+ " VARCHAR(50) NOT NULL, " + ALTERNATIVE
-				+ " TEXT NOT NULL, " + CRITERION + " TEXT NOT NULL, " + EXPERT + " TEXT NOT NULL, " + DOMAIN + " VARCHAR(255) NOT NULL, PRIMARY KEY(" + PROBLEM + ","
-				+ ALTERNATIVE + "(255)," + CRITERION + "(255)," + EXPERT + "(255)));";
+		result = "create table " + TABLE + "(" + PROBLEM //$NON-NLS-1$ //$NON-NLS-2$
+				+ " VARCHAR(50) NOT NULL, " + ALTERNATIVE //$NON-NLS-1$
+				+ " TEXT NOT NULL, " + CRITERION + " TEXT NOT NULL, " + EXPERT + " TEXT NOT NULL, " + DOMAIN + " VARCHAR(255) NOT NULL, PRIMARY KEY(" + PROBLEM + "," //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+				+ ALTERNATIVE + "(255)," + CRITERION + "(255)," + EXPERT + "(255)));"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 		return result;
 	}
@@ -66,7 +66,7 @@ public class DAOProblemDomainAssignments {
 			String domain = null;
 			for (KeyDomainAssignment key : domainAssignments.keySet()) {
 				domain = domainAssignments.get(key);
-				st.executeUpdate("insert into " + TABLE + " values ('" + problemId + "','" + key.getAlternative().replace("'", "''") + "','" + key.getCriterion().replace("'", "''") + "','" + key.getExpert().replace("'",  "''") + "','" + domain + "')");
+				st.executeUpdate("insert into " + TABLE + " values ('" + problemId + "','" + key.getAlternative().replace("'", "''") + "','" + key.getCriterion().replace("'", "''") + "','" + key.getExpert().replace("'",  "''") + "','" + domain + "')"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$ //$NON-NLS-12$ //$NON-NLS-13$
 			}
 			st.close();
 		} catch (Exception e) {
@@ -83,7 +83,7 @@ public class DAOProblemDomainAssignments {
 			
 			for(KeyDomainAssignment key: assignment.keySet()) {
 				domain = assignment.get(key);
-				st.executeUpdate("replace into " + TABLE + " values ('" + problemId + "','" + key.getAlternative().replace("'", "''") + "','" + key.getCriterion().replace("'", "''") + "','" + key.getExpert().replace("'", "''") + "','" + domain + "')");
+				st.executeUpdate("replace into " + TABLE + " values ('" + problemId + "','" + key.getAlternative().replace("'", "''") + "','" + key.getCriterion().replace("'", "''") + "','" + key.getExpert().replace("'", "''") + "','" + domain + "')"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$ //$NON-NLS-12$ //$NON-NLS-13$
 			}
 			st.close();
 		} catch (Exception e) {
@@ -94,7 +94,7 @@ public class DAOProblemDomainAssignments {
 	public void removeProblemDomainAssignments(String problem) {
 		try {
 			Connection c = getConnection();
-			PreparedStatement pst = c.prepareStatement("delete from " + TABLE + " where " + PROBLEM + " = ?");
+			PreparedStatement pst = c.prepareStatement("delete from " + TABLE + " where " + PROBLEM + " = ?"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			pst.setString(1, problem);
 			pst.executeUpdate();
 			pst.close();
@@ -113,7 +113,7 @@ public class DAOProblemDomainAssignments {
 			Connection c = getConnection();
 			Statement st = c.createStatement();
 
-			String select = "select * from " + TABLE + " where " + PROBLEM + "='" + problem + "';";
+			String select = "select * from " + TABLE + " where " + PROBLEM + "='" + problem + "';"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			ResultSet rs = st.executeQuery(select);
 			String criterion;
 			String alternative;

@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.layout.GridData;
 
 import flintstones.gathering.cloud.dao.DAOProblem;
+import flintstones.gathering.cloud.nls.Messages;
 
 @SuppressWarnings("serial")
 public class ProblemIdWizardPage extends WizardPage {
@@ -18,15 +19,15 @@ public class ProblemIdWizardPage extends WizardPage {
 	private DAOProblem daoProblem = DAOProblem.getDAO();
 	private Text problemIdText;
 
-	private String id = "";
+	private String id = ""; //$NON-NLS-1$
 	private boolean pageComplete = false;
 	
 	/**
 	 * Create the wizard.
 	 */
 	public ProblemIdWizardPage() {
-		super("wizardPage");
-		setTitle("Establecer identificador del problema");
+		super("wizardPage"); //$NON-NLS-1$
+		setTitle(Messages.ProblemIdWizardPage_Set_problem_id);
 		setDescription(null);
 	}
 
@@ -40,7 +41,7 @@ public class ProblemIdWizardPage extends WizardPage {
 		
 		container.setLayout(new GridLayout(2, false));		
 		Label problemIdLabel = new Label(container, SWT.NONE);
-		problemIdLabel.setText("Identificador del problema");
+		problemIdLabel.setText(Messages.ProblemIdWizardPage_Problem_id);
 		
 		problemIdText = new Text(container, SWT.BORDER);
 		problemIdText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -64,11 +65,11 @@ public class ProblemIdWizardPage extends WizardPage {
 				pageComplete = true;
 			} else {
 				pageComplete = false;
-				setErrorMessage("Identificador duplicado");
+				setErrorMessage(Messages.ProblemIdWizardPage_Duplicated_id);
 			}
 		} else {
 			pageComplete = false;
-			setErrorMessage("Identificador vacío");
+			setErrorMessage(Messages.ProblemIdWizardPage_Empty_id);
 		}
 		
 		setPageComplete(pageComplete);

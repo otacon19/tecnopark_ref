@@ -25,6 +25,8 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
+import flintstones.gathering.cloud.nls.Messages;
+
 public class ElementAssignmentView extends ViewPart implements IAssignmentDomain {
 
 	public static final String ID = "flintstones.gathering.cloud.view.elementassignments"; //$NON-NLS-1$
@@ -118,19 +120,19 @@ public class ElementAssignmentView extends ViewPart implements IAssignmentDomain
 		table.setHeaderVisible(true);
 		
 		_tvcCriterion = new TableViewerColumn(_viewer, SWT.NONE);
-		_tvcCriterion.getColumn().setText("Criterio");
+		_tvcCriterion.getColumn().setText(Messages.ElementAssignmentView_Criterion);
 		_tvcCriterion.setLabelProvider(new CriterionLabelProvider());
-		_tvcCriterion.getColumn().setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/criterion_20.png").createImage());
+		_tvcCriterion.getColumn().setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/criterion_20.png").createImage()); //$NON-NLS-1$ //$NON-NLS-2$
 		
 		_tvcAlternative = new TableViewerColumn(_viewer, SWT.NONE);
-		_tvcAlternative.getColumn().setText("Alternativa");
+		_tvcAlternative.getColumn().setText(Messages.ElementAssignmentView_Alternative);
 		_tvcAlternative.setLabelProvider(new AlternativeLabelProvider());
-		_tvcAlternative.getColumn().setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/alternative_20.png").createImage());
+		_tvcAlternative.getColumn().setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/alternative_20.png").createImage()); //$NON-NLS-1$ //$NON-NLS-2$
 		
 		_tvcDomain = new TableViewerColumn(_viewer, SWT.NONE);
-		_tvcDomain.getColumn().setText("Dominio");
+		_tvcDomain.getColumn().setText(Messages.ElementAssignmentView_Domain);
 		_tvcDomain.setLabelProvider(new DomainLabelProvider());
-		_tvcDomain.getColumn().setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/domain_id.png").createImage());
+		_tvcDomain.getColumn().setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/domain_id.png").createImage()); //$NON-NLS-1$ //$NON-NLS-2$
 		
 		parent.addControlListener(new ControlAdapter() {
 			public void controlResized(ControlEvent e) {
@@ -177,13 +179,12 @@ public class ElementAssignmentView extends ViewPart implements IAssignmentDomain
 		
 		for(String[] a: _domainAssignments) {
 			if(a[0].equals(assignment[0]) && a[1].equals(assignment[1])) { 
-				if(a[2] != assignment[2]) {
 					int index = _domainAssignments.indexOf(a);
 					_domainAssignments.remove(a);
 					_domainAssignments.add(index, assignment);
 					
 					return true;
-				}
+				
 			}
 		}
 		return false;

@@ -17,8 +17,8 @@ public class LabelLinguisticDomain implements Cloneable, Comparable<LabelLinguis
 	public LabelLinguisticDomain(){}
 	
 	public LabelLinguisticDomain(String name, IMembershipFunction semantic) {
-		ParameterValidator.notEmpty(name, "name");
-		ParameterValidator.notNull(semantic, "semantic");
+		ParameterValidator.notEmpty(name, "name"); //$NON-NLS-1$
+		ParameterValidator.notNull(semantic, "semantic"); //$NON-NLS-1$
 		
 		_name = name;
 		_semantic = semantic;
@@ -43,7 +43,7 @@ public class LabelLinguisticDomain implements Cloneable, Comparable<LabelLinguis
 	
 	@Override
 	public String toString() {
-		return _name + ";" + _semantic.toString();
+		return _name + ";" + _semantic.toString(); //$NON-NLS-1$
 	}
 	
 	@Override
@@ -98,14 +98,14 @@ public class LabelLinguisticDomain implements Cloneable, Comparable<LabelLinguis
 	
 	@Override
 	public int compareTo(LabelLinguisticDomain other) {
-		ParameterValidator.notNull(other, "other");
+		ParameterValidator.notNull(other, "other"); //$NON-NLS-1$
 		
 		return _semantic.compareTo(other._semantic);
 	}
 	
 	public void save(XMLStreamWriter writer) throws XMLStreamException {		
 		writer.writeStartElement("semantic"); //$NON-NLS-1$
-		writer.writeAttribute("type", "sinbad2.domain.linguistic.fuzzy.function.types.TrapezoidalFunction"); //$NON-NLS-1$
+		writer.writeAttribute("type", "sinbad2.domain.linguistic.fuzzy.function.types.TrapezoidalFunction"); //$NON-NLS-1$ //$NON-NLS-2$
 		_semantic.save(writer);
 		writer.writeEndElement();
 	}

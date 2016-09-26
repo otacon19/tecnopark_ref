@@ -25,6 +25,7 @@ import org.jfree.data.xy.IntervalXYDataset;
 import mcdacw.valuation.domain.Domain;
 import mcdacw.valuation.domain.DomainChart;
 import mcdacw.valuation.domain.numeric.NumericIntegerDomain;
+import mcdacw.valuation.nls.Messages;
 
 public class NumericIntegerDomainChart extends DomainChart {
 	
@@ -74,7 +75,7 @@ public class NumericIntegerDomainChart extends DomainChart {
 		_chart.getXYPlot().getRangeAxis().setTickLabelsVisible(inRange);
 		
 		if(inRange) {
-			_chart.getXYPlot().getRangeAxis().setLabel("Dominio");
+			_chart.getXYPlot().getRangeAxis().setLabel(Messages.getString("NumericIntegerDomainChart.Domain")); //$NON-NLS-1$
 		} else {
 			_chart.getXYPlot().getRangeAxis().setLabel(Double.toString(Double.NEGATIVE_INFINITY) + 
 					"                                           " +  //$NON-NLS-1$
@@ -145,7 +146,7 @@ public class NumericIntegerDomainChart extends DomainChart {
 		double[] yStart = new double[] {lowerLimit};
 		double[] yEnd = new double[] {upperLimit};
 		double[][] data = new double[][] {x, xStart, xEnd, y, yStart, yEnd};
-		result.addSeries("Range", data);
+		result.addSeries(Messages.getString("NumericIntegerDomainChart.Range"), data); //$NON-NLS-1$
 		
 		return result;
 	}
@@ -159,7 +160,7 @@ public class NumericIntegerDomainChart extends DomainChart {
 			ChartUtilities.writeChartAsPNG(bos, _chart, _width, _height);
 			image = new Image(Display.getCurrent(), new ByteArrayInputStream(bos.toByteArray()));
 		} catch (IOException e) {
-			System.err.println("Creation image failed");
+			System.err.println("Creation image failed"); //$NON-NLS-1$
 		}
 		
 		return image;

@@ -39,7 +39,7 @@ public static final String ID = "flintstones.domain.numeric.real"; //$NON-NLS-1$
 	}
 
 	public void setMinMax(Double min, Double max) {
-		ParameterValidator.notDisorder(new double[] { min, max }, "min-max", false);
+		ParameterValidator.notDisorder(new double[] { min, max }, "min-max", false); //$NON-NLS-1$
 		_min = min;
 		_max = max;
 	}
@@ -54,7 +54,7 @@ public static final String ID = "flintstones.domain.numeric.real"; //$NON-NLS-1$
 		String prefix = "(I) "; //$NON-NLS-1$
 		
 		if(!_inRange) {
-			return prefix + "numeric real domain without range";
+			return prefix + "numeric real domain without range"; //$NON-NLS-1$
 		} else {
 			return prefix + toString();
 		}

@@ -177,7 +177,7 @@ public class LinguisticDomainChart extends DomainChart {
 			ChartUtilities.writeChartAsPNG(bos, _chart, _width, _height);
 			image = new Image(Display.getCurrent(), new ByteArrayInputStream(bos.toByteArray()));
 		} catch (IOException e) {
-			System.err.println("Creation image failed");
+			System.err.println("Creation image failed"); //$NON-NLS-1$
 		}
 		
 		return image;

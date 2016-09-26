@@ -30,10 +30,11 @@ import flintstones.gathering.cloud.controller.OpenViewAction;
 import flintstones.gathering.cloud.dao.DAOProblem;
 import flintstones.gathering.cloud.model.Problem;
 import flintstones.gathering.cloud.model.User;
+import flintstones.gathering.cloud.nls.Messages;
 
 public class ProblemsView extends ViewPart {
 
-	public static final String ID = "flintstones.gathering.cloud.view.problemsView";
+	public static final String ID = "flintstones.gathering.cloud.view.problemsView"; //$NON-NLS-1$
 
 	private TableViewer viewer;
 
@@ -72,7 +73,7 @@ public class ProblemsView extends ViewPart {
 	}
 
 	private Object createModel() {
-		User user = (User) RWT.getUISession().getAttribute("user");
+		User user = (User) RWT.getUISession().getAttribute("user"); //$NON-NLS-1$
 		
 		return DAOProblem.getDAO().getProblems(user);
 	}
@@ -110,7 +111,7 @@ public class ProblemsView extends ViewPart {
 						.getSelection();
 				if (!selection.isEmpty()) {
 					if (MessageDialog.openConfirm(viewer.getTable().getShell(),
-							"Eliminar problema", "¿Estás seguro?")) {
+							Messages.ProblemsView_Delete_problem, Messages.ProblemsView_Are_you_sure_question)) {
 						DAOProblem.getDAO().removeProblem(
 								(Problem) selection.getFirstElement());
 						refreshModel();
@@ -126,8 +127,8 @@ public class ProblemsView extends ViewPart {
 		List<Problem> input = (List<Problem>) viewer.getInput();
 		if (input.isEmpty()) {
 			viewer.setSelection(new StructuredSelection(), false);
-			((ExportProblemAction) RWT.getUISession().getAttribute("export-action")).setEnabled(false);
-			((ExportProblemActionMenu) RWT.getUISession().getAttribute("export-action-menu")).setEnabled(false);
+			((ExportProblemAction) RWT.getUISession().getAttribute("export-action")).setEnabled(false); //$NON-NLS-1$
+			((ExportProblemActionMenu) RWT.getUISession().getAttribute("export-action-menu")).setEnabled(false); //$NON-NLS-1$
 		} else {
 			viewer.setSelection(new StructuredSelection(viewer.getElementAt(0)), true);
 		}
@@ -142,13 +143,13 @@ public class ProblemsView extends ViewPart {
 			problem = (Problem) selection.getFirstElement();
 		}
 
-		RWT.getUISession().setAttribute("problem", problem);
+		RWT.getUISession().setAttribute("problem", problem); //$NON-NLS-1$
 
 		if (problem != null) {
-			OpenViewAction ova = new OpenViewAction(getSite().getWorkbenchWindow(), "problem", ProblemView.ID);
+			OpenViewAction ova = new OpenViewAction(getSite().getWorkbenchWindow(), "problem", ProblemView.ID); //$NON-NLS-1$
 			ova.run();
 		} else {
-			CloseViewAction cva = new CloseViewAction(getSite().getWorkbenchWindow(), "problem", ProblemView.ID);
+			CloseViewAction cva = new CloseViewAction(getSite().getWorkbenchWindow(), "problem", ProblemView.ID); //$NON-NLS-1$
 			cva.run();
 		}
 	}

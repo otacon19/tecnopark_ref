@@ -41,12 +41,13 @@ import flintstones.gathering.cloud.model.Problem;
 import flintstones.gathering.cloud.model.ProblemAssignment;
 import flintstones.gathering.cloud.model.User;
 import flintstones.gathering.cloud.model.Valuations;
+import flintstones.gathering.cloud.nls.Messages;
 import mcdacw.valuation.domain.Domain;
 import mcdacw.valuation.valuation.Valuation;
 
 public class SurveyView extends ViewPart {
 	
-	public static final String ID = "flintstones.gathering.cloud.view.surveyView";
+	public static final String ID = "flintstones.gathering.cloud.view.surveyView"; //$NON-NLS-1$
 
 	private TableViewer _assignmentsViewer;
 	private TableViewer _importanceViewer;
@@ -68,9 +69,9 @@ public class SurveyView extends ViewPart {
 
 	public SurveyView() {
 		
-		_problem = (Problem) RWT.getUISession().getAttribute("valuation-problem");
+		_problem = (Problem) RWT.getUISession().getAttribute("valuation-problem"); //$NON-NLS-1$
 		
-		User user = (User) RWT.getUISession().getAttribute("user");
+		User user = (User) RWT.getUISession().getAttribute("user"); //$NON-NLS-1$
 		Map<Problem, ProblemAssignment> model = DAOProblemAssignments.getDAO().getUserProblemAssignments(user);
 		for(Problem p: model.keySet()) {
 			if(p.getId().equals(_problem.getId())) {
@@ -134,7 +135,7 @@ public class SurveyView extends ViewPart {
 	public void createPartControl(Composite parent) {
 		parent.setLayout(new GridLayout(1, false));
 		
-		_tabFolder = new TabFolder(parent, SWT.NONE);
+		_tabFolder = new TabFolder(parent, SWT.H_SCROLL | SWT.V_SCROLL);
 		_tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		_tabFolder.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -154,8 +155,8 @@ public class SurveyView extends ViewPart {
 		buttonComposite.setLayoutData(new GridData(SWT.RIGHT, SWT.RIGHT, true, false, 1, 1));
 		_sendAssignmets = new Button(buttonComposite, SWT.BORDER);
 		_sendAssignmets.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
-		_sendAssignmets.setText("Enviar");
-		_sendAssignmets.setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/mail_20.png").createImage());
+		_sendAssignmets.setText(Messages.SurveyView_Send);
+		_sendAssignmets.setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/mail_20.png").createImage()); //$NON-NLS-1$ //$NON-NLS-2$
 		_sendAssignmets.setEnabled(false);
 		_sendAssignmets.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -191,19 +192,19 @@ public class SurveyView extends ViewPart {
 		table.setHeaderVisible(true);
 		
 		TableViewerColumn tc_criterion = new TableViewerColumn(_assignmentsViewer, SWT.NONE);
-		tc_criterion.getColumn().setText("Criterio");
+		tc_criterion.getColumn().setText(Messages.SurveyView_Criterion);
 		tc_criterion.setLabelProvider(new CriterionLabelProvider());
-		tc_criterion.getColumn().setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/criterion_20.png").createImage());
+		tc_criterion.getColumn().setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/criterion_20.png").createImage()); //$NON-NLS-1$ //$NON-NLS-2$
 		
 		TableViewerColumn tc_alternative = new TableViewerColumn(_assignmentsViewer, SWT.NONE);
-		tc_alternative.getColumn().setText("Alternativa");
+		tc_alternative.getColumn().setText(Messages.SurveyView_Alternative);
 		tc_alternative.setLabelProvider(new AlternativeLabelProvider());
-		tc_alternative.getColumn().setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/alternative_20.png").createImage());
+		tc_alternative.getColumn().setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/alternative_20.png").createImage()); //$NON-NLS-1$ //$NON-NLS-2$
 		
 		TableViewerColumn tc_valuation = new TableViewerColumn(_assignmentsViewer, SWT.NONE);
-		tc_valuation.getColumn().setText("Valoración");
+		tc_valuation.getColumn().setText(Messages.SurveyView_Valuation);
 		tc_valuation.setLabelProvider(new ValuationLabelProvider());
-		tc_valuation.getColumn().setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/valuation.png").createImage());
+		tc_valuation.getColumn().setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/valuation.png").createImage()); //$NON-NLS-1$ //$NON-NLS-2$
 		
 		table.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -234,7 +235,7 @@ public class SurveyView extends ViewPart {
 		});
 		
 		TabItem tabItem = new TabItem(_tabFolder, SWT.NONE, 0);
-		tabItem.setText("Valoraciones");
+		tabItem.setText(Messages.SurveyView_Assessments);
 		tabItem.setControl(_assignmentsComposite);
 		
 		_assignmentsComposite.addControlListener(new ControlAdapter() {
@@ -276,14 +277,14 @@ public class SurveyView extends ViewPart {
 		table.setHeaderVisible(true);
 		
 		TableViewerColumn tc_criterion = new TableViewerColumn(_importanceViewer, SWT.NONE);
-		tc_criterion.getColumn().setText("Criterio");
+		tc_criterion.getColumn().setText(Messages.SurveyView_Criterion);
 		tc_criterion.setLabelProvider(new CriterionLabelProvider());
-		tc_criterion.getColumn().setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/criterion_20.png").createImage());
+		tc_criterion.getColumn().setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/criterion_20.png").createImage()); //$NON-NLS-1$ //$NON-NLS-2$
 		
 		TableViewerColumn tc_valuation = new TableViewerColumn(_importanceViewer, SWT.NONE);
-		tc_valuation.getColumn().setText("Valoración");
+		tc_valuation.getColumn().setText(Messages.SurveyView_Valuation);
 		tc_valuation.setLabelProvider(new ValuationLabelProvider());
-		tc_valuation.getColumn().setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/valuation.png").createImage());
+		tc_valuation.getColumn().setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/valuation.png").createImage()); //$NON-NLS-1$ //$NON-NLS-2$
 		
 		table.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -302,7 +303,7 @@ public class SurveyView extends ViewPart {
 					}
 				}
 				
-				Domain domain = _problem.getDomains().get("auto_generated_importance");
+				Domain domain = _problem.getDomains().get("auto_generated_importance"); //$NON-NLS-1$
 				_valuationView.setDomain(domain);
 			}
 		});
@@ -324,7 +325,7 @@ public class SurveyView extends ViewPart {
 		});
 		
 		TabItem tabItem = new TabItem(_tabFolder, SWT.NONE, 1);
-		tabItem.setText("Importancia");
+		tabItem.setText(Messages.SurveyView_Importance);
 		tabItem.setControl(_importanceComposite);
 	}
 	
@@ -348,14 +349,14 @@ public class SurveyView extends ViewPart {
 		table.setHeaderVisible(true);
 		
 		TableViewerColumn tc_criterion = new TableViewerColumn(_thresholdViewer, SWT.NONE);
-		tc_criterion.getColumn().setText("Criterio");
+		tc_criterion.getColumn().setText(Messages.SurveyView_Criterion);
 		tc_criterion.setLabelProvider(new CriterionLabelProvider());
-		tc_criterion.getColumn().setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/criterion_20.png").createImage());
+		tc_criterion.getColumn().setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/criterion_20.png").createImage()); //$NON-NLS-1$ //$NON-NLS-2$
 		
 		TableViewerColumn tc_valuation = new TableViewerColumn(_thresholdViewer, SWT.NONE);
-		tc_valuation.getColumn().setText("Valoración");
+		tc_valuation.getColumn().setText(Messages.SurveyView_Valuation);
 		tc_valuation.setLabelProvider(new ValuationLabelProvider());
-		tc_valuation.getColumn().setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/valuation.png").createImage());
+		tc_valuation.getColumn().setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/valuation.png").createImage()); //$NON-NLS-1$ //$NON-NLS-2$
 		
 		table.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -374,7 +375,7 @@ public class SurveyView extends ViewPart {
 					}
 				}
 				
-				Domain domain = _problem.getDomains().get("auto_generated_knowledge");
+				Domain domain = _problem.getDomains().get("auto_generated_knowledge"); //$NON-NLS-1$
 				_valuationView.setDomain(domain);
 			}
 		});
@@ -396,7 +397,7 @@ public class SurveyView extends ViewPart {
 		});
 		
 		TabItem tabItem = new TabItem(_tabFolder, SWT.NONE, 2);
-		tabItem.setText("Conocimiento");
+		tabItem.setText(Messages.SurveyView_Knowledge);
 		tabItem.setControl(_thresholdComposite);
 	}
 	
@@ -417,10 +418,10 @@ public class SurveyView extends ViewPart {
 						if(v != null) {
 							values[2] = v.changeFormatValuationToString(); 
 						} else {
-							values[2] = "No asignada";
+							values[2] = Messages.SurveyView_Unassigned;
 						}
 					} else {
-						values[2] = "No asignada";
+						values[2] = Messages.SurveyView_Unassigned;
 					}
 					input.add(values);
 				}
@@ -434,14 +435,14 @@ public class SurveyView extends ViewPart {
 				values[1] = c;
 				
 				if(_valuations != null) {
-					Valuation v = _valuations.getValuation(new KeyDomainAssignment("null_importance", c, _problemAssignment.getId()));
+					Valuation v = _valuations.getValuation(new KeyDomainAssignment("null_importance", c, _problemAssignment.getId())); //$NON-NLS-1$
 					if(v != null) {
 						values[2] = v.changeFormatValuationToString(); 
 					} else {
-						values[2] = "No asignada";
+						values[2] = Messages.SurveyView_Unassigned;
 					}
 				} else {
-					values[2] = "No asignada";
+					values[2] = Messages.SurveyView_Unassigned;
 				}
 				input.add(values);
 			}
@@ -455,14 +456,14 @@ public class SurveyView extends ViewPart {
 				values[1] = c;
 				
 				if(_valuations != null) {
-					Valuation v = _valuations.getValuation(new KeyDomainAssignment("null_threshold", c, _problemAssignment.getId()));
+					Valuation v = _valuations.getValuation(new KeyDomainAssignment("null_threshold", c, _problemAssignment.getId())); //$NON-NLS-1$
 					if(v != null) {
 						values[2] = v.changeFormatValuationToString(); 
 					} else {
-						values[2] = "No asignada";
+						values[2] = Messages.SurveyView_Unassigned;
 					}
 				} else {
-					values[2] = "No asignada";
+					values[2] = Messages.SurveyView_Unassigned;
 				}
 				input.add(values);
 			}
@@ -478,7 +479,7 @@ public class SurveyView extends ViewPart {
 	}
 
 	public void refresh() {
-		_problem = (Problem) RWT.getUISession().getAttribute("valuation-problem");
+		_problem = (Problem) RWT.getUISession().getAttribute("valuation-problem"); //$NON-NLS-1$
 		if(_problem != null) {
 			setModel();
 		}
@@ -496,14 +497,14 @@ public class SurveyView extends ViewPart {
 			
 			_valuationSelected.setText(2, valuation.changeFormatValuationToString());
 		} else if(_importanceSelected != null) {
-			KeyDomainAssignment key = new KeyDomainAssignment("null_importance", _importanceSelected.getText(0), _problemAssignment.getId());
+			KeyDomainAssignment key = new KeyDomainAssignment("null_importance", _importanceSelected.getText(0), _problemAssignment.getId()); //$NON-NLS-1$
 			_valuations.getValuations().put(key, valuation);
 			_problemAssignment.setValuations(_valuations);
 			DAOValuations.getDAO().insertValuation(_problem, key, valuation);
 			
 			_importanceSelected.setText(1, valuation.changeFormatValuationToString());
 		} else if(_thresholdSelected != null) {
-			KeyDomainAssignment key = new KeyDomainAssignment("null_threshold", _thresholdSelected.getText(0), _problemAssignment.getId());
+			KeyDomainAssignment key = new KeyDomainAssignment("null_threshold", _thresholdSelected.getText(0), _problemAssignment.getId()); //$NON-NLS-1$
 			_valuations.getValuations().put(key, valuation);
 			_problemAssignment.setValuations(_valuations);
 			DAOValuations.getDAO().insertValuation(_problem, key, valuation);
@@ -531,21 +532,21 @@ public class SurveyView extends ViewPart {
 			_problemAssignment.setValuations(_valuations);
 			DAOValuations.getDAO().removeValuation(_problem.getId(), key);
 			
-			_valuationSelected.setText(2, "No asignada");
+			_valuationSelected.setText(2, Messages.SurveyView_Unassigned);
 		} else if(_importanceSelected != null) {
-			KeyDomainAssignment key = new KeyDomainAssignment("null_importance", _importanceSelected.getText(0), _problemAssignment.getId());
+			KeyDomainAssignment key = new KeyDomainAssignment("null_importance", _importanceSelected.getText(0), _problemAssignment.getId()); //$NON-NLS-1$
 			_valuations.getValuations().remove(key);
 			_problemAssignment.setValuations(_valuations);
 			DAOValuations.getDAO().removeValuation(_problem.getId(), key);
 			
-			_importanceSelected.setText(1, "No asignada");
+			_importanceSelected.setText(1, Messages.SurveyView_Unassigned);
 		} else if(_thresholdSelected != null) {
-			KeyDomainAssignment key = new KeyDomainAssignment("null_threshold", _thresholdSelected.getText(0), _problemAssignment.getId());
+			KeyDomainAssignment key = new KeyDomainAssignment("null_threshold", _thresholdSelected.getText(0), _problemAssignment.getId()); //$NON-NLS-1$
 			_valuations.getValuations().remove(key);
 			_problemAssignment.setValuations(_valuations);
 			DAOValuations.getDAO().removeValuation(_problem.getId(), key);
 			
-			_thresholdSelected.setText(1, "No asignada");
+			_thresholdSelected.setText(1, Messages.SurveyView_Unassigned);
 		}
 	}
 }

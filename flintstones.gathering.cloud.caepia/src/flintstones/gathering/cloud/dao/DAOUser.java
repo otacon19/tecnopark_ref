@@ -15,11 +15,11 @@ import sinbad2.database.DatabaseManager;
 
 public class DAOUser {
 
-	public static final String TABLE = "user";
-	public static final String MAIL = "mail";
-	public static final String PASS = "pass";
-	public static final String ADMIN = "admin";
-	public static final String PROBLEMS = "problems";
+	public static final String TABLE = "user"; //$NON-NLS-1$
+	public static final String MAIL = "mail"; //$NON-NLS-1$
+	public static final String PASS = "pass"; //$NON-NLS-1$
+	public static final String ADMIN = "admin"; //$NON-NLS-1$
+	public static final String PROBLEMS = "problems"; //$NON-NLS-1$
 
 	private static DAOUser _dao = null;
 
@@ -38,10 +38,10 @@ public class DAOUser {
 	public static String getCreationTableSql() {
 		String result = null;
 
-		result = "create table " + TABLE + "(" + MAIL
-				+ " VARCHAR(255) NOT NULL, " + PASS + " VARCHAR(8) NOT NULL, "
-				+ ADMIN + " VARCHAR(5) NOT NULL, " + PROBLEMS
-				+ " VARCHAR(5) NOT NULL, PRIMARY KEY(" + MAIL + "));";
+		result = "create table " + TABLE + "(" + MAIL //$NON-NLS-1$ //$NON-NLS-2$
+				+ " VARCHAR(255) NOT NULL, " + PASS + " VARCHAR(8) NOT NULL, " //$NON-NLS-1$ //$NON-NLS-2$
+				+ ADMIN + " VARCHAR(5) NOT NULL, " + PROBLEMS //$NON-NLS-1$
+				+ " VARCHAR(5) NOT NULL, PRIMARY KEY(" + MAIL + "));"; //$NON-NLS-1$ //$NON-NLS-2$
 
 		return result;
 	}
@@ -62,10 +62,10 @@ public class DAOUser {
 		try {
 			Connection c = getConnection();
 			Statement st = c.createStatement();
-			st.executeUpdate("insert into " + TABLE + " values ('"
-					+ user.getMail() + "','" + user.getPass() + "','"
-					+ Boolean.toString(user.getAdmin()) + "','"
-					+ Boolean.toString(user.getManageProblems()) + "')");
+			st.executeUpdate("insert into " + TABLE + " values ('" //$NON-NLS-1$ //$NON-NLS-2$
+					+ user.getMail() + "','" + user.getPass() + "','" //$NON-NLS-1$ //$NON-NLS-2$
+					+ Boolean.toString(user.getAdmin()) + "','" //$NON-NLS-1$
+					+ Boolean.toString(user.getManageProblems()) + "')"); //$NON-NLS-1$
 			st.close();
 		} catch (Exception e) {
 		}
@@ -75,8 +75,8 @@ public class DAOUser {
 
 		try {
 			Connection c = getConnection();
-			PreparedStatement pst = c.prepareStatement("delete from " + TABLE
-					+ " where " + MAIL + " = ?");
+			PreparedStatement pst = c.prepareStatement("delete from " + TABLE //$NON-NLS-1$
+					+ " where " + MAIL + " = ?"); //$NON-NLS-1$ //$NON-NLS-2$
 			pst.setString(1, mail);
 			pst.executeUpdate();
 			pst.close();
@@ -95,8 +95,8 @@ public class DAOUser {
 			Connection c = getConnection();
 			Statement st = c.createStatement();
 
-			String select = "select * from " + TABLE + " where " + MAIL + "='"
-					+ mail + "';";
+			String select = "select * from " + TABLE + " where " + MAIL + "='" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					+ mail + "';"; //$NON-NLS-1$
 			ResultSet rs = st.executeQuery(select);
 			while (rs.next()) {
 				result = new User(rs.getString(MAIL), rs.getString(PASS),
@@ -117,7 +117,7 @@ public class DAOUser {
 			Connection c = getConnection();
 			Statement st = c.createStatement();
 
-			String select = "select * from " + TABLE + ";";
+			String select = "select * from " + TABLE + ";"; //$NON-NLS-1$ //$NON-NLS-2$
 			ResultSet rs = st.executeQuery(select);
 			while (rs.next()) {
 				result.add(new User(rs.getString(MAIL), rs.getString(PASS),
@@ -137,8 +137,8 @@ public class DAOUser {
 			Connection c = getConnection();
 			Statement st = c.createStatement();
 
-			String select = "select * from " + TABLE + " where " + MAIL + "='"
-					+ mail + "' and " + PASS + "='" + pass + "';";
+			String select = "select * from " + TABLE + " where " + MAIL + "='" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					+ mail + "' and " + PASS + "='" + pass + "';"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			ResultSet rs = st.executeQuery(select);
 			while (rs.next()) {
 				result = new User(rs.getString(MAIL), rs.getString(PASS),
@@ -168,9 +168,9 @@ public class DAOUser {
 				Connection c = getConnection();
 				Statement st = c.createStatement();
 
-				String update = "update " + TABLE + " set " + PASS + " = '"
-						+ pass + "' where " + MAIL + " = '" + user.getMail()
-						+ "';";
+				String update = "update " + TABLE + " set " + PASS + " = '" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						+ pass + "' where " + MAIL + " = '" + user.getMail() //$NON-NLS-1$ //$NON-NLS-2$
+						+ "';"; //$NON-NLS-1$
 				st.executeUpdate(update);
 				st.close();
 			} catch (Exception e) {
@@ -217,9 +217,9 @@ public class DAOUser {
 			Connection c = getConnection();
 			Statement st = c.createStatement();
 
-			String update = "update " + TABLE + " set " + ADMIN + " = '"
-					+ Boolean.toString(admin) + "' where " + MAIL + " = '" + mail
-					+ "';";
+			String update = "update " + TABLE + " set " + ADMIN + " = '" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					+ Boolean.toString(admin) + "' where " + MAIL + " = '" + mail //$NON-NLS-1$ //$NON-NLS-2$
+					+ "';"; //$NON-NLS-1$
 			st.executeUpdate(update);
 			st.close();
 		} catch (Exception e) {
@@ -233,9 +233,9 @@ public class DAOUser {
 			Connection c = getConnection();
 			Statement st = c.createStatement();
 
-			String update = "update " + TABLE + " set " + PROBLEMS + " = '"
-					+ Boolean.toString(manageProblems) + "' where " + MAIL + " = '" + mail
-					+ "';";
+			String update = "update " + TABLE + " set " + PROBLEMS + " = '" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					+ Boolean.toString(manageProblems) + "' where " + MAIL + " = '" + mail //$NON-NLS-1$ //$NON-NLS-2$
+					+ "';"; //$NON-NLS-1$
 			st.executeUpdate(update);
 			st.close();
 		} catch (Exception e) {

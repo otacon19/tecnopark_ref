@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Eclipse-ExtensibleAPI: true
 Bundle-ManifestVersion: 2
-Bundle-Name: MySQL Connector/J
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: com.mysql.jdbc
 Bundle-Version: 5.1.6
-Bundle-Vendor: Oracle
+Bundle-Vendor: %Bundle-Vendor
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: com.mysql.jdbc,
  com.mysql.jdbc.exceptions,

@@ -45,7 +45,7 @@ public class ExportXML {
 	}
 
 	public void createExportFile() throws Exception {
-		_problem = (Problem) RWT.getUISession().getAttribute("problem");
+		_problem = (Problem) RWT.getUISession().getAttribute("problem"); //$NON-NLS-1$
 
 		_outputFactory = XMLOutputFactory.newInstance();
 
@@ -56,11 +56,11 @@ public class ExportXML {
 		_writer = _outputFactory.createXMLStreamWriter(new FileWriter(_file));
 		_writer.writeStartDocument();
 
-		_writer.writeStartElement("resolution.scheme");
-		_writer.writeAttribute("id", XMLValues.RESOLUTION_SCHEME);
+		_writer.writeStartElement("resolution.scheme"); //$NON-NLS-1$
+		_writer.writeAttribute("id", XMLValues.RESOLUTION_SCHEME); //$NON-NLS-1$
 
-		_writer.writeStartElement("resolution.phase");
-		_writer.writeAttribute("id", XMLValues.RESOLUTION_PHASE_FRAMEWORK);
+		_writer.writeStartElement("resolution.phase"); //$NON-NLS-1$
+		_writer.writeAttribute("id", XMLValues.RESOLUTION_PHASE_FRAMEWORK); //$NON-NLS-1$
 
 		createElements();
 		createDomains();
@@ -68,26 +68,26 @@ public class ExportXML {
 
 		_writer.writeEndElement();
 
-		_writer.writeStartElement("resolution.phase");
-		_writer.writeAttribute("id", XMLValues.RESOLUTION_PHASE_FRAMEWORK_STRUCTURING);
+		_writer.writeStartElement("resolution.phase"); //$NON-NLS-1$
+		_writer.writeAttribute("id", XMLValues.RESOLUTION_PHASE_FRAMEWORK_STRUCTURING); //$NON-NLS-1$
 
 		createDomainAssignments();
 
 		_writer.writeEndElement();
 
-		_writer.writeStartElement("resolution.phase");
-		_writer.writeAttribute("id", XMLValues.RESOLUTION_PHASE_GATHERING);
+		_writer.writeStartElement("resolution.phase"); //$NON-NLS-1$
+		_writer.writeAttribute("id", XMLValues.RESOLUTION_PHASE_GATHERING); //$NON-NLS-1$
 
 		createValuations();
 
 		_writer.writeEndElement();
 
-		_writer.writeStartElement("resolution.phase");
-		_writer.writeAttribute("id", XMLValues.RESOLUTION_PHASE_RATING);
+		_writer.writeStartElement("resolution.phase"); //$NON-NLS-1$
+		_writer.writeAttribute("id", XMLValues.RESOLUTION_PHASE_RATING); //$NON-NLS-1$
 		_writer.writeEndElement();
 
-		_writer.writeStartElement("resolution.phase");
-		_writer.writeAttribute("id", XMLValues.RESOLUTION_PHASE_SENSITIVITY_ANALYSIS);
+		_writer.writeStartElement("resolution.phase"); //$NON-NLS-1$
+		_writer.writeAttribute("id", XMLValues.RESOLUTION_PHASE_SENSITIVITY_ANALYSIS); //$NON-NLS-1$
 		_writer.writeEndElement();
 
 		_writer.writeEndElement();
@@ -98,32 +98,32 @@ public class ExportXML {
 	}
 
 	private void createElements() throws Exception {
-		_writer.writeStartElement("elements");
+		_writer.writeStartElement("elements"); //$NON-NLS-1$
 
 		List<String> experts = DAOProblemExperts.getDAO().getProblemExperts(_problem);
-		_writer.writeStartElement("experts");
+		_writer.writeStartElement("experts"); //$NON-NLS-1$
 		for (String experto : experts) {
-			_writer.writeStartElement("expert");
-			_writer.writeAttribute("id", experto);
+			_writer.writeStartElement("expert"); //$NON-NLS-1$
+			_writer.writeAttribute("id", experto); //$NON-NLS-1$
 			_writer.writeEndElement();
 		}
 		_writer.writeEndElement();
 
 		List<String> alternatives = DAOProblemAlternatives.getDAO().getProblemAlternatives(_problem);
-		_writer.writeStartElement("alternatives");
+		_writer.writeStartElement("alternatives"); //$NON-NLS-1$
 		for (String alternative : alternatives) {
-			_writer.writeStartElement("alternative");
-			_writer.writeAttribute("id", alternative);
+			_writer.writeStartElement("alternative"); //$NON-NLS-1$
+			_writer.writeAttribute("id", alternative); //$NON-NLS-1$
 			_writer.writeEndElement();
 		}
 		_writer.writeEndElement();
 
 		List<String> criteria = DAOProblemCriteria.getDAO().getProblemCriteria(_problem);
-		_writer.writeStartElement("criteria");
+		_writer.writeStartElement("criteria"); //$NON-NLS-1$
 		for (String criterion : criteria) {
-			_writer.writeStartElement("criterion");
-			_writer.writeAttribute("id", criterion);
-			_writer.writeAttribute("cost", "false");
+			_writer.writeStartElement("criterion"); //$NON-NLS-1$
+			_writer.writeAttribute("id", criterion); //$NON-NLS-1$
+			_writer.writeAttribute("cost", "false"); //$NON-NLS-1$ //$NON-NLS-2$
 			_writer.writeEndElement();
 		}
 		_writer.writeEndElement();
@@ -132,7 +132,7 @@ public class ExportXML {
 	}
 
 	private void createDomains() throws Exception {
-		_writer.writeStartElement("domain-set");
+		_writer.writeStartElement("domain-set"); //$NON-NLS-1$
 
 		String domainType = null;
 		Map<String, Domain> domains = DAOProblemDomains.getDAO().getProblemDomains(_problem);
@@ -141,15 +141,15 @@ public class ExportXML {
 			Domain domain = domains.get(domainId);
 
 			if (domain instanceof FuzzySet) {
-				domainType = "flintstones.domain.linguistic";
+				domainType = "flintstones.domain.linguistic"; //$NON-NLS-1$
 			} else if (domain instanceof NumericIntegerDomain) {
-				domainType = "flintstones.domain.numeric.integer";
+				domainType = "flintstones.domain.numeric.integer"; //$NON-NLS-1$
 			} else if (domain instanceof NumericRealDomain) {
-				domainType = "flintstones.domain.numeric.real";
+				domainType = "flintstones.domain.numeric.real"; //$NON-NLS-1$
 			}
 
 			_writer.writeStartElement(domainType);
-			_writer.writeAttribute("id", domainId);
+			_writer.writeAttribute("id", domainId); //$NON-NLS-1$
 			domain.save(_writer);
 			_writer.writeEndElement();
 		}
@@ -158,37 +158,33 @@ public class ExportXML {
 	}
 
 	private void createDomainsValuations() throws Exception {
-		_writer.writeStartElement("domain-valuation");
+		_writer.writeStartElement("domain-valuation"); //$NON-NLS-1$
 
 		Map<String, String> domainValuations = DAOProblemValuations.getDAO().getDomainValuations(_problem.getId());
 		for (String domain : domainValuations.keySet()) {
-			_writer.writeStartElement("domain-id");
-			_writer.writeAttribute("id", domain);
+			_writer.writeStartElement("domain-id"); //$NON-NLS-1$
+			_writer.writeAttribute("id", domain); //$NON-NLS-1$
 			_writer.writeEndElement();
 
-			_writer.writeStartElement("valuation-id");
-			_writer.writeAttribute("id", domainValuations.get(domain));
+			_writer.writeStartElement("valuation-id"); //$NON-NLS-1$
+			_writer.writeAttribute("id", domainValuations.get(domain)); //$NON-NLS-1$
 			_writer.writeEndElement();
 		}
 		
-		_writer.writeStartElement("valuation-id");
-		_writer.writeAttribute("id", "flintstones.valuation.real");
+		_writer.writeStartElement("domain-id"); //$NON-NLS-1$
+		_writer.writeAttribute("id", "auto_generated_importance"); //$NON-NLS-1$ //$NON-NLS-2$
 		_writer.writeEndElement();
 		
-		_writer.writeStartElement("domain-id");
-		_writer.writeAttribute("id", "auto_generated_importance");
+		_writer.writeStartElement("valuation-id"); //$NON-NLS-1$
+		_writer.writeAttribute("id", "flintstones.valuation.hesitant"); //$NON-NLS-1$ //$NON-NLS-2$
 		_writer.writeEndElement();
 		
-		_writer.writeStartElement("valuation-id");
-		_writer.writeAttribute("id", "flintstones.valuation.hesitant");
-		_writer.writeEndElement();
-		
-		_writer.writeStartElement("domain-id");
-		_writer.writeAttribute("id", "auto_generated_knowledge");
+		_writer.writeStartElement("domain-id"); //$NON-NLS-1$
+		_writer.writeAttribute("id", "auto_generated_knowledge"); //$NON-NLS-1$ //$NON-NLS-2$
 		_writer.writeEndElement();
 
-		_writer.writeStartElement("valuation-id");
-		_writer.writeAttribute("id", "flintstones.valuation.linguistic");
+		_writer.writeStartElement("valuation-id"); //$NON-NLS-1$
+		_writer.writeAttribute("id", "flintstones.valuation.linguistic"); //$NON-NLS-1$ //$NON-NLS-2$
 		_writer.writeEndElement();
 		
 		
@@ -196,16 +192,16 @@ public class ExportXML {
 	}
 
 	private void createDomainAssignments() throws Exception {
-		_writer.writeStartElement("domain-assignments");
+		_writer.writeStartElement("domain-assignments"); //$NON-NLS-1$
 
 		Map<KeyDomainAssignment, String> domainAssignments = DAOProblemDomainAssignments.getDAO().getProblemDomainAssignments(_problem);
 		for (KeyDomainAssignment key : domainAssignments.keySet()) {
-			_writer.writeStartElement("assignment");
+			_writer.writeStartElement("assignment"); //$NON-NLS-1$
 
-			_writer.writeAttribute("expert", key.getExpert());
-			_writer.writeAttribute("alternative", key.getAlternative());
-			_writer.writeAttribute("criterion", key.getCriterion());
-			_writer.writeAttribute("domain", domainAssignments.get(key));
+			_writer.writeAttribute("expert", key.getExpert()); //$NON-NLS-1$
+			_writer.writeAttribute("alternative", key.getAlternative()); //$NON-NLS-1$
+			_writer.writeAttribute("criterion", key.getCriterion()); //$NON-NLS-1$
+			_writer.writeAttribute("domain", domainAssignments.get(key)); //$NON-NLS-1$
 
 			_writer.writeEndElement();
 		}
@@ -216,7 +212,7 @@ public class ExportXML {
 	private void createValuations() throws Exception {
 		List<String> experts = DAOProblemExperts.getDAO().getProblemExperts(_problem);
 
-		_writer.writeStartElement("valuations");
+		_writer.writeStartElement("valuations"); //$NON-NLS-1$
 
 		for (String expert : experts) {
 			Valuations v = DAOValuations.getDAO().getValuations(_problem.getId(), _problem.getAssignment(expert), _problem.getDomains());
@@ -227,25 +223,25 @@ public class ExportXML {
 				Valuation valuation = valuations.get(key);
 				
 				if (valuation instanceof HesitantValuation) {
-					valuationType = "flintstones.valuation.hesitant";
+					valuationType = "flintstones.valuation.hesitant"; //$NON-NLS-1$
 				} else if (valuation instanceof IntegerValuation) {
-					valuationType = "flintstones.valuation.integer";
+					valuationType = "flintstones.valuation.integer"; //$NON-NLS-1$
 				} else if (valuation instanceof IntegerIntervalValuation) {
-					valuationType = "flintstones.valuation.integer.interval";
+					valuationType = "flintstones.valuation.integer.interval"; //$NON-NLS-1$
 				} else if (valuation instanceof LinguisticValuation) {
-					valuationType = "flintstones.valuation.linguistic";
+					valuationType = "flintstones.valuation.linguistic"; //$NON-NLS-1$
 				} else if (valuation instanceof RealValuation) {
-					valuationType = "flintstones.valuation.real";
+					valuationType = "flintstones.valuation.real"; //$NON-NLS-1$
 				} else if (valuation instanceof RealIntervalValuation) {
-					valuationType = "flintstones.valuation.real.interval";
+					valuationType = "flintstones.valuation.real.interval"; //$NON-NLS-1$
 				}
 
 				_writer.writeStartElement(valuationType);
 
-				_writer.writeAttribute("domain-id", valuation.getDomain().getId());
-				_writer.writeAttribute("expert", key.getExpert());
-				_writer.writeAttribute("alternative", key.getAlternative());
-				_writer.writeAttribute("criterion", key.getCriterion());
+				_writer.writeAttribute("domain-id", valuation.getDomain().getId()); //$NON-NLS-1$
+				_writer.writeAttribute("expert", key.getExpert()); //$NON-NLS-1$
+				_writer.writeAttribute("alternative", key.getAlternative()); //$NON-NLS-1$
+				_writer.writeAttribute("criterion", key.getCriterion()); //$NON-NLS-1$
 
 				valuation.save(_writer);
 

@@ -28,6 +28,7 @@ import flintstones.gathering.cloud.controller.OpenProblemsPerspective;
 import flintstones.gathering.cloud.controller.RefreshAction;
 import flintstones.gathering.cloud.controller.UserAccountAction;
 import flintstones.gathering.cloud.model.User;
+import flintstones.gathering.cloud.nls.Messages;
 
 public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
@@ -70,9 +71,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		register(userAccountAction);
 		
 		logoutAction = ActionFactory.QUIT.create(window);
-		logoutAction.setToolTipText("Salir");
-		logoutAction.setText("");
-		logoutAction.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/exit.png"));
+		logoutAction.setToolTipText(Messages.ApplicationActionBarAdvisor_Exit0);
+		logoutAction.setText(""); //$NON-NLS-1$
+		logoutAction.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/exit.png")); //$NON-NLS-1$ //$NON-NLS-2$
 		register(logoutAction);
 
 		refreshAction = new RefreshAction(window);
@@ -90,19 +91,19 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		register(openGatheringPerspective);
 
 		aboutAction = new AboutAction(window);
-		aboutAction.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/about.png"));
+		aboutAction.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/about.png")); //$NON-NLS-1$ //$NON-NLS-2$
 		register(aboutAction);
 	}
 
 	protected void fillMenuBar(IMenuManager menuBar) {
 
-		User user = (User) RWT.getUISession().getAttribute("user");
+		User user = (User) RWT.getUISession().getAttribute("user"); //$NON-NLS-1$
 		boolean canManageProblems = user.getManageProblems();
 		MenuManager problemMenu = null;
 		if (canManageProblems) {
-			problemMenu = new MenuManager("&Problemas", IWorkbenchActionConstants.M_FILE);
+			problemMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_ExitProblems, IWorkbenchActionConstants.M_FILE);
 		}
-		MenuManager helpMenu = new MenuManager("&Ayuda", IWorkbenchActionConstants.M_HELP);
+		MenuManager helpMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_ExitHelp, IWorkbenchActionConstants.M_HELP);
 
 		if (canManageProblems) {
 			menuBar.add(problemMenu);
@@ -123,9 +124,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
 	protected void fillCoolBar(ICoolBarManager coolBar) {
 		IToolBarManager toolbar = new ToolBarManager(SWT.FLAT | SWT.RIGHT);
-		coolBar.add(new ToolBarContributionItem(toolbar, "main"));
+		coolBar.add(new ToolBarContributionItem(toolbar, "main")); //$NON-NLS-1$
 
-		User user = (User) RWT.getUISession().getAttribute("user");
+		User user = (User) RWT.getUISession().getAttribute("user"); //$NON-NLS-1$
 		boolean canManageProblems = user.getManageProblems();
 		if (canManageProblems) {
 			toolbar.add(importProblemAction);

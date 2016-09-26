@@ -30,11 +30,11 @@ public class TrapezoidalFunction implements IMembershipFunction {
 	public TrapezoidalFunction(double[] limits) {
 		this();
 		
-		ParameterValidator.notNull(limits, "limits");
-		ParameterValidator.notInvalidSize(limits.length, 3, 4, "limits");
+		ParameterValidator.notNull(limits, "limits"); //$NON-NLS-1$
+		ParameterValidator.notInvalidSize(limits.length, 3, 4, "limits"); //$NON-NLS-1$
 		
 		for(double limit: limits) {
-			ParameterValidator.notNegative(limit, "limit");
+			ParameterValidator.notNegative(limit, "limit"); //$NON-NLS-1$
 		}
 		
 		if(limits.length == 3) {
@@ -168,7 +168,7 @@ public class TrapezoidalFunction implements IMembershipFunction {
 
 	@Override
 	public double maxMin(double min, double max) {
-		ParameterValidator.notDisorder(new double[] { min, max }, "min-max", false);
+		ParameterValidator.notDisorder(new double[] { min, max }, "min-max", false); //$NON-NLS-1$
 		
 		if(( max >= _b) && (min <= _c)) {
 			return 1d;
@@ -183,11 +183,11 @@ public class TrapezoidalFunction implements IMembershipFunction {
 	public double maxMin(IMembershipFunction function) {
 		TrapezoidalFunction tmf;
 
-		ParameterValidator.notNull(function, "function");
+		ParameterValidator.notNull(function, "function"); //$NON-NLS-1$
 		if (function instanceof TrapezoidalFunction) {
 			tmf = (TrapezoidalFunction) function;
 		} else {
-			throw new IllegalArgumentException("Invalid element type");
+			throw new IllegalArgumentException("Invalid element type"); //$NON-NLS-1$
 		}
 
 		double values[] = new double[5];
@@ -339,7 +339,7 @@ public class TrapezoidalFunction implements IMembershipFunction {
 	
 	@Override
 	public int compareTo(IMembershipFunction other) {
-		ParameterValidator.notNull(other, "other");
+		ParameterValidator.notNull(other, "other"); //$NON-NLS-1$
 		
 		return Double.compare(this.centroid(), other.centroid());
 	}

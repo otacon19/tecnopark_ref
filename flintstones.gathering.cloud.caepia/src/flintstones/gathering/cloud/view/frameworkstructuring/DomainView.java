@@ -33,7 +33,7 @@ public class DomainView extends ViewPart implements ISelectedDomain {
 	public void createPartControl(Composite parent) {
 		_parent = parent;
 		
-		_problem = (Problem) RWT.getUISession().getAttribute("valuation-problem");
+		_problem = (Problem) RWT.getUISession().getAttribute("valuation-problem"); //$NON-NLS-1$
 		
 		if(_problem != null) {
 			_domains = _problem.getDomains();
@@ -56,7 +56,7 @@ public class DomainView extends ViewPart implements ISelectedDomain {
 	public void notifySelectedDomain(String id) {
 		Domain d = _domains.get(id);
 
-		if(d.getType().equals("Lingüístico")) {
+		if(d.getType().equals("Lingüístico")) { //$NON-NLS-1$
 			_chart = new LinguisticDomainChart();
 			_chart.initialize(d, _parent.getSize().x, _parent.getSize().y, SWT.NONE);
 			
@@ -64,7 +64,7 @@ public class DomainView extends ViewPart implements ISelectedDomain {
 			_parent.setBackgroundMode(SWT.INHERIT_NONE);
 			_parent.setBackgroundImage(chartImage);
 			
-		} else if(d.getType().equals("Entero")) {
+		} else if(d.getType().equals("Entero")) { //$NON-NLS-1$
 			_chart = new NumericIntegerDomainChart();
 			_chart.initialize(d, _parent.getSize().x, _parent.getSize().y, SWT.NONE);
 			
@@ -72,7 +72,7 @@ public class DomainView extends ViewPart implements ISelectedDomain {
 			_parent.setBackgroundMode(SWT.INHERIT_NONE);
 			_parent.setBackgroundImage(chartImage);
 			
-		} else if(d.getType().equals("Real")) {
+		} else if(d.getType().equals("Real")) { //$NON-NLS-1$
 			_chart = new NumericRealDomainChart();
 			_chart.initialize(d, _parent.getSize().x, _parent.getSize().y, SWT.NONE);
 			

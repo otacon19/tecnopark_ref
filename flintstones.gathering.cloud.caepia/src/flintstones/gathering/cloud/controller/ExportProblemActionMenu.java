@@ -13,6 +13,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 import flintstones.gathering.cloud.ICommandIds;
 import flintstones.gathering.cloud.download.DownloadService;
+import flintstones.gathering.cloud.nls.Messages;
 import flintstones.gathering.cloud.xml.ExportXML;
 
 /**
@@ -25,19 +26,19 @@ public class ExportProblemActionMenu extends Action {
 	private final IWorkbenchWindow window;
 
 	public ExportProblemActionMenu(IWorkbenchWindow window) {
-		super("Exportar problema seleccionado");
+		super(Messages.ExportProblemActionMenu_Export_problem_selected0);
 		this.window = window;
-		setToolTipText("Exportar problema seleccionado");
-		setText("Exportar problema seleccionado");
+		setToolTipText(Messages.ExportProblemActionMenu_Export_problem_selectedExport_problem_selected);
+		setText(Messages.ExportProblemActionMenu_Export_problem_selectedExport_problem_selected);
 		setId(ICommandIds.CMD_EXPORT_PROBLEM_MENU);
 		setActionDefinitionId(ICommandIds.CMD_EXPORT_PROBLEM_MENU);
 		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
-				"flintstones.gathering.cloud", "/icons/export.png"));
-		RWT.getUISession().setAttribute("export-action-menu", this);
+				"flintstones.gathering.cloud", "/icons/export.png")); //$NON-NLS-1$ //$NON-NLS-2$
+		RWT.getUISession().setAttribute("export-action-menu", this); //$NON-NLS-1$
 	}
 
 	public void run() {
-		File file = new File("flintstones_problem.flintstones");
+		File file = new File("flintstones_problem.flintstones"); //$NON-NLS-1$
 		ExportXML exportXML = new ExportXML(file.getName());
 		try {
 			exportXML.createExportFile();

@@ -29,6 +29,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 import flintstones.gathering.cloud.model.Problem;
+import flintstones.gathering.cloud.nls.Messages;
 import flintstones.gathering.cloud.xml.XMLValues;
 import mcdacw.valuation.domain.Domain;
 import mcdacw.valuation.domain.DomainChart;
@@ -50,7 +51,7 @@ import mcdacw.valuation.valuation.hesitant.HesitantValuation;
 
 public class ValuationView extends ViewPart {
 	
-	public static final String ID = "flintstones.gathering.cloud.view.valuationview";
+	public static final String ID = "flintstones.gathering.cloud.view.valuationview"; //$NON-NLS-1$
 
 	private Spinner _valueSpinner;
 	private Spinner _valueSpinnerMax;
@@ -100,7 +101,7 @@ public class ValuationView extends ViewPart {
 	private SurveyView _surveyView;
 	
 	public ValuationView() {
-		_problem = (Problem) RWT.getUISession().getAttribute("valuation-problem");
+		_problem = (Problem) RWT.getUISession().getAttribute("valuation-problem"); //$NON-NLS-1$
 		
 		_surveyView = null;
 		IViewReference viewReferences[] = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences();
@@ -114,7 +115,7 @@ public class ValuationView extends ViewPart {
 	@Override
 	public void createPartControl(Composite parent) {
 		_parent = parent;
-		GridLayout layout = new GridLayout(4, true);
+		GridLayout layout = new GridLayout(4, false);
 		_parent.setLayout(layout);
 	}
 
@@ -130,11 +131,11 @@ public class ValuationView extends ViewPart {
 		
 		if(_domain != null) {
 			dispose();
-			if(_domain.getId().equals("auto_generated_importance")) {
+			if(_domain.getId().equals("auto_generated_importance")) { //$NON-NLS-1$
 				createHesitantPanel();
 				createButtons();
 				createLinguisticChart();
-			} else if(_domain.getId().endsWith("auto_generated_knowledge")) {
+			} else if(_domain.getId().endsWith("auto_generated_knowledge")) { //$NON-NLS-1$
 				createLinguisticPanel();
 				createButtons();
 				createLinguisticChart();
@@ -183,7 +184,7 @@ public class ValuationView extends ViewPart {
 	@SuppressWarnings("serial")
 	private void createButtons() {	
 		_buttonsPart = new Composite(_parent, SWT.NONE);
-		_buttonsPart.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, true, 1, 1));
+		_buttonsPart.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, true, 1, 1));
 		_buttonsPart.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		GridLayout layout = new GridLayout(1, false);
 		_buttonsPart.setLayout(layout);
@@ -191,13 +192,13 @@ public class ValuationView extends ViewPart {
 		_valuateButton = new Button(_buttonsPart, SWT.BORDER);
 		_valuateButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
 		((GridData) _valuateButton.getLayoutData()).heightHint = 35;
-		_valuateButton.setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/valuation.png").createImage());
-		_valuateButton.setText("Evaluar");
+		_valuateButton.setImage(AbstractUIPlugin.imageDescriptorFromPlugin("flintstones.gathering.cloud", "/icons/valuation.png").createImage()); //$NON-NLS-1$ //$NON-NLS-2$
+		_valuateButton.setText(Messages.ValuationView_Evaluate);
 		_valuateButton.pack();
 		_valuateButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if(_domain.getId().equals("auto_generated_importance")) {
+				if(_domain.getId().equals("auto_generated_importance")) { //$NON-NLS-1$
 					_valuation = new HesitantValuation((FuzzySet) _domain);
 					if(_upperTerm != null && _lowerTerm != null) {
 						((HesitantValuation) _valuation).setBinaryRelation(_lowerTerm, _upperTerm);
@@ -213,7 +214,7 @@ public class ValuationView extends ViewPart {
 					_term = null;
 					_label = null;
 					
-				} else if(_domain.getId().equals("auto_generated_knowledge")) {
+				} else if(_domain.getId().equals("auto_generated_knowledge")) { //$NON-NLS-1$
 					_valuation = new LinguisticValuation();
 					_valuation.setDomain(_domain);
 					((LinguisticValuation) _valuation).setLabel(_label);
@@ -253,7 +254,7 @@ public class ValuationView extends ViewPart {
 		_removeButton = new Button(_buttonsPart, SWT.BORDER);
 		_removeButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
 		((GridData) _removeButton.getLayoutData()).heightHint = 35;
-		_removeButton.setText("Borrar");
+		_removeButton.setText(Messages.ValuationView_Delete);
 		_removeButton.setImage(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_DELETE).createImage());
 		_removeButton.pack();
 		_removeButton.addSelectionListener(new SelectionAdapter() {
@@ -266,7 +267,7 @@ public class ValuationView extends ViewPart {
 	
 	@SuppressWarnings("serial")
 	private void createIntegerPanel() {
-		_valuationComposite = new Composite(_parent, SWT.BORDER);
+		_valuationComposite = new Composite(_parent, SWT.NONE);
 		_valuationComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		_valuationComposite.setLayout(new GridLayout(5, true));
 		
@@ -275,7 +276,7 @@ public class ValuationView extends ViewPart {
 		GridData gd = new GridData(SWT.CENTER, SWT.FILL, true, false, 5, 1);
 		gd.verticalIndent = 15;
 		label.setLayoutData(gd);
-		label.setText("Valoración entera");
+		label.setText(Messages.ValuationView_Integer_valuation);
 		label.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		
 		Label value = new Label(_valuationComposite, SWT.NONE);
@@ -283,7 +284,7 @@ public class ValuationView extends ViewPart {
 		gd = new GridData(SWT.CENTER, SWT.FILL, true, false, 3, 1);
 		gd.verticalIndent = 15;
 		value.setLayoutData(gd);
-		value.setText("Valor");
+		value.setText(Messages.ValuationView_Value);
 		value.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		new Label(_valuationComposite, SWT.NONE);
 		
@@ -314,7 +315,7 @@ public class ValuationView extends ViewPart {
 	
 	@SuppressWarnings("serial")
 	private void createIntegerIntervalPanel() {
-		_valuationComposite = new Composite(_parent, SWT.BORDER);
+		_valuationComposite = new Composite(_parent, SWT.NONE);
 		_valuationComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		_valuationComposite.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		_valuationComposite.setLayout(new GridLayout(2, false));
@@ -324,7 +325,7 @@ public class ValuationView extends ViewPart {
 		GridData gd = new GridData(SWT.CENTER, SWT.FILL, true, false, 2, 1);
 		gd.verticalIndent = 15;
 		label.setLayoutData(gd);
-		label.setText("Valoración intervalar entera");
+		label.setText(Messages.ValuationView_Integer_interval_valuation);
 		label.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		
 		Composite spinnerComposite = new Composite(_valuationComposite, SWT.NONE);
@@ -340,7 +341,7 @@ public class ValuationView extends ViewPart {
 		 gd = new GridData(SWT.CENTER, SWT.FILL, false, true, 1, 1);
 		Label intervalLowerLabel = new Label(intervalSpinnerComposite, SWT.NONE);
 		intervalLowerLabel.setLayoutData(gd);
-		intervalLowerLabel.setText("Límite inferior");
+		intervalLowerLabel.setText(Messages.ValuationView_Lower_limit);
 		intervalLowerLabel.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		
 		_valueSpinnerMin = new Spinner(intervalSpinnerComposite, SWT.BORDER);
@@ -350,7 +351,7 @@ public class ValuationView extends ViewPart {
 		
 		Label intervalUpperLabel = new Label(intervalSpinnerComposite, SWT.NONE);
 		intervalUpperLabel.setLayoutData(new GridData(SWT.CENTER, SWT.FILL, true, true, 1, 1));
-		intervalUpperLabel.setText("Límite superior");
+		intervalUpperLabel.setText(Messages.ValuationView_Upper_limit);
 		intervalUpperLabel.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		
 		_valueSpinnerMax = new Spinner(intervalSpinnerComposite, SWT.BORDER);
@@ -401,7 +402,7 @@ public class ValuationView extends ViewPart {
 	
 	@SuppressWarnings("serial")
 	private void createRealPanel() {
-		_valuationComposite = new Composite(_parent, SWT.BORDER);
+		_valuationComposite = new Composite(_parent, SWT.NONE);
 		_valuationComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		_valuationComposite.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		_valuationComposite.setLayout(new GridLayout(5, true));
@@ -411,7 +412,7 @@ public class ValuationView extends ViewPart {
 		GridData gd = new GridData(SWT.CENTER, SWT.FILL, true, false, 5, 1);
 		gd.verticalIndent = 15;
 		label.setLayoutData(gd);
-		label.setText("Valoración real");
+		label.setText(Messages.ValuationView_Real_valuation);
 		label.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		
 		Label value = new Label(_valuationComposite, SWT.NONE);
@@ -419,7 +420,7 @@ public class ValuationView extends ViewPart {
 		gd = new GridData(SWT.CENTER, SWT.FILL, true, false, 3, 1);
 		gd.verticalIndent = 15;
 		value.setLayoutData(gd);
-		value.setText("Valor");
+		value.setText(Messages.ValuationView_Value);
 		value.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		new Label(_valuationComposite, SWT.NONE);
 		
@@ -451,7 +452,7 @@ public class ValuationView extends ViewPart {
 	
 	@SuppressWarnings("serial")
 	private void createRealIntervalPanel() {
-		_valuationComposite = new Composite(_parent, SWT.BORDER);
+		_valuationComposite = new Composite(_parent, SWT.NONE);
 		_valuationComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		_valuationComposite.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		_valuationComposite.setLayout(new GridLayout(2, false));
@@ -461,7 +462,7 @@ public class ValuationView extends ViewPart {
 		GridData gd = new GridData(SWT.CENTER, SWT.FILL, true, false, 2, 1);
 		gd.verticalIndent = 15;
 		label.setLayoutData(gd);
-		label.setText("Valoración intervalar real");
+		label.setText(Messages.ValuationView_Real_interval_valuation);
 		label.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		
 		Composite spinnerComposite = new Composite(_valuationComposite, SWT.NONE);
@@ -477,7 +478,7 @@ public class ValuationView extends ViewPart {
 		 gd = new GridData(SWT.CENTER, SWT.CENTER, false, true, 1, 1);
 		Label intervalLowerLabel = new Label(intervalSpinnerComposite, SWT.NONE);
 		intervalLowerLabel.setLayoutData(gd);
-		intervalLowerLabel.setText("Límite inferior");
+		intervalLowerLabel.setText(Messages.ValuationView_Lower_limit);
 		intervalLowerLabel.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		
 		_valueSpinnerMin = new Spinner(intervalSpinnerComposite, SWT.BORDER);
@@ -487,7 +488,7 @@ public class ValuationView extends ViewPart {
 		
 		Label intervalUpperLabel = new Label(intervalSpinnerComposite, SWT.NONE);
 		intervalUpperLabel.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, true, 1, 1));
-		intervalUpperLabel.setText("Límite superior");
+		intervalUpperLabel.setText(Messages.ValuationView_Upper_limit);
 		intervalUpperLabel.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		
 		_valueSpinnerMax = new Spinner(intervalSpinnerComposite, SWT.BORDER);
@@ -545,7 +546,7 @@ public class ValuationView extends ViewPart {
 	
 	@SuppressWarnings("serial")
 	private void createLinguisticPanel() {
-		_valuationComposite = new Composite(_parent, SWT.BORDER);
+		_valuationComposite = new Composite(_parent, SWT.NONE);
 		_valuationComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		_valuationComposite.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		_valuationComposite.setLayout(new GridLayout(5, true));
@@ -555,7 +556,7 @@ public class ValuationView extends ViewPart {
 		GridData gd = new GridData(SWT.CENTER, SWT.FILL, true, false, 5, 1);
 		gd.verticalIndent = 15;
 		label.setLayoutData(gd);
-		label.setText("Valoración lingüística");
+		label.setText(Messages.ValuationView_Linguistic_valuation);
 		label.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 
 		Label value = new Label(_valuationComposite, SWT.NONE);
@@ -563,7 +564,7 @@ public class ValuationView extends ViewPart {
 		gd = new GridData(SWT.CENTER, SWT.BOTTOM, true, false, 3, 1);
 		gd.verticalIndent = 15;
 		value.setLayoutData(gd);
-		value.setText("Valor");
+		value.setText(Messages.ValuationView_Value);
 		value.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		new Label(_valuationComposite, SWT.NONE);
 		
@@ -599,8 +600,8 @@ public class ValuationView extends ViewPart {
 	
 	@SuppressWarnings("serial")
 	private void createHesitantPanel() {
-		_valuationComposite = new Composite(_parent, SWT.BORDER);
-		_valuationComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		_valuationComposite = new Composite(_parent, SWT.NONE);
+		_valuationComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true, 1, 1));
 		_valuationComposite.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		_valuationComposite.setLayout(new GridLayout(4, false));
 		
@@ -609,7 +610,7 @@ public class ValuationView extends ViewPart {
 		GridData gd = new GridData(SWT.CENTER, SWT.FILL, true, false, 4, 1);
 		gd.verticalIndent = 15;
 		label.setLayoutData(gd);
-		label.setText("Valoración hesitant");
+		label.setText(Messages.ValuationView_Hesitant_valuation);
 		
 		Composite buttonsComposite = new Composite(_valuationComposite, SWT.NONE);
 		buttonsComposite.setLayoutData(new GridData(SWT.CENTER, SWT.FILL, true, false, 4, 1));
@@ -620,20 +621,20 @@ public class ValuationView extends ViewPart {
 		hesitantButtonsComposite.setLayout(new GridLayout(1,  false));
 		
 		_primaryButton = new Button(hesitantButtonsComposite, SWT.RADIO);
-		_primaryButton.setText("Primaria");
+		_primaryButton.setText(Messages.ValuationView_Primary);
 		
 		_compositeButton = new Button(hesitantButtonsComposite, SWT.RADIO);
-		_compositeButton.setText("Compuesta");
+		_compositeButton.setText(Messages.ValuationView_Composite);
 		
 		_hesitantRelationshipComposite = new Composite(buttonsComposite, SWT.NONE);
 		_hesitantRelationshipComposite.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
 		_hesitantRelationshipComposite.setLayout(new GridLayout(1,  false));
 		
 		_unaryRelationshipButton = new Button(_hesitantRelationshipComposite, SWT.RADIO);
-		_unaryRelationshipButton.setText("Unaria");
+		_unaryRelationshipButton.setText(Messages.ValuationView_Unary);
 		
 		_binaryRelationshipButton = new Button(_hesitantRelationshipComposite, SWT.RADIO);
-		_binaryRelationshipButton.setText("Binaria");
+		_binaryRelationshipButton.setText(Messages.ValuationView_Binary);
 		
 		_selectIndexes = new LinkedList<Integer>();
 		_binaryIndexes = new LinkedList<Integer>();
@@ -645,6 +646,9 @@ public class ValuationView extends ViewPart {
 			
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				_upperTerm = null;
+				_lowerTerm = null;
+				_term = null;
 				
 				if(_hesitantRelationshipComposite.getEnabled()) {
 					_hesitantRelationshipComposite.setEnabled(false);
@@ -654,6 +658,8 @@ public class ValuationView extends ViewPart {
 				
 				checkHesitantValues(false, false, false, true, false);
 				
+				
+				
 				modifyHesitantSelection();
 			}
 		});
@@ -662,7 +668,7 @@ public class ValuationView extends ViewPart {
 			
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-
+				
 				if(!_hesitantRelationshipComposite.getEnabled()) {
 					_hesitantRelationshipComposite.setEnabled(true);
 					_unaryRelationshipButton.setEnabled(true);
@@ -689,6 +695,9 @@ public class ValuationView extends ViewPart {
 			
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				_label = null;
+				_upperTerm = null;
+				_lowerTerm = null;
 				
 				if(_hesitantRelationshipComposite.getEnabled()) {
 					if(_compositeButton.getSelection()) {
@@ -706,6 +715,8 @@ public class ValuationView extends ViewPart {
 			
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				_term = null;
+				_label = null;
 				
 				if(_hesitantRelationshipComposite.getEnabled()) {
 					if(_compositeButton.getSelection()) {
@@ -764,7 +775,7 @@ public class ValuationView extends ViewPart {
 		}
 		
 		_hesitantValueComposite = new Composite(_valuationComposite, SWT.NONE);
-		_hesitantValueComposite.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 4, 1));
+		_hesitantValueComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 4, 1));
 		GridLayout layout = new GridLayout(fields, false);
 		_hesitantValueComposite.setLayout(layout);
 		
@@ -774,7 +785,7 @@ public class ValuationView extends ViewPart {
 			}
 			_betweenLabel = new Label(_hesitantValueComposite, SWT.NONE);
 			_betweenLabel.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
-			_betweenLabel.setText("Between");
+			_betweenLabel.setText(Messages.ValuationView_Between);
 		}
 		
 		if(hesitantCombo1) {
@@ -798,7 +809,7 @@ public class ValuationView extends ViewPart {
 			}
 			_andLabel = new Label(_hesitantValueComposite, SWT.NONE);
 			_andLabel.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
-			_andLabel.setText("And");
+			_andLabel.setText(Messages.ValuationView_And);
 		}
 		
 		if(hesitantCombo2) {
@@ -1313,9 +1324,9 @@ public class ValuationView extends ViewPart {
 	@SuppressWarnings("serial")
 	private void createLinguisticChart() {
 		_chartComposite = new Composite(_parent, SWT.NONE);
-		_chartComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true, 2, 1));
+		_chartComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		_chartComposite.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
-		GridLayout layout = new GridLayout(1, true);
+		GridLayout layout = new GridLayout(1, false);
 		_chartComposite.setLayout(layout);
 		
 		_chartComposite.addControlListener(new ControlAdapter() {

@@ -14,9 +14,9 @@ import sinbad2.database.DatabaseManager;
 
 public class DAOProblemCriteria {
 
-	public static final String TABLE = "criteria";
-	public static final String PROBLEM = "problem";
-	public static final String CRITERION = "criterion";
+	public static final String TABLE = "criteria"; //$NON-NLS-1$
+	public static final String PROBLEM = "problem"; //$NON-NLS-1$
+	public static final String CRITERION = "criterion"; //$NON-NLS-1$
 
 	private static DAOProblemCriteria _dao = null;
 
@@ -35,10 +35,10 @@ public class DAOProblemCriteria {
 	public static String getCreationTableSql() {
 		String result = null;
 
-		result = "create table " + TABLE + "(" + PROBLEM
-				+ " VARCHAR(50) NOT NULL, " + CRITERION
-				+ " TEXT NOT NULL, PRIMARY KEY(" + PROBLEM + ","
-				+ CRITERION + "(255)));";
+		result = "create table " + TABLE + "(" + PROBLEM //$NON-NLS-1$ //$NON-NLS-2$
+				+ " VARCHAR(50) NOT NULL, " + CRITERION //$NON-NLS-1$
+				+ " TEXT NOT NULL, PRIMARY KEY(" + PROBLEM + "," //$NON-NLS-1$ //$NON-NLS-2$
+				+ CRITERION + "(255)));"; //$NON-NLS-1$
 
 		return result;
 	}
@@ -61,8 +61,8 @@ public class DAOProblemCriteria {
 			String id = problem.getId();
 			List<String> criteria = problem.getCriteria();
 			for (String criterion : criteria) {
-				criterion = criterion.replace( "'" , "''" );
-				st.executeUpdate("insert into " + TABLE + " values ('" + id + "','" + criterion + "')");
+				criterion = criterion.replace( "'" , "''" ); //$NON-NLS-1$ //$NON-NLS-2$
+				st.executeUpdate("insert into " + TABLE + " values ('" + id + "','" + criterion + "')"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			}
 			st.close();
 		} catch (Exception e) {
@@ -73,8 +73,8 @@ public class DAOProblemCriteria {
 	public void removeProblemCriteria(String problem) {
 		try {
 			Connection c = getConnection();
-			PreparedStatement pst = c.prepareStatement("delete from " + TABLE
-					+ " where " + PROBLEM + " = ?");
+			PreparedStatement pst = c.prepareStatement("delete from " + TABLE //$NON-NLS-1$
+					+ " where " + PROBLEM + " = ?"); //$NON-NLS-1$ //$NON-NLS-2$
 			pst.setString(1, problem);
 			pst.executeUpdate();
 			pst.close();
@@ -93,8 +93,8 @@ public class DAOProblemCriteria {
 			Connection c = getConnection();
 			Statement st = c.createStatement();
 
-			String select = "select * from " + TABLE + " where " + PROBLEM
-					+ "='" + problem + "';";
+			String select = "select * from " + TABLE + " where " + PROBLEM //$NON-NLS-1$ //$NON-NLS-2$
+					+ "='" + problem + "';"; //$NON-NLS-1$ //$NON-NLS-2$
 			ResultSet rs = st.executeQuery(select);
 			while (rs.next()) {
 				result.add(rs.getString(CRITERION));

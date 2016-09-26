@@ -46,7 +46,7 @@ public abstract class Valuation implements Cloneable, Comparable<Valuation> {
 	}
 	
 	public void setDomain(Domain domain) {
-		ParameterValidator.notNull(domain, "domain");
+		ParameterValidator.notNull(domain, "domain"); //$NON-NLS-1$
 		
 		_domain = domain;
 	}
