@@ -268,9 +268,9 @@ public class ValuationView extends ViewPart {
 	@SuppressWarnings("serial")
 	private void createIntegerPanel() {
 		_valuationComposite = new Composite(_parent, SWT.NONE);
-		_valuationComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		_valuationComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true, 1, 1));
 		_valuationComposite.setLayout(new GridLayout(5, true));
-		
+	
 		Label label = new Label(_valuationComposite, SWT.NONE);
 		label.setFont(SWTResourceManager.getFont("Cantarell", 17, SWT.BOLD)); //$NON-NLS-1$
 		GridData gd = new GridData(SWT.CENTER, SWT.FILL, true, false, 5, 1);
@@ -316,7 +316,7 @@ public class ValuationView extends ViewPart {
 	@SuppressWarnings("serial")
 	private void createIntegerIntervalPanel() {
 		_valuationComposite = new Composite(_parent, SWT.NONE);
-		_valuationComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		_valuationComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true, 1, 1));
 		_valuationComposite.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		_valuationComposite.setLayout(new GridLayout(2, false));
 		
@@ -403,7 +403,7 @@ public class ValuationView extends ViewPart {
 	@SuppressWarnings("serial")
 	private void createRealPanel() {
 		_valuationComposite = new Composite(_parent, SWT.NONE);
-		_valuationComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		_valuationComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true, 1, 1));
 		_valuationComposite.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		_valuationComposite.setLayout(new GridLayout(5, true));
 		
@@ -453,7 +453,7 @@ public class ValuationView extends ViewPart {
 	@SuppressWarnings("serial")
 	private void createRealIntervalPanel() {
 		_valuationComposite = new Composite(_parent, SWT.NONE);
-		_valuationComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		_valuationComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true, 1, 1));
 		_valuationComposite.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		_valuationComposite.setLayout(new GridLayout(2, false));
 		
@@ -1286,9 +1286,9 @@ public class ValuationView extends ViewPart {
 	@SuppressWarnings("serial")
 	private void createIntegerChart() {
 		_chartComposite = new Composite(_parent, SWT.NONE);
-		_chartComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true, 2, 1));
+		_chartComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		_chartComposite.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
-		GridLayout layout = new GridLayout(1, true);
+		GridLayout layout = new GridLayout(1, false);
 		_chartComposite.setLayout(layout);
 		
 		_chartComposite.addControlListener(new ControlAdapter() {
@@ -1305,9 +1305,9 @@ public class ValuationView extends ViewPart {
 	@SuppressWarnings("serial")
 	private void createRealChart() {
 		_chartComposite = new Composite(_parent, SWT.NONE);
-		_chartComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true, 2, 1));
+		_chartComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		_chartComposite.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
-		GridLayout layout = new GridLayout(1, true);
+		GridLayout layout = new GridLayout(1, false);
 		_chartComposite.setLayout(layout);
 		
 		_chartComposite.addControlListener(new ControlAdapter() {

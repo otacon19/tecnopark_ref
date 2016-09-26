@@ -1,20 +1,22 @@
 package flintstones.gathering.cloud.view.layout;
 
+import org.eclipse.rap.internal.design.example.ILayoutSetConstants;
 import org.eclipse.rap.ui.interactiondesign.layout.model.ILayoutSetInitializer;
 import org.eclipse.rap.ui.interactiondesign.layout.model.LayoutSet;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 
-public class LogoInitializer implements ILayoutSetInitializer{
+public class LogoInitializer implements ILayoutSetInitializer {
 	
-	@Override
-	public void initializeLayoutSet(LayoutSet layoutSet) {
-		String path = ILayoutSetConstants.IMAGE_PATH;
-		layoutSet.addImagePath( ILayoutSetConstants.LOGO, path + "logo.png" ); //$NON-NLS-1$
+	public LogoInitializer() {}
 
+	public void initializeLayoutSet(LayoutSet layoutSet) {
+		layoutSet.addImagePath(ILayoutSetConstants.LOGO, ILayoutSetConstants.IMAGE_PATH_BUSINESS + "logo.png");
+
+		// positions
 		FormData fdLogo = new FormData();
-		fdLogo.right = new FormAttachment( 100, -50 );
-		fdLogo.top = new FormAttachment( 50, 32 );
-		layoutSet.addPosition( ILayoutSetConstants.LOGO_POSITION, fdLogo );
+		fdLogo.right = new FormAttachment(100, -75);
+		fdLogo.top = new FormAttachment(0, 32);
+		layoutSet.addPosition(ILayoutSetConstants.LOGO_POSITION, fdLogo);
 	}
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-
+	
    <extension
          id="flintstones.entrypoints"
          point="org.eclipse.rap.ui.entrypoint">
@@ -23,6 +23,72 @@
                class="flintstones.gathering.cloud.Application">
          </run>
       </application>
+   </extension>
+   <extension
+         id="product"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="flintstones.gathering.cloud.app"
+            name="%product.name">
+         <property
+               name="appName"
+               value="flintstones.gathering.cloud">
+         </property>
+      </product>
+   </extension>
+   <extension
+         id="product1"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="flintstones.gathering.cloud.app"
+            name="%product.name.0">
+      </product>
+   </extension>
+   <extension
+         point="sinbad2.database">
+      <database
+            connector="sinbad2.database.connector.mysql"
+            id="flintstones.gathering.cloud.caepia.database">
+         <parameter
+               id="url"
+               value="localhost">
+         </parameter>
+         <parameter
+               id="dbname"
+               value="db">
+         </parameter>
+         <parameter
+               id="user"
+               value="root">
+         </parameter>
+         <parameter
+               id="password"
+               value="admin">
+         </parameter>
+      </database>
+   </extension>
+   <extension
+         point="sinbad2.mail.account">
+      <account
+            mail="ceatic.ujaen@gmail.com"
+            password="zFcLA?lPdv">
+         <property
+               id="mail.smtp.auth"
+               value="true">
+         </property>
+         <property
+               id="mail.smtp.starttls.enable"
+               value="true">
+         </property>
+         <property
+               id="mail.smtp.host"
+               value="smtp.gmail.com">
+         </property>
+         <property
+               id="mail.smtp.port"
+               value="587">
+         </property>
+      </account>
    </extension>
    <extension
          point="org.eclipse.ui.perspectives">
@@ -203,70 +269,16 @@
       </branding>
    </extension>
    <extension
-         id="product"
-         point="org.eclipse.core.runtime.products">
-      <product
-            application="flintstones.gathering.cloud.app"
-            name="%product.name">
-         <property
-               name="appName"
-               value="flintstones.gathering.cloud">
-         </property>
-      </product>
-   </extension>
-   <extension
-         id="product1"
-         point="org.eclipse.core.runtime.products">
-      <product
-            application="flintstones.gathering.cloud.app"
-            name="%product.name.0">
-      </product>
-   </extension>
-   <extension
-         point="sinbad2.database">
-      <database
-            connector="sinbad2.database.connector.mysql"
-            id="flintstones.gathering.cloud.caepia.database">
-         <parameter
-               id="url"
-               value="localhost">
-         </parameter>
-         <parameter
-               id="dbname"
-               value="db">
-         </parameter>
-         <parameter
-               id="user"
-               value="root">
-         </parameter>
-         <parameter
-               id="password"
-               value="admin">
-         </parameter>
-      </database>
-   </extension>
-   <extension
-         point="sinbad2.mail.account">
-      <account
-            mail="ceatic.ujaen@gmail.com"
-            password="zFcLA?lPdv">
-         <property
-               id="mail.smtp.auth"
-               value="true">
-         </property>
-         <property
-               id="mail.smtp.starttls.enable"
-               value="true">
-         </property>
-         <property
-               id="mail.smtp.host"
-               value="smtp.gmail.com">
-         </property>
-         <property
-               id="mail.smtp.port"
-               value="587">
-         </property>
-      </account>
+         point="org.eclipse.rap.ui.layouts">
+      <layout
+            id="flintstones.gathering.cloud.caepia.layout">
+         <layoutSet
+               class="flintstones.gathering.cloud.view.layout.LogoInitializer"
+               id="flintstones.gathering.cloud.caepia.layoutSet"
+               name="Logo override"
+               overridesId="org.eclipse.rap.design.example.layoutset.logo">
+         </layoutSet>
+      </layout>
    </extension>
 
 </plugin>
