@@ -273,7 +273,7 @@
       <layout
             id="flintstones.gathering.cloud.caepia.layout">
          <layoutSet
-               class="flintstones.gathering.cloud.view.layout.LogoInitializer"
+               class="org.eclipse.rap.internal.design.example.business.layoutsets.LogoInitializer"
                id="flintstones.gathering.cloud.caepia.layoutSet"
                name="Logo override"
                overridesId="org.eclipse.rap.design.example.layoutset.logo">

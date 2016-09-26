@@ -5,6 +5,7 @@
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins">
 		<accessrules>
 			<accessrule kind="accessible" pattern="org/eclipse/rap/internal/design/example/**"/>
+			<accessrule kind="accessible" pattern="org/eclipse/rap7internal/design/example/business/layoutsets/**"/>
 		</accessrules>
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
