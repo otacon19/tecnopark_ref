@@ -1,5 +1,7 @@
 package flintstones.gathering.cloud.view.frameworkstructuring;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -38,6 +40,31 @@ public class ElementAssignmentView extends ViewPart implements IAssignmentDomain
 	private TableViewerColumn _tvcDomain;
 	
 	private List<String[]> _domainAssignments;
+	
+	@SuppressWarnings("rawtypes")
+	private static class DataComparator implements Comparator {
+		@Override
+		public int compare(Object d1, Object d2) {
+			String c1 = ((String[]) d1)[0];
+			String c2 = ((String[]) d2)[0];
+			String a1 = ((String[]) d1)[1];
+			String a2 = ((String[]) d2)[1];
+
+			int criterionComparation = extractInt(c1) - extractInt(c2);
+			if (criterionComparation != 0) {
+				return criterionComparation;
+			} else if (extractInt(a1) - (extractInt(a2)) != 0) {
+				return extractInt(a1) - extractInt(a2);
+			} else {
+				return 0;
+			}
+		}
+
+		int extractInt(String s) {
+			String num = s.replaceAll("\\D", "");
+			return num.isEmpty() ? 0 : Integer.parseInt(num);
+		}
+	}
 	
 	public ElementAssignmentView() {
 		DomainAssignmentView domainAssignmentView = null;
@@ -107,7 +134,7 @@ public class ElementAssignmentView extends ViewPart implements IAssignmentDomain
 		RWT.getUISession().setAttribute(ID, this);
 	}
 	
-	@SuppressWarnings("serial")
+	@SuppressWarnings({ "serial", "unchecked" })
 	@Override
 	public void createPartControl(final Composite parent) {	
 		_viewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
@@ -152,8 +179,9 @@ public class ElementAssignmentView extends ViewPart implements IAssignmentDomain
 			}
 		});
 		
-		_viewer.setInput(_domainAssignments);
+		Collections.sort(_domainAssignments, new DataComparator());
 		
+		_viewer.setInput(_domainAssignments);
 	}
 
 	
