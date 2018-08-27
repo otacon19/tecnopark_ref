@@ -300,7 +300,10 @@ public class DomainAssignmentView extends ViewPart {
 
 	private void extractAlternativeValues() {
 		for(String id: _problem.getAlternatives()) {
-			_alternativeValues.add(id);
+			//TODO
+			if(!id.equals("criterion_importance") && !id.equals("expert_knowledge")) {
+				_alternativeValues.add(id);
+			}
 		}
 	}
 

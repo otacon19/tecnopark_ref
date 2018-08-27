@@ -180,7 +180,7 @@ public class DAOProblemDomains {
 				type = rs.getString(TYPE);
 				value = rs.getString(DOMAIN);
 	
-				if(type.equals("Entero")) { //$NON-NLS-1$
+				if(type.equals("Integer")) { //$NON-NLS-1$
 	
 					try {
 						String[] tokens = value.split(","); //$NON-NLS-1$
@@ -212,7 +212,7 @@ public class DAOProblemDomains {
 						e.printStackTrace();
 					}
 					
-				} else if(type.equals("Lingüístico")) { //$NON-NLS-1$
+				} else if(type.equals("Linguistic")) { //$NON-NLS-1$
 					
 					try {
 						value = value.replace("{", ""); //$NON-NLS-1$ //$NON-NLS-2$

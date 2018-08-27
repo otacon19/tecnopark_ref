@@ -63,7 +63,7 @@
          </parameter>
          <parameter
                id="password"
-               value="admin">
+               value="root">
          </parameter>
       </database>
    </extension>

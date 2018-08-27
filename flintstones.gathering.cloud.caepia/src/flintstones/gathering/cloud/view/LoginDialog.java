@@ -17,6 +17,7 @@ import org.eclipse.swt.widgets.Text;
 
 import flintstones.gathering.cloud.APP;
 import flintstones.gathering.cloud.dao.DAOUser;
+import flintstones.gathering.cloud.dao.Deploy;
 import flintstones.gathering.cloud.model.User;
 import flintstones.gathering.cloud.nls.Messages;
 
@@ -91,7 +92,7 @@ public class LoginDialog extends TitleAreaDialog {
 
 		_mailText = new Text(container, SWT.BORDER);
 		_mailText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		_mailText.setText("alabella@ujaen.es"); //$NON-NLS-1$
+		_mailText.setText("msymwang@hotmail.com"); //$NON-NLS-1$
 		
 		Label passLabel = new Label(container, SWT.NONE);
 		passLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,false, 1, 1));
@@ -99,7 +100,7 @@ public class LoginDialog extends TitleAreaDialog {
 
 		_passText = new Text(container, SWT.BORDER | SWT.PASSWORD);
 		_passText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		_passText.setText("alabella"); //$NON-NLS-1$
+		_passText.setText("b6fc455c"); //$NON-NLS-1$
 
 		Composite composite = new Composite(container, SWT.NONE);
 		GridLayout gl_composite = new GridLayout(1, false);

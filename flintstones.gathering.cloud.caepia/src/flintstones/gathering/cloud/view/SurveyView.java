@@ -409,21 +409,24 @@ public class SurveyView extends ViewPart {
 	
 			List<String[]> input = new LinkedList<String[]>();
 			for(String a: _problem.getAlternatives()) {
-				for(String c: _problem.getCriteria()) {
-					String[] values = new String[3];
-					values[0] = a;
-					values[1] = c;
-					if(_valuations != null) {
-						Valuation v = _valuations.getValuation(new KeyDomainAssignment(a, c, _problemAssignment.getId()));
-						if(v != null) {
-							values[2] = v.changeFormatValuationToString(); 
+				//TODO
+				if(!a.equals("criterion_importance") && !a.equals("expert_knowledge")) {
+					for(String c: _problem.getCriteria()) {
+						String[] values = new String[3];
+						values[0] = a;
+						values[1] = c;
+						if(_valuations != null) {
+							Valuation v = _valuations.getValuation(new KeyDomainAssignment(a, c, _problemAssignment.getId()));
+							if(v != null) {
+								values[2] = v.changeFormatValuationToString(); 
+							} else {
+								values[2] = Messages.SurveyView_Unassigned;
+							}
 						} else {
 							values[2] = Messages.SurveyView_Unassigned;
 						}
-					} else {
-						values[2] = Messages.SurveyView_Unassigned;
+						input.add(values);
 					}
-					input.add(values);
 				}
 			}
 			_assignmentsViewer.setInput(input);
